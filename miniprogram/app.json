@@ -1,0 +1,25 @@
+{
+  "entryPagePath": "pages/index/index",
+  "pages": [
+    "pages/index/index",
+    "pages/example/index",
+    "pages/logs/logs",
+    "pages/mode_select/mode_select",
+    "pages/scenery_select/scenery_select",
+    "pages/dialogue/dialogue",
+    "pages/script/script",
+    "pages/v_config/v_config",
+    "pages/wait/wait",
+    "pages/v_output/v_output"
+  ],
+  "window": {
+    "backgroundColor": "#F0FAFA",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#BAF5E6",
+     "navigationBarTitleText": "忆景创影",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}
