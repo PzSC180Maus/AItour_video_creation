@@ -10,9 +10,12 @@ App({
          openid : null,
          spot_url: null,
          request: null,
+         final_request: null,
          scriptContent: "",
          user_potrait: null,
-      }
+      },
+      video_url: null,
+      final_response: null,//存最后小红书配文
     };
 
     // 2. 初始化云开发
