@@ -1,63 +1,133 @@
 /**index.wxss**/
 page {
-  background-color: #F0FAFA;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
-.scrollarea {
-  flex: 1;
-  overflow-y: hidden;
+page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-color: rgba(207, 234, 234, 0.55);
+  pointer-events: none;
+  z-index: 0;
 }
-
-.userinfo {
+.container {
+  min-height: 100vh;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #aaa;
-  width: 80%;
+  padding: 120rpx 40rpx 80rpx;
+  box-sizing: border-box;
 }
 
-.userinfo-avatar {
-  overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.page-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("https://k.sinaimg.cn/n/sinakd20115/553/w1080h1873/20211006/3c14-eec85cb30436c3ad141274f39866a10a.jpg/w700d1q75cms.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
 }
 
-.usermotto {
-  margin-top: 200px;
+.scrollarea {
+  flex: 1;
+}
+
+.userinfo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .avatar-wrapper {
   padding: 0;
-  width: 56px !important;
-  border-radius: 8px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+  width: 132rpx !important;
+  height: 132rpx;
+  border-radius: 24rpx;
+  margin-top: 80rpx;
+  margin-bottom: 72rpx;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(232, 248, 244, 0.74),
+    rgba(201, 232, 226, 0.46)
+  );
+  border: 2rpx solid rgba(255, 255, 255, 0.46);
+  box-shadow:
+    0 16rpx 36rpx rgba(35, 76, 72, 0.14),
+    inset 0 2rpx 0 rgba(255, 255, 255, 0.5);
+}
+
+.avatar-wrapper::after {
+  border: none;
 }
 
 .avatar {
   display: block;
-  width: 56px;
-  height: 56px;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 18rpx;
 }
 
 .nickname-wrapper {
+  width: 88%;
   display: flex;
-  width: 100%;
-  padding: 16px;
+  align-items: center;
+  padding: 24rpx 28rpx;
   box-sizing: border-box;
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  color: black;
+  border-radius: 28rpx;
+  background: linear-gradient(
+    135deg,
+    rgba(239, 250, 247, 0.84),
+    rgba(214, 237, 231, 0.54)
+  );
+  border: 2rpx solid rgba(255, 255, 255, 0.48);
+  box-shadow:
+    0 16rpx 34rpx rgba(31, 72, 69, 0.12),
+    inset 0 2rpx 0 rgba(255, 255, 255, 0.45);
+  color: #173c3c;
 }
 
 .nickname-label {
-  width: 105px;
+  width: 132rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #165757;
+  letter-spacing: 2rpx;
+  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
 }
 
 .nickname-input {
   flex: 1;
+  font-size: 30rpx;
+  color: #173c3c;
+  letter-spacing: 2rpx;
+  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
+}
+
+.usermotto {
+  position: relative;
+  z-index: 1;
+  margin-top: 400rpx;
+  text-align: center;
+}
+
+.user-motto {
+  font-size: 42rpx;
+  font-weight: 600;
+  color: #123c3c;
+  letter-spacing: 4rpx;
+  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
+  text-shadow:
+    0 2rpx 8rpx rgba(255, 255, 255, 0.42),
+    0 8rpx 18rpx rgba(22, 78, 72, 0.08);
 }

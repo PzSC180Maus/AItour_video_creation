@@ -1,2 +1,23 @@
 <!--pages/script/script.wxml-->
-<text>pages/script/script.wxml</text>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="page-bg"></view>
+      <view class="script-card">
+        <textarea
+          class="script-text"
+          value="{{scriptContent}}"
+          bindinput="onScriptInput"
+          placeholder="脚本生成中..."
+          maxlength="-1"
+        />
+      </view>
+
+      <button class="main-btn" bindtap="changeVersion" loading="{{loading}}">
+        <text class="main-btn-text">不满意？换一版</text>
+      </button>
+
+      <view class="bottom-tip" bindtap="goConfigPage">
+        <text class="bottom-tip-text">选好了！这个不错</text>
+      </view>
+  </view>
+</scroll-view>

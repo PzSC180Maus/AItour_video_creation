@@ -1,2 +1,39 @@
 <!--pages/scenery_select/scenery_select.wxml-->
-<text>pages/scenery_select/scenery_select.wxml</text>
+<view class="container">
+  <view class="page-bg"></view>
+
+  <scroll-view
+    class="rail-scroll"
+    scroll-y="true"
+    show-scrollbar="false"
+    enhanced="true"
+  >
+    <view class="rail-list">
+      <view
+        wx:for="{{spotList}}"
+        wx:key="id"
+        id="spot-{{item.id}}"
+        class="rail-item rail-item-{{index}}"
+      >
+        <view
+          class="card {{current === index ? 'active' : ''}}"
+          data-index="{{index}}"
+          bindtap="selectSpot"
+        >
+          <view class="card-media">
+            <image class="card-image" src="{{item.cover}}" mode="aspectFill"></image>
+            <view class="play-icon"></view>
+          </view>
+
+          <view class="card-content">
+            <text class="card-desc">{{item.text}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="action-bar">
+    <button class="confirm-btn" bindtap="confirmSelection">选好了</button>
+  </view>
+</view>

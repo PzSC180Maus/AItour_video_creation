@@ -2,18 +2,20 @@
 const util = require("../../utils/util.js");
 const app = getApp();
 
+const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+
 Page({
   data: {
     logs: [],
-    openid: "",
     motto: "Your Story, Our Scenery",
     userInfo: {
-      avatarUrl: "",
+      avatarUrl: defaultAvatarUrl,
       nickName: "",
     },
     hasUserInfo: false,
     canIUseGetUserProfile: wx.canIUse("getUserProfile"),
     canIUseNicknameComp: wx.canIUse("input.type.nickname"),
+    canIUseChooseAvatar: wx.canIUse("chooseAvatar"),
   },
 
   onLoad() {
@@ -24,8 +26,24 @@ Page({
           timeStamp: log,
         };
       }),
-      openid: app.globalData.openid || "",
     });
+  },
+
+  onShow() {
+    console.log('onShow triggered, hasNavigated:', app.globalData.hasNavigated, 'globalData:', app.globalData);
+    if (app.globalData.hasNavigated) {
+      console.log('Before reset:', this.data.userInfo);
+    this.setData({
+      userInfo: {
+        avatarUrl: defaultAvatarUrl,
+        nickName: "",
+      },
+      hasUserInfo: false,
+    });
+    console.log('After reset:', this.data.userInfo);
+    app.globalData.userInfo = this.data.userInfo;
+    app.globalData.hasNavigated = false;// 重置逻辑
+    }
   },
 
   bindViewTap() {
@@ -35,37 +53,55 @@ Page({
   },
 
   onChooseAvatar(e) {
-    const { avatarUrl } = e.detail;
-    const { nickName } = this.data.userInfo;
+    const { avatarUrl } = e.detail
+    const { nickName } = this.data.userInfo
+    const hasUserInfo = nickName && avatarUrl && avatarUrl !== defaultAvatarUrl;
     this.setData({
       "userInfo.avatarUrl": avatarUrl,
-      hasUserInfo:
-        nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    });
+      hasUserInfo: hasUserInfo,
+    })
+    if (hasUserInfo) {
+      console.log('Setting hasNavigated to true');
+      app.globalData.hasNavigated = true;
+      app.globalData.userInfo = this.data.userInfo;
+      wx.navigateTo({
+        url: '../mode_select/mode_select'
+      });
+    }
   },
 
   onInputChange(e) {
     const nickName = e.detail.value;
-    const { avatarUrl } = this.data.userInfo;
-    this.setData({
-      "userInfo.nickName": nickName,
-      hasUserInfo:
-        nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
+    const newUserInfo = { ...this.data.userInfo, nickName };
+    const hasUserInfo = nickName && newUserInfo.avatarUrl && newUserInfo.avatarUrl !== defaultAvatarUrl;
+    this.setData({ 
+      userInfo: newUserInfo,
+      hasUserInfo: hasUserInfo, 
     });
+    app.globalData.userInfo = newUserInfo;
+  
+    if (hasUserInfo) {
+      console.log('Setting hasNavigated to true');
+      app.globalData.hasNavigated = true;
+      wx.navigateTo({
+        url: '../mode_select/mode_select'
+      });
+    }
   },
 
   getUserProfile(e) {
-    // 封装调用 app.getUserInfo，结果会同步到全局
     app.getUserInfo((userInfo) => {
       this.setData({
-        userInfo,
+        userInfo: userInfo,
         hasUserInfo: true,
+      });
+      app.globalData.userInfo = userInfo;
+      wx.navigateTo({
+        url: '../mode_select/mode_select'
       });
     });
   },
 });
 
-const defaultAvatarUrl =
-  "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
 
 

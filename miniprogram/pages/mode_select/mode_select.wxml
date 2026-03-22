@@ -1,2 +1,23 @@
 <!--pages/mode_select/mode_select.wxml-->
-<text>pages/mode_select/mode_select.wxml</text>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="page-bg"></view>
+
+    <view class="intro-card">
+      <text class="page-title">游览小引</text>
+      <text class="page-desc">
+        先择景成意，再与智能助手细语成篇；随后上传个人照片，轻点生成，稍候片刻，便可查看专属旅游视频。
+      </text>
+    </view>
+
+    <view class="action-group">
+      <button class="mode-btn primary-btn" bindtap="official">
+        采用优选模板
+      </button>
+
+      <button class="mode-btn secondary-btn" bindtap="personalize">
+        个人描述定制
+      </button>
+    </view>
+  </view>
+</scroll-view>

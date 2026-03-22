@@ -1,1 +1,162 @@
 /* pages/script/script.wxss */
+page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-color: rgba(207, 234, 234, 0.42);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.scrollarea {
+  flex: 1;
+}
+
+.container {
+  min-height: 100vh;
+  position: relative;
+  padding: 72rpx 24rpx 176rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.page-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("https://n.sinaimg.cn/sinakd20109/254/w960h1694/20230513/ab8e-ae218b1a6d2ba3ad9c31c89b702956ae.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  transform: scale(1.03);
+}
+
+.page-body {
+  position: relative;
+  z-index: 1;
+}
+
+.script-card,
+.main-btn,
+.bottom-tip {
+  position: relative;
+  overflow: hidden;
+  border: 1rpx solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 16rpx 36rpx rgba(28, 56, 58, 0.14),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(18rpx) saturate(145%);
+  -webkit-backdrop-filter: blur(18rpx) saturate(145%);
+}
+
+.script-card::before,
+.main-btn::before,
+.bottom-tip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.26),
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(255, 255, 255, 0.14)
+  );
+  pointer-events: none;
+}
+
+.script-card {
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 32rpx;
+  padding: 28rpx 24rpx;
+  box-sizing: border-box;
+  min-height: 760rpx;
+  position: relative;
+  overflow: hidden;
+  border: 1rpx solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 16rpx 36rpx rgba(28, 56, 58, 0.14),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(18rpx) saturate(145%);
+  -webkit-backdrop-filter: blur(18rpx) saturate(145%);
+}
+
+.script-text {
+  width: 100%;
+  min-height: 680rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #183536;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1rpx solid rgba(255, 255, 255, 0.26);
+  border-radius: 22rpx;
+  box-sizing: border-box;
+  padding: 18rpx 18rpx;
+  display: block;
+}
+
+.main-btn {
+  width: 320rpx;
+  height: 72rpx;
+  margin: 200rpx auto 0;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08)),
+    linear-gradient(90deg, rgba(143, 229, 255, 0.60) 0%, rgba(171, 186, 238, 0.54) 52%, rgba(235, 226, 184, 0.58) 100%);
+}
+
+.main-btn::after {
+  border: none;
+}
+
+.main-btn-text {
+  position: relative;
+  z-index: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #214344;
+  text-align: center;
+  text-shadow: 0 1rpx 6rpx rgba(255, 255, 255, 0.25);
+  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
+}
+
+.bottom-tip {
+ width: 320rpx;
+  height: 72rpx;
+  margin: 48rpx auto 0;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08)),
+    linear-gradient(90deg, rgba(143, 229, 255, 0.60) 0%, rgba(171, 186, 238, 0.54) 52%, rgba(235, 226, 184, 0.58) 100%);
+}
+
+.bottom-tip-text {
+  position: relative;
+  z-index: 1;
+  font-size: 28rpx;
+  color: #214344;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 1rpx 6rpx rgba(255, 255, 255, 0.22);
+  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
+}
+
+.page-body,
+.script-text,
+.main-btn-text,
+.bottom-tip-text {
+  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
+}
