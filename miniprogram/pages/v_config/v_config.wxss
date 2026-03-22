@@ -15,12 +15,6 @@ page::before {
   z-index: 0;
 }
 
-.page {
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-
 .page-bg {
   position: fixed;
   inset: 0;

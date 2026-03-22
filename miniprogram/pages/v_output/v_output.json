@@ -1,3 +1,4 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "视频生成结果",
+  "navigationStyle": "default"
 }

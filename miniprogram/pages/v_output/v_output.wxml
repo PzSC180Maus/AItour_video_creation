@@ -1,1 +1,35 @@
-﻿
+<view class="page">
+  <view class="page-bg"></view>
+
+  <view class="container">
+    <view class="content">
+      <view class="card">
+        <view class="video-wrap">
+          <video
+            class="video"
+            src="{{videoUrl}}"
+            poster="{{coverUrl}}"
+            controls
+            show-center-play-btn
+            object-fit="cover"
+          ></video>
+        </view>
+
+        <view class="headline">您的视频制作完成</view>
+        <view class="desc">下方为本次生成的文案内容</view>
+
+        <view class="copy-card">
+          <view class="copy-title">生成文案</view>
+          <scroll-view class="copy-scroll" scroll-y="true">
+            <text class="copy-text">{{finalResponse || "暂无生成文案"}}</text>
+          </scroll-view>
+        </view>
+
+        <view class="actions">
+          <button class="btn" bindtap="saveVideo">保存视频</button>
+          <button class="btn outline" bindtap="backToGenerate">重新生成</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

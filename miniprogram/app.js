@@ -8,9 +8,10 @@ App({
       hasNavigated: false,
       task_data: {
          openid : null,
+         sign: 1,
          spot_url: null,
          request: null,
-         final_request: null,
+         video_request: null,
          scriptContent: "",
          user_potrait: null,
       },
