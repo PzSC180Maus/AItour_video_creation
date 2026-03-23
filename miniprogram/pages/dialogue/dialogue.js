@@ -11,7 +11,8 @@ const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lc
 
 Page({
   data: {
-    url: "api/dialogue",
+    initUrl: "api/dialogue/init",
+    chatUrl: "api/dialogue/chat",
     inputValue: "",
     loading: false,
     initialized: false,
@@ -33,7 +34,7 @@ Page({
 
     try {
       await this.ensureTaskDataReady();
-      await this.sendCurrentTaskRequest(true);
+      await this.sendInitialDialogueRequest();
       this.setData({
         initialized: true
       });
@@ -90,13 +91,12 @@ Page({
     });
   },
 
-  async sendCurrentTaskRequest(isInitial = false) {
+  async sendRequest(url, requestText, options = {}) {
+    const { appendUserMessage = false, clearInput = false } = options;
+
     if (this.data.loading) {
       return;
     }
-
-    const taskData = app.globalData.task_data || {};
-    const requestText = taskData.request || "";
 
     if (!requestText) {
       wx.showToast({
@@ -106,34 +106,45 @@ Page({
       return;
     }
 
-    const nextMessages = isInitial
-      ? this.data.messages.slice()
-      : this.data.messages.concat([{
+    const taskData = {
+      ...(app.globalData.task_data || {}),
+      request: requestText
+    };
+
+    const nextMessages = appendUserMessage
+      ? this.data.messages.concat([{
           role: "user",
           content: requestText,
           avatar: this.data.user_avatar,
           name: this.data.user_name
-        }]);
+        }])
+      : this.data.messages.slice();
 
     this.setData({
       loading: true,
       showBotTyping: true,
       messages: nextMessages,
-      inputValue: ""
+      inputValue: clearInput ? "" : this.data.inputValue
     });
 
     try {
-      const resp = await wxRequest.get(this.data.url, {
+      const resp = await wxRequest.post(url, {
         task_data: taskData
       });
 
-      const replyText = typeof resp.data === "string" ? resp.data : "";
+      const replyText =
+        typeof resp.data === "string"
+          ? resp.data
+          : (resp.data && resp.data.response) || "";
+
       const botMessage = {
         role: "bot",
         content: replyText,
         avatar: this.data.bot_avatar,
         name: this.data.bot_name
       };
+
+      app.globalData.task_data = taskData;
 
       this.setData({
         messages: this.data.messages.concat([botMessage]),
@@ -151,6 +162,23 @@ Page({
         showBotTyping: false
       });
     }
+  },
+
+  async sendInitialDialogueRequest() {
+    const taskData = app.globalData.task_data || {};
+    const requestText = taskData.request || "";
+
+    await this.sendRequest(this.data.initUrl, requestText, {
+      appendUserMessage: false,
+      clearInput: false
+    });
+  },
+
+  async sendUserDialogueRequest(text) {
+    await this.sendRequest(this.data.chatUrl, text, {
+      appendUserMessage: true,
+      clearInput: true
+    });
   },
 
   onInputChange(e) {
@@ -174,9 +202,7 @@ Page({
       return;
     }
 
-    app.globalData.task_data.request = text;
-
-    await this.sendCurrentTaskRequest(false);
+    await this.sendUserDialogueRequest(text);
   },
 
   finishDrawing() {

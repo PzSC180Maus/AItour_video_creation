@@ -74,7 +74,7 @@ Page({
       const taskData = app.globalData.task_data;
       const url = this.data.url;
 
-      const resp = await wxRequest.get(url, {
+      const resp = await wxRequest.post(url, {
         task_data: taskData
       });
 

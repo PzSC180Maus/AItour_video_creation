@@ -51,7 +51,7 @@ Page({
 
     // 第一步：先发第一个请求，失败也不阻断
     try {
-      const firstResp = await wxRequest.get(this.data.requestUrl, {
+      const firstResp = await wxRequest.post(this.data.requestUrl, {
         task_data: taskData
       });
 
@@ -72,7 +72,7 @@ Page({
         ...taskData
       };
 
-      await wxRequest.get(this.data.video_req, {
+      await wxRequest.post(this.data.video_req, {
         task_data: secondTaskData
       });
 
@@ -156,7 +156,7 @@ Page({
         openid: taskData.openid,
       };
 
-      const resp = await wxRequest.get(this.data.requestUrl, {
+      const resp = await wxRequest.post(this.data.requestUrl, {
         task_data: pollingTaskData
       });
 
