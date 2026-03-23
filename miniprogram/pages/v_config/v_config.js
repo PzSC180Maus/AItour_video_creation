@@ -74,16 +74,6 @@ Page({
     });
   },
 
-  goBack() {
-    wx.navigateBack({
-      fail() {
-        wx.reLaunch({
-          url: "/pages/index/index"
-        });
-      }
-    });
-  },
-
   chooseAndUploadImage() {
     wx.showLoading({
       title: "上传中..."

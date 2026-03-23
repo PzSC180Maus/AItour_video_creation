@@ -11,7 +11,7 @@ const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lc
 
 Page({
   data: {
-    url: "/api/video/hhh",
+    url: "api/dialogue",
     inputValue: "",
     loading: false,
     initialized: false,

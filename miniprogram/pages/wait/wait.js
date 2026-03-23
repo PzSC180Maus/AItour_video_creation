@@ -14,7 +14,8 @@ Page({
     videoStatus: false,
     pollingTimer: null,
     fakeTimer: null,
-    requestUrl: "/api/video/script"
+    requestUrl: "api/share",
+    video_req:"api/video",
   },
 
   onLoad() {
@@ -68,11 +69,10 @@ Page({
     // 第二步：无论第一个是否失败，都继续发第二个请求
     try {
       const secondTaskData = {
-        ...taskData,
-        sign: 2
+        ...taskData
       };
 
-      await wxRequest.get(this.data.requestUrl, {
+      await wxRequest.get(this.data.video_req, {
         task_data: secondTaskData
       });
 
@@ -154,7 +154,6 @@ Page({
 
       const pollingTaskData = {
         openid: taskData.openid,
-        sign: 2
       };
 
       const resp = await wxRequest.get(this.data.requestUrl, {
@@ -199,7 +198,7 @@ Page({
 
     setTimeout(() => {
       wx.navigateTo({
-        url: "/pages/v_output/v_output"
+        url: "../v_output/v_output"
       });
     }, 400);
   }

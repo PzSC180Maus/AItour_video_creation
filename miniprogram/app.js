@@ -8,7 +8,6 @@ App({
       hasNavigated: false,
       task_data: {
          openid : null,
-         sign: 1,
          spot_url: null,
          request: null,
          video_request: null,
