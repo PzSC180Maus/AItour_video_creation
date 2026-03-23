@@ -3,15 +3,29 @@ page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    #70efd1 0%,
+    #ddf0ba 45%,
+    #ffffff 100%
+  );
 }
+
 page::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-color: rgba(207, 234, 234, 0.55);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.36), transparent 40%),
+    linear-gradient(
+      180deg,
+      rgba(220, 242, 223, 0.22) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
   pointer-events: none;
   z-index: 0;
 }
+
 .container {
   min-height: 100vh;
   position: relative;
@@ -20,16 +34,6 @@ page::before {
   align-items: center;
   padding: 120rpx 40rpx 80rpx;
   box-sizing: border-box;
-}
-
-.page-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("https://k.sinaimg.cn/n/sinakd20115/553/w1080h1873/20211006/3c14-eec85cb30436c3ad141274f39866a10a.jpg/w700d1q75cms.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
 }
 
 .scrollarea {
@@ -103,7 +107,6 @@ page::before {
   font-weight: 600;
   color: #165757;
   letter-spacing: 2rpx;
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
 }
 
 .nickname-input {
@@ -111,7 +114,6 @@ page::before {
   font-size: 30rpx;
   color: #173c3c;
   letter-spacing: 2rpx;
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
 }
 
 .usermotto {
@@ -126,7 +128,6 @@ page::before {
   font-weight: 600;
   color: #123c3c;
   letter-spacing: 4rpx;
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
   text-shadow:
     0 2rpx 8rpx rgba(255, 255, 255, 0.42),
     0 8rpx 18rpx rgba(22, 78, 72, 0.08);

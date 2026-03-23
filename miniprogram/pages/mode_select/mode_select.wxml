@@ -1,8 +1,5 @@
 <!--pages/mode_select/mode_select.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <view class="page-bg"></view>
-
     <view class="intro-card">
       <text class="page-title">游览小引</text>
       <text class="page-desc">
@@ -20,4 +17,3 @@
       </button>
     </view>
   </view>
-</scroll-view>

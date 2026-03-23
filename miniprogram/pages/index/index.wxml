@@ -1,7 +1,6 @@
 <!--index.wxml-->
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-  <view class="page-bg"> </view>
     <view class="userinfo">
       <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
         <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
@@ -24,5 +23,5 @@
     <view class="usermotto">
       <text class="user-motto">{{motto}}</text>
     </view>
-  </view>
+    </view>
 </scroll-view>

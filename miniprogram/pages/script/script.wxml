@@ -1,7 +1,6 @@
 <!--pages/script/script.wxml-->
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <view class="page-bg"></view>
       <view class="script-card">
         <textarea
           class="script-text"

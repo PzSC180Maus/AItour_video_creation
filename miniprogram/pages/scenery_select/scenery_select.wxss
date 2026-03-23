@@ -3,13 +3,25 @@ page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    #70efd1 0%,
+    #ddf0ba 45%,
+    #ffffff 100%
+  );
 }
 
 page::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-color: rgba(207, 234, 234, 0.42);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.36), transparent 40%),
+    linear-gradient(
+      180deg,
+      rgba(220, 242, 223, 0.22) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
   pointer-events: none;
   z-index: 0;
 }
@@ -17,21 +29,12 @@ page::before {
 .container {
   min-height: 100vh;
   position: relative;
-  padding: 72rpx 24rpx 176rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx 80rpx;
   box-sizing: border-box;
-  overflow: hidden;
 }
-
-.page-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("https://n.sinaimg.cn/sinakd20109/254/w960h1694/20230513/ab8e-ae218b1a6d2ba3ad9c31c89b702956ae.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-}
-
 
 .rail-scroll {
   position: relative;
@@ -75,19 +78,25 @@ page::before {
 }
 
 .card {
-width: 560rpx;
-min-height: 196rpx;
-padding: 18rpx 22rpx;
-box-sizing: border-box;
-display: flex;
-align-items: center;
-gap: 22rpx;
-border-radius: 30rpx;
-background: rgba(255, 255, 255, 0.12);
-border: 2rpx solid rgba(255, 255, 255, 0.62);
-box-shadow: 0 10rpx 24rpx rgba(32, 45, 40, 0.1);
-transform-origin: center;
-transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  width: 560rpx;
+  min-height: 196rpx;
+  padding: 18rpx 22rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2rpx solid rgba(255, 255, 255, 0.62);
+  box-shadow: 0 10rpx 24rpx rgba(32, 45, 40, 0.1);
+  transform-origin: center;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .rail-item-0 .card {
@@ -95,7 +104,7 @@ transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, bac
 }
 
 .rail-item-1 .card {
-  transform: rotate(-8deg) scale(0.98);
+  transform: rotate(-7deg) scale(0.98);
 }
 
 .rail-item-2 .card {
@@ -103,18 +112,28 @@ transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease, bac
 }
 
 .rail-item-3 .card {
-  transform: rotate(-7deg) scale(0.98);
+  transform: rotate(7deg) scale(0.98);
 }
 
 .rail-item-4 .card {
-  transform: rotate(-28deg) scale(0.95);
+  transform: rotate(14deg) scale(0.96);
 }
 
 .card.active {
-background: rgba(255, 255, 255, 0.18);
-border-color: rgba(255, 255, 255, 0.88);
-box-shadow: 0 14rpx 30rpx rgba(32, 45, 40, 0.14);
-opacity: 1;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08)),
+    linear-gradient(
+      90deg,
+      rgba(117, 178, 255, 0.28) 0%,
+      rgba(155, 136, 236, 0.24) 52%,
+      rgba(243, 218, 122, 0.22) 100%
+    );
+  border-color: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 24rpx 44rpx rgba(34, 44, 62, 0.18),
+    0 0 0 4rpx rgba(255, 255, 255, 0.16);
+  opacity: 1;
+  transform: rotate(0deg) scale(1.04);
 }
 
 .card-media {
@@ -162,9 +181,15 @@ opacity: 1;
 .card-desc {
   font-size: 34rpx;
   line-height: 1.45;
-  color: #4d4b39;
+  color: #0a0a09;
   font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
   letter-spacing: 2rpx;
+}
+
+.card.active .card-desc {
+  color: #111827;
+  font-weight: 700;
+  text-shadow: 0 1rpx 4rpx rgba(255, 255, 255, 0.28);
 }
 
 .action-bar {

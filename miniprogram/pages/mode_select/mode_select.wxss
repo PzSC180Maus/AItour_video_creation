@@ -3,19 +3,27 @@ page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    #70efd1 0%,
+    #ddf0ba 45%,
+    #ffffff 100%
+  );
 }
 
 page::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: rgba(207, 234, 234, 0.42);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.36), transparent 40%),
+    linear-gradient(
+      180deg,
+      rgba(220, 242, 223, 0.22) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
   pointer-events: none;
   z-index: 0;
-}
-
-.scrollarea {
-  flex: 1;
 }
 
 .container {
@@ -24,18 +32,8 @@ page::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80rpx 40rpx 72rpx;
+  padding: 120rpx 40rpx 80rpx;
   box-sizing: border-box;
-}
-
-.page-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("https://ts2.tc.mm.bing.net/th/id/OIP-C.pXlanYJ3nHiOoptpAgl2LwHaM0?pid=ImgDet&w=474&h=820&rs=1&o=7&rm=3");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
 }
 
 .intro-card {
@@ -88,7 +86,6 @@ page::before {
   color: #184845;
   letter-spacing: 8rpx;
   line-height: 1.2;
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
 }
 
 .page-desc {
@@ -102,7 +99,6 @@ page::before {
   line-height: 1.8;
   letter-spacing: 4rpx;
   color: #2d5b57;
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
 }
 
 .action-group {
@@ -130,7 +126,6 @@ page::before {
   font-weight: 600;
   color: #184845;
   letter-spacing: 2rpx;
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
   border: 2rpx solid rgba(255, 255, 255, 0.42);
   box-shadow:
     0 14rpx 30rpx rgba(32, 72, 69, 0.12),

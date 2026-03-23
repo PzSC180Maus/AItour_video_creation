@@ -1,7 +1,5 @@
 <!--pages/scenery_select/scenery_select.wxml-->
 <view class="container">
-  <view class="page-bg"></view>
-
   <scroll-view
     class="rail-scroll"
     scroll-y="true"

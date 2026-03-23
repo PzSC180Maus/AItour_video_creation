@@ -3,38 +3,39 @@ page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    #70efd1 0%,
+    #ddf0ba 45%,
+    #ffffff 100%
+  );
 }
 
 page::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-color: rgba(207, 234, 234, 0.42);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.36), transparent 40%),
+    linear-gradient(
+      180deg,
+      rgba(220, 242, 223, 0.22) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
   pointer-events: none;
   z-index: 0;
 }
-
-.scrollarea {
-  flex: 1;
-}
-
 .container {
   min-height: 100vh;
   position: relative;
-  padding: 72rpx 24rpx 176rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx 80rpx;
   box-sizing: border-box;
-  overflow: hidden;
 }
-
-.page-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("https://n.sinaimg.cn/sinakd20109/254/w960h1694/20230513/ab8e-ae218b1a6d2ba3ad9c31c89b702956ae.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  transform: scale(1.03);
+.scrollarea {
+  flex: 1;
 }
 
 .page-body {
@@ -79,12 +80,25 @@ page::before {
   min-height: 760rpx;
   position: relative;
   overflow: hidden;
-  border: 1rpx solid rgba(255, 255, 255, 0.42);
+  border: 1rpx solid rgba(114, 104, 104, 0.42);
   box-shadow:
-    0 16rpx 36rpx rgba(28, 56, 58, 0.14),
+    0 16rpx 36rpx rgba(28, 52, 53, 0.14),
     inset 0 1rpx 0 rgba(255, 255, 255, 0.58);
   backdrop-filter: blur(18rpx) saturate(145%);
   -webkit-backdrop-filter: blur(18rpx) saturate(145%);
+}
+
+.script-card {
+  background: rgba(255, 255, 255, 0.36);
+}
+
+.script-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.03) 55%,
+    rgba(255, 255, 255, 0.08)
+  );
 }
 
 .script-text {
@@ -92,9 +106,9 @@ page::before {
   min-height: 680rpx;
   font-size: 26rpx;
   line-height: 1.6;
-  color: #183536;
+  color: #0c1a1a;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.24);
   border: 1rpx solid rgba(255, 255, 255, 0.26);
   border-radius: 22rpx;
   box-sizing: border-box;
@@ -127,11 +141,10 @@ page::before {
   color: #214344;
   text-align: center;
   text-shadow: 0 1rpx 6rpx rgba(255, 255, 255, 0.25);
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
 }
 
 .bottom-tip {
- width: 320rpx;
+  width: 320rpx;
   height: 72rpx;
   margin: 48rpx auto 0;
   border-radius: 36rpx;
@@ -151,12 +164,4 @@ page::before {
   font-weight: 700;
   text-align: center;
   text-shadow: 0 1rpx 6rpx rgba(255, 255, 255, 0.22);
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
-}
-
-.page-body,
-.script-text,
-.main-btn-text,
-.bottom-tip-text {
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
 }
