@@ -1,4 +1,4 @@
-// pages/dialogue/dialogue.js
+﻿// pages/dialogue/dialogue.js
 import WxRequest from "mina-request";
 
 const app = getApp();
@@ -91,88 +91,99 @@ Page({
     });
   },
 
-  async sendRequest(url, requestText, options = {}) {
-    const { appendUserMessage = false, clearInput = false } = options;
+async sendRequest(url, requestText, options = {}) {
+const {
+appendUserMessage = false,
+clearInput = false,
+isInitialRequest = false
+} = options;
 
-    if (this.data.loading) {
-      return;
-    }
+if (this.data.loading) {
+return;
+}
 
-    if (!requestText) {
-      wx.showToast({
-        title: "请求内容为空",
-        icon: "none"
-      });
-      return;
-    }
+if (!requestText) {
+wx.showToast({
+title: "请求内容为空",
+icon: "none"
+});
+return;
+}
 
-    const taskData = {
-      ...(app.globalData.task_data || {}),
-      request: requestText
-    };
+const taskData = {
+...(app.globalData.task_data || {}),
+request: requestText
+};
 
-    const nextMessages = appendUserMessage
-      ? this.data.messages.concat([{
-          role: "user",
-          content: requestText,
-          avatar: this.data.user_avatar,
-          name: this.data.user_name
-        }])
-      : this.data.messages.slice();
+const nextMessages = appendUserMessage
+? this.data.messages.concat([{
+role: "user",
+content: requestText,
+avatar: this.data.user_avatar,
+name: this.data.user_name
+}])
+: this.data.messages.slice();
+this.setData({
+loading: true,
+showBotTyping: true,
+messages: nextMessages,
+inputValue: clearInput ? "" : this.data.inputValue
+});
 
-    this.setData({
-      loading: true,
-      showBotTyping: true,
-      messages: nextMessages,
-      inputValue: clearInput ? "" : this.data.inputValue
-    });
+try {
+const resp = await wxRequest.post(url, {
+task_data: taskData
+});
 
-    try {
-      const resp = await wxRequest.post(url, {
-        task_data: taskData
-      });
+const responseData = resp && resp.data ? resp.data : {};
 
-      const replyText =
-        typeof resp.data === "string"
-          ? resp.data
-          : (resp.data && resp.data.response) || "";
+if (isInitialRequest && responseData.task_id) {
+app.globalData.taskdata = app.globalData.taskdata || {};
+app.globalData.taskdata.task_id = responseData.task_id;
+}
 
-      const botMessage = {
-        role: "bot",
-        content: replyText,
-        avatar: this.data.bot_avatar,
-        name: this.data.bot_name
-      };
+const replyText =
+typeof responseData === "string"
+? responseData
+: responseData.response || "";
 
-      app.globalData.task_data = taskData;
+const botMessage = {
+role: "bot",
+content: replyText,
+avatar: this.data.bot_avatar,
+name: this.data.bot_name
+};
 
-      this.setData({
-        messages: this.data.messages.concat([botMessage]),
-        showBotTyping: false
-      });
-    } catch (err) {
-      console.error("请求后端失败：", err);
-      wx.showToast({
-        title: "请求失败",
-        icon: "none"
-      });
-    } finally {
-      this.setData({
-        loading: false,
-        showBotTyping: false
-      });
-    }
-  },
+app.globalData.task_data = taskData;
 
-  async sendInitialDialogueRequest() {
-    const taskData = app.globalData.task_data || {};
-    const requestText = taskData.request || "";
+this.setData({
+messages: this.data.messages.concat([botMessage]),
+showBotTyping: false
+});
+} catch (err) {
+console.error("请求后端失败：", err);
+wx.showToast({
+title: "请求失败",
+icon: "none"
+});
+} finally {
+this.setData({
+loading: false,
+showBotTyping: false
+});
+}
+},
 
-    await this.sendRequest(this.data.initUrl, requestText, {
-      appendUserMessage: false,
-      clearInput: false
-    });
-  },
+async sendInitialDialogueRequest() {
+const taskData = app.globalData.task_data || {};
+const requestText = taskData.request || "";
+
+await this.sendRequest(this.data.initUrl, requestText, {
+appendUserMessage: false,
+clearInput: false,
+isInitialRequest: true
+});
+},
 
   async sendUserDialogueRequest(text) {
     await this.sendRequest(this.data.chatUrl, text, {
