@@ -11,7 +11,7 @@ Page({
     url: "api/script",
     scriptContent: "",
     loading: false,
-    request: "你现在请总结我们以上聊天内容，生成这个视频的脚本script."
+    request: "生成这个视频的脚本script."
     
   },
 

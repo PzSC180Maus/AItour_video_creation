@@ -1,4 +1,4 @@
-// pages/generating/generating.js
+// pages/wait/wait.js
 import WxRequest from "mina-request";
 
 const app = getApp();
@@ -11,11 +11,12 @@ Page({
   data: {
     coverUrl: "",
     progress: 0,
-    videoStatus: false,
+    videoStatus: "idle",
     pollingTimer: null,
     fakeTimer: null,
     requestUrl: "api/share",
-    video_req:"api/video",
+    videoReq: "api/video",
+    videoStatusUrl: "api/video/status"
   },
 
   onLoad() {
@@ -37,9 +38,9 @@ Page({
   async startTaskFlow() {
     const taskData = app.globalData.task_data || {};
 
-    if (!taskData.openid) {
+    if (!taskData.openid || !taskData.task_id) {
       wx.showToast({
-        title: "openid 未初始化完成",
+        title: "任务未初始化",
         icon: "none"
       });
       return;
@@ -49,38 +50,52 @@ Page({
       title: "任务提交中..."
     });
 
-    // 第一步：先发第一个请求，失败也不阻断
     try {
-      const firstResp = await wxRequest.post(this.data.requestUrl, {
-        task_data: taskData
+      const shareResp = await wxRequest.post(this.data.requestUrl, {
+        task_data: {
+          openid: taskData.openid,
+          task_id: taskData.task_id,
+          request: taskData.request,
+          scriptContent: taskData.scriptContent,
+          video_request: taskData.video_request
+        }
       });
 
-      const firstData = firstResp && firstResp.data ? firstResp.data : {};
+      const shareData = shareResp && shareResp.data ? shareResp.data : {};
       const finalResponse =
-        typeof firstData === "string"
-          ? firstData
-          : firstData.response || firstData.final_response || "";
+        typeof shareData === "string"
+          ? shareData
+          : shareData.final_response || shareData.response || "";
 
       app.globalData.final_response = finalResponse;
     } catch (err) {
-      console.error("第一个任务失败：", err);
+      console.error("分享文案生成失败：", err);
     }
 
-    // 第二步：无论第一个是否失败，都继续发第二个请求
     try {
-      const secondTaskData = {
-        ...taskData
-      };
+      const videoResp = await wxRequest.post(this.data.videoReq, {
+        task_data: {
+          openid: taskData.openid,
+          task_id: taskData.task_id,
+          request: taskData.request,
+          scriptContent: taskData.scriptContent,
+          video_request: taskData.video_request,
+          spot_url: taskData.spot_url,
+          user_potrait: taskData.user_potrait
+        }
+      });
 
-      await wxRequest.post(this.data.video_req, {
-        task_data: secondTaskData
+      const videoData = videoResp && videoResp.data ? videoResp.data : {};
+
+      this.setData({
+        videoStatus: videoData.video_status || "processing"
       });
 
       wx.hideLoading();
       this.startPolling();
     } catch (err) {
       wx.hideLoading();
-      console.error("第二个任务启动失败：", err);
+      console.error("视频任务启动失败：", err);
       wx.showToast({
         title: "视频任务启动失败",
         icon: "none"
@@ -128,7 +143,6 @@ Page({
         progress: next
       });
 
-      // 到 95 就停住，等待真正完成时再拉到 100
       if (next >= 95) {
         this.clearFakeProgress();
       }
@@ -154,26 +168,39 @@ Page({
 
       const pollingTaskData = {
         openid: taskData.openid,
+        task_id: taskData.task_id
       };
 
-      const resp = await wxRequest.post(this.data.requestUrl, {
+      const resp = await wxRequest.get(this.data.videoStatusUrl, {
         task_data: pollingTaskData
       });
 
-      const rawData = resp && resp.data ? resp.data : {};
-      const videoResponse = rawData.video_response || rawData;
+      const data = resp && resp.data ? resp.data : {};
+      const videoStatus = data.video_status || "idle";
+      const videoUrl = data.video_url || "";
+      const progress =
+        typeof data.progress === "number"
+          ? Math.min(data.progress, 100)
+          : this.data.progress;
 
-      const videoStatus = videoResponse.video_status === true;
-      const videoUrl = videoResponse.video_url || "";
+      this.setData({
+        progress,
+        videoStatus
+      });
 
-      if (typeof videoResponse.progress === "number") {
-        this.setData({
-          progress: videoResponse.progress > 100 ? 100 : videoResponse.progress
-        });
+      if (videoStatus === "complete" && videoUrl) {
+        this.handleVideoReady(videoUrl, data);
+        return;
       }
 
-      if (videoStatus && videoUrl) {
-        this.handleVideoReady(videoUrl, videoResponse);
+      if (videoStatus === "failed") {
+        this.clearPolling();
+        this.clearFakeProgress();
+
+        wx.showToast({
+          title: data.error_message || "视频生成失败",
+          icon: "none"
+        });
       }
     } catch (err) {
       console.error("轮询视频状态失败：", err);
@@ -186,7 +213,7 @@ Page({
 
     this.setData({
       progress: 100,
-      videoStatus: true
+      videoStatus: "complete"
     });
 
     app.globalData.video_url = videoUrl;
