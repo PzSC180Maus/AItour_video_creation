@@ -21,6 +21,13 @@ const STYLE_OPTIONS = [
     description:
       "请将内容转化为电影沉浸式风格，突出叙事镜头、情绪张力、环境氛围、层次光影和高质感画面表达，让视频具有电影预告片般的沉浸体验与情感感染力。",
     themeClass: "option-green"
+  },
+  {
+    id: "user-based",
+    name: "按照用户描述",
+    description:
+      "请根据脚本内提取的视频风格和用户描述，竭力完成用户描绘的视频氛围以及镜头调用。",
+    themeClass: "option-green"
   }
 ];
 

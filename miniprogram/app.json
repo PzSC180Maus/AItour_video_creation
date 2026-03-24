@@ -1,5 +1,5 @@
 {
-  "entryPagePath": "pages/index/index",
+  "entryPagePath": "pages/v_config/v_config",
   "pages": [
     "pages/index/index",
     "pages/example/index",
