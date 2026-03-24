@@ -56,8 +56,6 @@ Page({
           openid: taskData.openid,
           task_id: taskData.task_id,
           request: taskData.request,
-          scriptContent: taskData.scriptContent,
-          video_request: taskData.video_request
         }
       });
 
@@ -65,7 +63,7 @@ Page({
       const finalResponse =
         typeof shareData === "string"
           ? shareData
-          : shareData.final_response || shareData.response || "";
+          : shareData.response || "";
 
       app.globalData.final_response = finalResponse;
     } catch (err) {
@@ -77,8 +75,6 @@ Page({
         task_data: {
           openid: taskData.openid,
           task_id: taskData.task_id,
-          request: taskData.request,
-          scriptContent: taskData.scriptContent,
           video_request: taskData.video_request,
           spot_url: taskData.spot_url,
           user_potrait: taskData.user_potrait
@@ -217,7 +213,6 @@ Page({
     });
 
     app.globalData.video_url = videoUrl;
-    app.globalData.videoUrl = videoUrl;
 
     if (videoResponse.cover_url) {
       app.globalData.coverUrl = videoResponse.cover_url;

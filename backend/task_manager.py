@@ -149,5 +149,13 @@ class TaskManager:
         thread = threading.Thread(target=cleanup_loop, daemon=True)
         thread.start()
 
+    def delete_task(self, task_id: str) -> bool:
+        """删除任务"""
+        with self._lock:
+            if task_id not in self._store:
+                return False
+            del self._store[task_id]
+            return True
+
 
 task_manager = TaskManager()
