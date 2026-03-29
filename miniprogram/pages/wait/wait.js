@@ -4,7 +4,7 @@ import WxRequest from "mina-request";
 const app = getApp();
 
 const wxRequest = new WxRequest({
-  baseURL: "http://172.24.99.16/20"
+  baseURL: "http://172.24.99.16:8000"
 });
 
 Page({
@@ -14,9 +14,9 @@ Page({
     videoStatus: "idle",
     pollingTimer: null,
     fakeTimer: null,
-    requestUrl: "api/share",
-    videoReq: "api/video",
-    videoStatusUrl: "api/video/status"
+    requestUrl: "/api/share",
+    videoReq: "/api/video",
+    videoStatusUrl: "/api/video/status"
   },
 
   onLoad() {
@@ -36,6 +36,7 @@ Page({
   },
 
   async startTaskFlow() {
+    console.log("轮询使用的 task_data:", app.globalData.task_data);
     const taskData = app.globalData.task_data || {};
 
     if (!taskData.openid || !taskData.task_id) {
@@ -50,13 +51,11 @@ Page({
       title: "任务提交中..."
     });
 
+    const fullTaskData = { ...taskData };
+
     try {
       const shareResp = await wxRequest.post(this.data.requestUrl, {
-        task_data: {
-          openid: taskData.openid,
-          task_id: taskData.task_id,
-          request: taskData.request,
-        }
+        task_data: fullTaskData
       });
 
       const shareData = shareResp && shareResp.data ? shareResp.data : {};
@@ -72,22 +71,23 @@ Page({
 
     try {
       const videoResp = await wxRequest.post(this.data.videoReq, {
-        task_data: {
-          openid: taskData.openid,
-          task_id: taskData.task_id,
-          video_request: taskData.video_request,
-          spot_url: taskData.spot_url,
-          user_potrait: taskData.user_potrait
-        }
+        task_data: fullTaskData
       });
 
       const videoData = videoResp && videoResp.data ? videoResp.data : {};
 
+      if (videoData.task_id && videoData.token) {
+        app.globalData.task_data = {
+          ...(app.globalData.task_data || {}),
+          task_id: videoData.task_id,
+          token: videoData.token
+        };
+      }
       this.setData({
         videoStatus: videoData.video_status || "processing"
       });
-
       wx.hideLoading();
+      console.log("轮询使用的 task_data:", app.globalData.task_data);
       this.startPolling();
     } catch (err) {
       wx.hideLoading();
@@ -162,12 +162,9 @@ Page({
     try {
       const taskData = app.globalData.task_data || {};
 
-      const pollingTaskData = {
-        openid: taskData.openid,
-        task_id: taskData.task_id
-      };
+      const pollingTaskData = { ...taskData };
 
-      const resp = await wxRequest.get(this.data.videoStatusUrl, {
+      const resp = await wxRequest.post(this.data.videoStatusUrl, {
         task_data: pollingTaskData
       });
 
@@ -194,7 +191,7 @@ Page({
         this.clearFakeProgress();
 
         wx.showToast({
-          title: data.error_message || "视频生成失败",
+          title: data.video_error || data.error_message || "视频生成失败",
           icon: "none"
         });
       }

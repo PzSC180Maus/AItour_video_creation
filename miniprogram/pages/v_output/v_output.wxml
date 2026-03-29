@@ -19,7 +19,7 @@
         <view class="copy-card">
           <view class="copy-title">生成文案</view>
           <scroll-view class="copy-scroll" scroll-y="true">
-            <text class="copy-text">{{finalResponse || "暂无生成文案"}}</text>
+            <text class="copy-text" selectable="{{true}}">{{finalResponse || "暂无生成文案"}}</text>
           </scroll-view>
         </view>
 

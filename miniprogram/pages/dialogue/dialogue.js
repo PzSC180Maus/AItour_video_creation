@@ -4,15 +4,15 @@ import WxRequest from "mina-request";
 const app = getApp();
 
 const wxRequest = new WxRequest({
-  baseURL: "http://172.24.99.16/20"
+  baseURL: "http://172.24.99.16:8000"
 });
 
 const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
 
 Page({
   data: {
-    initUrl: "api/dialogue/init",
-    chatUrl: "api/dialogue/chat",
+    initUrl: "/api/dialogue/init",
+    chatUrl: "/api/dialogue/chat",
     inputValue: "",
     loading: false,
     initialized: false,
@@ -137,9 +137,15 @@ task_data: taskData
 
 const responseData = resp && resp.data ? resp.data : {};
 
+// 合并并回写，避免把 init 返回的 task_id 覆盖丢失
+const mergedTaskData = {
+...(app.globalData.task_data || {}),
+...taskData
+};
+
 if (isInitialRequest && responseData.task_id) {
-app.globalData.taskdata = app.globalData.taskdata || {};
-app.globalData.taskdata.task_id = responseData.task_id;
+mergedTaskData.task_id = responseData.task_id;
+console.log("init 写入 task_id:", mergedTaskData.task_id, mergedTaskData);
 }
 
 const replyText =
@@ -154,7 +160,7 @@ avatar: this.data.bot_avatar,
 name: this.data.bot_name
 };
 
-app.globalData.task_data = taskData;
+app.globalData.task_data = mergedTaskData;
 
 this.setData({
 messages: this.data.messages.concat([botMessage]),

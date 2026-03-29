@@ -20,7 +20,7 @@ Page({
 
   backToGenerate() {
     wx.redirectTo({
-      url: "/pages/script/script"
+      url: "/pages/model_select/model_select"
     });
   },
 
@@ -77,11 +77,4 @@ Page({
       }
     });
   },
-
-  onShareAppMessage() {
-    return {
-      title: "这是我生成的视频，快来看看",
-      path: "/pages/dialogue/dialogue"
-    };
-  }
 });

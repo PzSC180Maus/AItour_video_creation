@@ -107,7 +107,7 @@ class TaskManager:
             task_data = self._store.get(task_id)
 
             if not task_data:
-                raise HTTPException(status_code=404, detail="任务不存在或已过期")
+                raise HTTPException(status_code=405, detail="任务不存在或已过期")
 
             if task_data["openid"] != openid:
                 print(

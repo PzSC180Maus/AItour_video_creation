@@ -3,12 +3,12 @@ import WxRequest from 'mina-request'
 const app = getApp()
 
 const wxRequest = new WxRequest({
-  baseURL: 'http://172.24.99.16/20'
+  baseURL: 'http://172.24.99.16:8000'
 })
 
 Page({
   data: {
-    url: "api/script",
+    url: "/api/script",
     scriptContent: "",
     loading: false,
     request: "生成这个视频的脚本script."
@@ -60,7 +60,7 @@ Page({
       }, 200);
     });
   },
-
+  
   async sendTaskData() {
     if (this.data.loading) return;
 

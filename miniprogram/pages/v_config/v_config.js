@@ -119,15 +119,39 @@ Page({
               return;
             }
 
-            this.setData({
-              avatarUrl: fileID
-            });
+            // 获取临时链接
+            wx.cloud.getTempFileURL({
+              fileList: [fileID],
+              success: (tempRes) => {
+                const tempUrl = tempRes.fileList && tempRes.fileList[0] && tempRes.fileList[0].tempFileURL;
+                if (!tempUrl) {
+                  wx.showToast({
+                    title: "获取链接失败",
+                    icon: "none"
+                  });
+                  return;
+                }
 
-            app.globalData.task_data.user_potrait = fileID;
+                this.setData({
+                  avatarUrl: tempUrl
+                });
 
-            wx.showToast({
-              title: "图片已上传",
-              icon: "success"
+                app.globalData.task_data.user_potrait = tempUrl;
+
+                wx.showToast({
+                  title: "图片已上传",
+                  icon: "success"
+                });
+              },
+              fail: (err) => {
+                wx.showToast({
+                  title: "获取链接失败",
+                  icon: "none"
+                });
+              },
+              complete: () => {
+                wx.hideLoading();
+              }
             });
           })
           .catch((err) => {
@@ -209,10 +233,7 @@ Page({
       scriptContent
     ]);
 
-    taskData.request = this.joinPrompt([
-      selectedOptimization.description,
-      scriptContent
-    ]);
+    taskData.request = selectedOptimization.description,
 
     app.globalData.task_data = taskData;
   },

@@ -2,7 +2,7 @@ import json
 import json5
 from contextvars import ContextVar
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List
 from pydantic import BaseModel
 
 from qwen_agent.llm import get_chat_model
@@ -20,7 +20,7 @@ class TaskContext:
     step_data: Dict = field(default_factory=dict)
 
 
-_task_context: ContextVar[Optional[TaskContext]] = ContextVar(
+_task_context: ContextVar[TaskContext] = ContextVar(
     "task_context",
     default=None,
 )
@@ -42,53 +42,49 @@ def reset_task_context(token: object) -> None:
 
 @register_tool("travel_script_gen")
 class TravelScriptTool(BaseTool):
-    """基于完整对话历史生成旅拍视频脚本"""
-
-    description = "读取当前任务完整对话历史，并生成 15-30 秒旅拍视频脚本"
+    description = "读取当前任务完整对话历史，并生成 10 秒旅拍视频脚本"
     parameters = {
         "type": "object",
         "properties": {
-            "style": {
-                "type": "string",
-                "description": "可选，指定视频风格",
-            },
-            "spot_name": {
-                "type": "string",
-                "description": "可选，指定景点名称",
-            },
-            "emotion": {
-                "type": "string",
-                "description": "可选，指定用户情绪",
-            },
             "extra_requirements": {
                 "type": "string",
-                "description": "可选，补充要求，例如用户对脚本设计、台词语气、镜头偏好",
+                "description": "可选，用户补充要求。通常来自前端 request。",
             },
         },
         "required": [],
     }
 
-    def __init__(self, cfg: Optional[Dict] = None):
+    def __init__(self, cfg=None):
         super().__init__(cfg)
-        llm_cfg = self.cfg.get("llm_cfg", {})
-        if not llm_cfg:
-            raise ValueError("llm_cfg is required for travel_script_gen")
-        self.llm = get_chat_model(llm_cfg)
+        llm_cfg = (self.cfg or {}).get("llm_cfg", {})
+        self.llm = get_chat_model(llm_cfg) if llm_cfg else None
 
-    def call(self, params: Union[str, dict], **kwargs) -> str:
-        """
-        仅负责生成脚本并返回结果。
-        持久化（写入 task_manager）由调用方路由处理器完成。
-        """
+    @staticmethod
+    def _extract_text(content):
+        if isinstance(content, str):
+            return content.strip()
+        if isinstance(content, list):
+            parts = []
+            for item in content:
+                if isinstance(item, dict):
+                    text = str(item.get("text", "")).strip()
+                    if text:
+                        parts.append(text)
+            return "\n".join(parts).strip()
+        return str(content or "").strip()
+
+    def call(self, params, **kwargs):
         ctx = _task_context.get()
-
         try:
             if ctx is None:
                 return json.dumps(
-                    {
-                        "success": False,
-                        "error": "当前没有绑定 TaskContext，上下文不可用",
-                    },
+                    {"success": False, "error": "当前没有绑定 TaskContext，上下文不可用"},
+                    ensure_ascii=False,
+                )
+
+            if self.llm is None:
+                return json.dumps(
+                    {"success": False, "error": "travel_script_gen 未配置 llm_cfg"},
                     ensure_ascii=False,
                 )
 
@@ -97,47 +93,44 @@ class TravelScriptTool(BaseTool):
             else:
                 params_dict = params or {}
 
-            override_emotion = str(params_dict.get("emotion", "")).strip()
-            override_spot_name = str(params_dict.get("spot_name", "")).strip()
-            override_style = str(params_dict.get("style", "")).strip()
             extra_requirements = str(params_dict.get("extra_requirements", "")).strip()
 
-            history_text = "\n".join(
-                f"{item.get('role', 'unknown')}: {str(item.get('content', '')).strip()}"
-                for item in ctx.messages
-                if str(item.get("content", "")).strip()
-            )
+            history_lines = []
+            for msg in ctx.messages or []:
+                role = str(msg.get("role", "unknown")).strip() or "unknown"
+                text = self._extract_text(msg.get("content", ""))
+                if text:
+                    history_lines.append(f"{role}: {text}")
+            history_text = "\n".join(history_lines).strip()
 
-            if not history_text and not any(
-                [override_emotion, override_spot_name, override_style, extra_requirements]
-            ):
+            if not history_text and not extra_requirements:
                 return json.dumps(
-                    {
-                        "success": False,
-                        "error": "没有可用于生成脚本的历史对话或补充信息",
-                    },
+                    {"success": False, "error": "没有可用于生成脚本的历史对话或补充信息"},
                     ensure_ascii=False,
                 )
 
             system_prompt = (
                 "你是专业旅拍视频脚本策划师。\n"
-                "请基于用户完整历史对话，直接生成一个 15-30 秒的旅拍视频脚本。\n"
-                "要求：\n"
-                "1. 你需要自己从历史对话中判断景点、情绪、风格、叙事重点和关键画面\n"
-                "2. 如果外部给了明确的景点、情绪、风格要求，优先采用外部要求\n"
-                "3. 输出严格聚焦单一主题，不要平行展开\n"
-                "4. 输出格式为：镜头 + 分镜 + 台词 + 时长 + 音乐建议\n"
-                "5. 只输出最终脚本文本，不要输出解释、分析过程、前缀、标题或 JSON"
+                "请严格按以下结构输出，且只输出最终脚本正文：\n"
+                "【景点名称】\n"
+                "1行，只写景点名称；若历史中未明确，则写“未明确景点”。\n\n"
+                "【情绪锚点】\n"
+                "1句，沿用用户原话关键词，不超过30字。\n\n"
+                "【分镜脚本】\n"
+                "输出3个镜头；每个镜头必须包含：镜头、动作、台词、时长。\n"
+                "镜头时长约束：镜头1为3秒，镜头2为3秒，镜头3为4秒。\n\n"
+                "【音乐与节奏建议】\n"
+                "给出音乐类型、节奏变化与情绪推进建议。\n\n"
+                "硬性约束：\n"
+                "1. 总时长必须为10秒。\n"
+                "2. 禁止输出JSON、解释、分析过程、额外寒暄。\n"
+                "3. 内容必须可执行、画面明确,注意对人物主体叙述。"
             )
 
             user_prompt = (
-                "以下是当前任务的完整历史对话，请根据这些内容直接生成最终视频脚本。\n\n"
+                "请基于以下内容生成脚本。\n\n"
                 f"历史对话：\n{history_text or '无'}\n\n"
-                f"外部指定景点：{override_spot_name or '无'}\n"
-                f"外部指定情绪：{override_emotion or '无'}\n"
-                f"外部指定风格：{override_style or '无'}\n"
-                f"额外要求：{extra_requirements or '无'}\n\n"
-                "请输出最终脚本文本。"
+                f"额外要求：{extra_requirements or '无'}\n"
             )
 
             messages = [
@@ -146,41 +139,32 @@ class TravelScriptTool(BaseTool):
             ]
 
             *_, last = self.llm.chat(messages=messages)
-            content = last[-1].get("content", [])
+            raw_content = last[-1].get("content", []) if last else []
 
-            script_parts = []
-            for item in content:
-                text = item.get("text", "")
-                if text:
-                    script_parts.append(text)
-
-            script = "\n".join(script_parts).strip()
+            if isinstance(raw_content, str):
+                script = raw_content.strip()
+            else:
+                parts = []
+                for item in raw_content:
+                    if isinstance(item, dict):
+                        t = str(item.get("text", "")).strip()
+                        if t:
+                            parts.append(t)
+                script = "\n".join(parts).strip()
 
             if not script:
                 return json.dumps(
-                    {
-                        "success": False,
-                        "error": "模型返回为空",
-                    },
+                    {"success": False, "error": "模型返回为空"},
                     ensure_ascii=False,
                 )
 
-            # 不在此处持久化 —— 调用方（路由处理器）收到 task_id + script 后
-            # 自行调用 task_manager.update_step_data(task_id, {"script": script})
             return json.dumps(
-                {
-                    "success": True,
-                    "script": script,
-                    "task_id": ctx.task_id,
-                },
+                {"success": True, "script": script, "task_id": ctx.task_id},
                 ensure_ascii=False,
             )
 
         except Exception as exc:
             return json.dumps(
-                {
-                    "success": False,
-                    "error": str(exc),
-                },
+                {"success": False, "error": str(exc)},
                 ensure_ascii=False,
             )

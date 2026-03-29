@@ -9,11 +9,12 @@ App({
       task_data: {
          openid : null,
          task_id : null,
-         spot_url: null,
-         request: null,
-         video_request: null,
+         token: null,
+         spot_url: "",
+         request: "",
+         video_request: "",
          scriptContent: "",
-         user_potrait: null,
+         user_potrait: "",
       },
       video_url: null,
       final_response: null,//存最后小红书配文
