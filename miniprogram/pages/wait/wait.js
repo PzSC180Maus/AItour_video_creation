@@ -4,7 +4,7 @@ import WxRequest from "mina-request";
 const app = getApp();
 
 const wxRequest = new WxRequest({
-  baseURL: "http://172.24.99.16:8000"
+  baseURL: "https://ruralv.cn"
 });
 
 Page({
@@ -25,9 +25,10 @@ Page({
     this.setData({
       coverUrl: taskData.spot_url || taskData.user_potrait || ""
     });
-
+    setTimeout(() => {
     this.startFakeProgress();
     this.startTaskFlow();
+    }, 200);
   },
 
   onUnload() {
@@ -106,7 +107,7 @@ Page({
 
     const timer = setInterval(() => {
       this.checkVideoStatus();
-    }, 2000);
+    }, 25000);
 
     this.setData({
       pollingTimer: timer
@@ -216,7 +217,7 @@ Page({
     }
 
     setTimeout(() => {
-      wx.navigateTo({
+      wx.redirectTo({
         url: "../v_output/v_output"
       });
     }, 400);

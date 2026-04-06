@@ -211,3 +211,17 @@ page::before {
     linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06)),
     linear-gradient(90deg, rgba(143, 229, 255, 0.66) 0%, rgba(171, 186, 238, 0.58) 52%, rgba(235, 226, 184, 0.62) 100%);
 }
+
+
+.bot-anim-active {
+  animation: botWave 1.5s infinite alternate;
+  box-shadow: 0 0 16px 4px #4fc3f7;
+  border-radius: 50%;
+}
+
+@keyframes botWave {
+  0% { transform: scale(1) rotate(0deg);}
+  50% { transform: scale(1.3) rotate(10deg);}
+  100% { transform: scale(1) rotate(-10deg);}
+}
+

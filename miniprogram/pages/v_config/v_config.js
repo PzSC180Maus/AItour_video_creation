@@ -268,7 +268,7 @@ Page({
         generating: false
       });
 
-      wx.navigateTo({
+      wx.redirectTo({
         url: "/pages/wait/wait"
       });
     }, 500);

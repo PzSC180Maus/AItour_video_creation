@@ -15,7 +15,7 @@
       </block>
 
       <view wx:if="{{showBotTyping}}" class="message-row bot-row">
-        <image class="avatar" src="{{bot_avatar}}"></image>
+        <image class="avatar {{botAnimClass}}" src="{{bot_avatar}}"></image>
         <view class="bubble-wrap">
           <text class="speaker-name">{{bot_name}}</text>
           <view class="bubble bot-bubble">
