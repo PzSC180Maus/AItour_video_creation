@@ -217,7 +217,7 @@ Page({
   joinPrompt(parts) {
     return parts
       .filter((item) => typeof item === "string" && item.trim())
-      .join("，");
+      .join(",");
   },
 
   saveConfigToGlobalData() {
@@ -267,6 +267,9 @@ Page({
       this.setData({
         generating: false
       });
+      
+      app.globalData.task_data.count = 0;
+      app.globalData.video_extend = false;
 
       wx.redirectTo({
         url: "/pages/wait/wait"

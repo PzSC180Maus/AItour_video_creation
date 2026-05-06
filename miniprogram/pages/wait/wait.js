@@ -9,12 +9,15 @@ const wxRequest = new WxRequest({
 
 Page({
   data: {
+    use_extend: false,
+    count: 0,
     coverUrl: "",
     progress: 0,
     videoStatus: "idle",
     pollingTimer: null,
     fakeTimer: null,
     requestUrl: "/api/share",
+    extendURL: "/api/video/extend",
     videoReq: "/api/video",
     videoStatusUrl: "/api/video/status"
   },
@@ -23,11 +26,13 @@ Page({
     const taskData = app.globalData.task_data || {};
 
     this.setData({
+      use_extend: app.globalData.video_extend || false,
+      count: app.globalData.task_data.count || 0,
       coverUrl: taskData.spot_url || taskData.user_potrait || ""
     });
     setTimeout(() => {
-    this.startFakeProgress();
-    this.startTaskFlow();
+      this.startFakeProgress();
+      this.startTaskFlow();
     }, 200);
   },
 
@@ -71,17 +76,24 @@ Page({
     }
 
     try {
-      const videoResp = await wxRequest.post(this.data.videoReq, {
-        task_data: fullTaskData
-      });
+      let videoResp;
+      if (this.data.use_extend) {
+  videoResp = await wxRequest.post(this.data.extendURL, {
+    task_data: fullTaskData
+  });
+} else {
+  videoResp = await wxRequest.post(this.data.videoReq, {
+    task_data: fullTaskData
+  });
+}
 
       const videoData = videoResp && videoResp.data ? videoResp.data : {};
 
-      if (videoData.task_id && videoData.token) {
+      if (videoData.task_id) {
         app.globalData.task_data = {
           ...(app.globalData.task_data || {}),
           task_id: videoData.task_id,
-          token: videoData.token
+          video_id: videoData.task_id
         };
       }
       this.setData({
@@ -107,7 +119,7 @@ Page({
 
     const timer = setInterval(() => {
       this.checkVideoStatus();
-    }, 25000);
+    }, 10000);
 
     this.setData({
       pollingTimer: timer
@@ -132,15 +144,15 @@ Page({
       const current = this.data.progress || 0;
       let next = current + Math.floor(Math.random() * 6) + 1;
 
-      if (next >= 95) {
-        next = 95;
+      if (next >= 20) {
+        next = 20;
       }
 
       this.setData({
         progress: next
       });
 
-      if (next >= 95) {
+      if (next >= 20) {
         this.clearFakeProgress();
       }
     }, 600);
@@ -172,10 +184,12 @@ Page({
       const data = resp && resp.data ? resp.data : {};
       const videoStatus = data.video_status || "idle";
       const videoUrl = data.video_url || "";
+      const backendProgress =
+        typeof data.progress === "number" ? data.progress : null;
       const progress =
-        typeof data.progress === "number"
-          ? Math.min(data.progress, 100)
-          : this.data.progress;
+        backendProgress == null
+          ? this.data.progress
+          : Math.min(100, Math.max(20, 20 + backendProgress * 0.8));
 
       this.setData({
         progress,

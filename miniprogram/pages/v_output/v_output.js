@@ -3,6 +3,8 @@ const app = getApp();
 
 Page({
   data: {
+    count: 0,
+    script: "",
     videoUrl: "",
     coverUrl: "",
     finalResponse: ""
@@ -12,6 +14,8 @@ Page({
     const taskData = app.globalData.task_data || {};
 
     this.setData({
+      count: app.globalData.task_data.count,
+      script: app.globalData.task_data.scriptContent,
       videoUrl: app.globalData.video_url || app.globalData.videoUrl || "",
       coverUrl: taskData.spot_url || "",
       finalResponse: app.globalData.final_response || ""
@@ -20,7 +24,17 @@ Page({
 
   backToGenerate() {
     wx.redirectTo({
-      url: "/pages/model_select/model_select"
+      url: "/pages/mode_select/mode_select"
+    });
+  },
+
+  backToExtend(){
+    const count = this.data.count;
+    const newCount = count + 1;
+    app.globalData.task_data.count = newCount;
+    app.globalData.task_data.request = this.data.script;
+    wx.redirectTo({
+      url: "/pages/dialogue/dialogue"
     });
   },
 

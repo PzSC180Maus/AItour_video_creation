@@ -6,10 +6,12 @@ App({
       env: "cloud1-5g34ybsmbfe89727", // 请确保此 ID 与你云开发控制台一致
       userInfo: null,
       hasNavigated: false,
+      video_extend: false,
       task_data: {
          openid : null,
          task_id : null,
-         token: null,
+         video_id: null,
+         count: 0,
          spot_url: "",
          request: "",
          video_request: "",

@@ -8,6 +8,7 @@ const wxRequest = new WxRequest({
 
 Page({
   data: {
+    count: 0,
     url: "/api/script",
     scriptContent: "",
     loading: false,
@@ -16,6 +17,9 @@ Page({
   },
 
 onShow() {
+  this.setData({
+    count: app.globalData.task_data.count,
+  });
   setTimeout(() => {
     this.initScriptPage();
   }, 200);
@@ -139,17 +143,20 @@ onShow() {
   },
 
   goConfigPage() {
+    const count = this.data.count;
+    const user_text = "请生成一段适合小红书或朋友圈发布的旅行文案。";
+    if(count==0){
     wx.navigateTo({
       url: "../v_config/v_config",
-      fail(err) {
-        console.error("跳转失败：", err);
-        wx.showToast({
-          title: "页面跳转失败",
-          icon: "none"
-        });
-      }
     });
-  },
-
+  }else{
+    app.globalData.video_extend = true;
+    app.globalData.task_data.video_request = this.data.scriptContent;
+    app.globalData.task_data.request = user_text;
+    wx.navigateTo({
+      url:"../wait/wait",
+    })
+  }
+},
   onShareAppMessage() {}
 });

@@ -123,6 +123,13 @@ page {
   gap: 16rpx;
 }
 
+.actions-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12rpx;
+  justify-content: center;
+}
+
 .btn {
   height: 90rpx;
   margin-top: 10rpx;
@@ -141,6 +148,14 @@ page {
     background 0.2s ease,
     box-shadow 0.2s ease,
     opacity 0.2s ease;
+}
+
+/* 小号按钮，用于并排的 outline 按钮 */
+.btn-sm {
+  height: 72rpx;
+  width: 100rpx;
+  font-size: 28rpx;
+  padding: 0 30rpx;
 }
 
 .btn:active {

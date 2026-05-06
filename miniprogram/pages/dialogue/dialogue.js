@@ -30,7 +30,7 @@ Page({
     ttsLock: false,
   },
   
-  onShow() {
+  onLoad() {
     this.syncUserInfo();
 
     this.setData({
