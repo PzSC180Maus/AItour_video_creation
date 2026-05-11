@@ -1,5 +1,4 @@
-﻿// pages/dialogue/dialogue.js
-import WxRequest from "mina-request";
+﻿import WxRequest from "mina-request";
 
 const app = getApp();
 

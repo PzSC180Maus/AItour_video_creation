@@ -23,6 +23,7 @@ Page({
   },
 
   backToGenerate() {
+    app.globalData.task_data.count = 0;
     wx.redirectTo({
       url: "/pages/mode_select/mode_select"
     });
@@ -31,11 +32,22 @@ Page({
   backToExtend(){
     const count = this.data.count;
     const newCount = count + 1;
+    if(newCount >= 3){
+      wx.showToast({
+        title: "已达视频延长上限",
+        icon: "none"
+      });
+      app.globalData.task_data.count = 0;
+      wx.redirectTo({
+        url: "/pages/mode_select/mode_select"
+      });
+    }else{
     app.globalData.task_data.count = newCount;
     app.globalData.task_data.request = this.data.script;
     wx.redirectTo({
       url: "/pages/dialogue/dialogue"
     });
+  }
   },
 
   saveVideo() {
