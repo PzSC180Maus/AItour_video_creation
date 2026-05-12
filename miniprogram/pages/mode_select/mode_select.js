@@ -16,7 +16,7 @@ Page({
 
   personalize() {
     wx.navigateTo({
-      url: "../script/script",
+      url: "../user_custom1/user_custom1",
     });
   },
 });

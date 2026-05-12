@@ -1,2 +1,35 @@
 <view class="page">
+  <!-- 羊皮卷输入区 —— 中间偏上 -->
+  <view class="parchment-card">
+    <image class="parchment-bg" src="../../images/scroll.gif" mode="aspectFill"></image>
+    <textarea
+      class="feeling-input"
+      value="{{inputValue}}"
+      bindinput="onInputChange"
+      placeholder="在这里写下你的感受..."
+      auto-height
+      maxlength="-1"
+      cursor-spacing="24"
+    />
+  </view>
+
+  <!-- 吉祥物 —— 左右并排，小范围运动 -->
+  <view class="mascot-stage">
+    <view class="guide-bubble">
+      <text class="bubble-text">{{guidePhrase}}</text>
+    </view>
+    <view class="mascot-track">
+      <image
+        class="mascot-img"
+        src="{{currentFrame}}"
+        style="transform: translateX({{mascotOffset}}rpx); transition: transform {{transitionDuration}}s ease-in-out;"
+        mode="aspectFit"
+      ></image>
+    </view>
+  </view>
+
+  <!-- 选好了按钮 —— 中间偏下 -->
+  <button class="confirm-btn" bindtap="onConfirm">
+    <text class="confirm-btn-text">选好了</text>
+  </button>
 </view>

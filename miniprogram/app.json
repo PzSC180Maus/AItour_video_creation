@@ -3,6 +3,7 @@
   "pages": [
     "pages/index/index",
     "pages/example/index",
+    "pages/user_custom1/user_custom1",
     "pages/logs/logs",
     "pages/mode_select/mode_select",
     "pages/user_custom2/user_custom2",
