@@ -1,10 +1,11 @@
 {
-  "entryPagePath": "pages/index/index",
+  "entryPagePath": "pages/user_custom2/user_custom2",
   "pages": [
     "pages/index/index",
     "pages/example/index",
     "pages/logs/logs",
     "pages/mode_select/mode_select",
+    "pages/user_custom2/user_custom2",
     "pages/scenery_select/scenery_select",
     "pages/dialogue/dialogue",
     "pages/script/script",
