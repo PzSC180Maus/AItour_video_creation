@@ -6,6 +6,7 @@
     "pages/user_custom1/user_custom1",
     "pages/logs/logs",
     "pages/mode_select/mode_select",
+    "pages/user_custom2/user_custom2",
     "pages/scenery_select/scenery_select",
     "pages/dialogue/dialogue",
     "pages/script/script",

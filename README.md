@@ -1,4 +1,4 @@
-﻿# AItour Video Creation
+# AItour Video Creation
 
 忆景创影：一个面向文旅场景的 AI 视频生成小程序原型。
 
