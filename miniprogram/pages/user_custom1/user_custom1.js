@@ -1,64 +1,54 @@
 // pages/user_custom1/user_custom1.js
-const app = getApp()
-
+const app = getApp();
+const SELECT_OPTIONS = [
+  {
+    id: 1,
+    text: "快来记录下📸你眼前的风景呀！"
+  },
+  {
+    id: 2,
+    text: "或是湖边，那条条垂柳🌿诉说眼前季节？"
+  },
+  {
+    id: 3,
+    text: "快看！湖面上有鸭子🦆"
+  },
+  {
+    id: 4,
+    text: "😉你想记录怎样的故事？"
+  },
+  {
+    id: 5,
+    text: "还是乡野点点烟火，最抚凡人心😊"
+  }];
 Page({
+  //"../../images/left.gif"
   data: {
-    scene_url
+    scene_url: "",
+    imgloading: false,
+    Selectedtextid: SELECT_OPTIONS[0].id
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
 
+  onshow(options) {
+     this.setData({
+        imgloading: false,
+        scene_url: "",
+     });
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
+  gotowrite() {
+    const url = this.data.scene_url;
+    app.globalData.task_data.spot_url = url;
+    if(url){
+    wx.navigateTo({
+      url:"../user_custom2/user_custom2",
+    })}else{
+      wx.showToast({
+        title: "请先拍照哟😘",
+        icon: "none",
+        duration: 800
+      });
+    }
+}
 })

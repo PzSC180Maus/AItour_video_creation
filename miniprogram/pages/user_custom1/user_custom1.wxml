@@ -1,2 +1,3 @@
-<!--pages/user_custom1/user_custom1.wxml-->
-<text>pages/user_custom1/user_custom1.wxml</text>
+<view class="bottom-tip" bindtap="gotowrite">
+      <text class="bottom-tip-text">这个不错💕</text>
+      </view>

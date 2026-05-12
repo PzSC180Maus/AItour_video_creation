@@ -1,1 +1,28 @@
 /* pages/user_custom1/user_custom1.wxss */
+page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    #70efd1 0%,
+    #ddf0ba 45%,
+    #ffffff 100%
+  );
+}
+
+page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.36), transparent 40%),
+    linear-gradient(
+      180deg,
+      rgba(220, 242, 223, 0.22) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+

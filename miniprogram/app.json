@@ -1,5 +1,5 @@
 {
-  "entryPagePath": "pages/index/index",
+  "entryPagePath": "pages/user_custom1/user_custom1",
   "pages": [
     "pages/index/index",
     "pages/example/index",
