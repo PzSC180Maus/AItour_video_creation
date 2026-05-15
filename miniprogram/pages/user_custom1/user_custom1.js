@@ -43,7 +43,7 @@ Page({
       guidePhrase: this.pickRandomPhrase(),
       transitionDuration: 0.6,
       imglist: [defaultItem],
-      scene_url: defaultItem.url,
+      scene_url:"",
       Selectedimgid: defaultItem.id,
       currentThumbIndex: 0
     });
