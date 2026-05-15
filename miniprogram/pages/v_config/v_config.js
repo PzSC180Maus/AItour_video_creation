@@ -105,7 +105,7 @@ Page({
 
         wx.cloud
           .uploadFile({
-            cloudPath: "user-potrait-" + Date.now() + ".png",
+            cloudPath: "user-potrait-" + Date.now() + ".jpg",
             filePath: tempFilePath
           })
           .then((res) => {

@@ -32,7 +32,7 @@ Page({
     posIndex: 1, // 从中间开始
   },
 
-  onLoad() {
+  onShow() {
     this.setData({
       guidePhrase: this.pickRandomPhrase(),
       transitionDuration: 0,
@@ -40,7 +40,7 @@ Page({
     this.startAnimation();
   },
 
-  onUnload() {
+  onHide() {
     this.stopAnimation();
   },
 
