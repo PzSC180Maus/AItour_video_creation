@@ -50,6 +50,12 @@ Page({
   }
   },
 
+  publishPost() {
+    wx.navigateTo({
+      url: "/pages/publish/publish"
+    });
+  },
+
   saveVideo() {
     const videoUrl = this.data.videoUrl;
 

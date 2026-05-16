@@ -1,0 +1,15 @@
+<view class="page">
+  <view class="empty-panel" wx:if="{{!hasVideo}}">
+    <view class="empty-title">还没有可发布的视频</view>
+    <view class="empty-desc">发布作品需要先完成一次视频生成，生成后会自动带回这里继续发布。</view>
+    <button class="main-btn" bindtap="goCreateVideo">去制作视频</button>
+    <button class="sub-btn" bindtap="backToCommunity">返回社区广场</button>
+  </view>
+
+  <view class="panel" wx:else>
+    <video class="video" src="{{videoUrl}}" poster="{{coverUrl}}" controls></video>
+    <input class="input" value="{{title}}" bindinput="onTitleInput" placeholder="作品标题" />
+    <textarea class="textarea" value="{{shareText}}" bindinput="onShareInput" placeholder="分享文案" maxlength="-1"></textarea>
+    <button class="main-btn" loading="{{publishing}}" disabled="{{publishing}}" bindtap="publishPost">发布帖子</button>
+  </view>
+</view>

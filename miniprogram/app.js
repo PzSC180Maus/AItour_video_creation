@@ -12,6 +12,7 @@ App({
          task_id : null,
          video_id: null,
          count: 0,
+         card_id: "",
          spot_url: "",
          request: "",
          video_request: "",
