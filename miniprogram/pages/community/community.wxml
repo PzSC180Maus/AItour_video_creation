@@ -1,0 +1,53 @@
+<view class="page">
+  <view class="topbar">
+    <view class="tabs">
+      <view class="tab {{activeTab === 'post' ? 'active' : ''}}" data-tab="post" bindtap="switchTab">作品</view>
+      <view class="tab {{activeTab === 'card' ? 'active' : ''}}" data-tab="card" bindtap="switchTab">卡片</view>
+    </view>
+  </view>
+
+  <view class="publish-entry">
+    <button wx:if="{{activeTab === 'post'}}" class="publish-btn" bindtap="goPostPublish">发布我的作品</button>
+    <button wx:else class="publish-btn" bindtap="goCardPublish">制作我的 card</button>
+  </view>
+
+  <scroll-view class="list" scroll-y bindscrolltolower="loadMore">
+    <block wx:if="{{activeTab === 'post'}}">
+      <block wx:for="{{postList}}" wx:key="post_id">
+        <view class="item" bindtap="openDetail" data-type="post" data-index="{{index}}">
+          <image class="thumb" src="{{item.cover_url}}" mode="aspectFill"></image>
+          <view class="body">
+            <view class="title">{{item.title || '旅行作品'}}</view>
+            <view class="meta">{{item.author_name || '用户'}} · {{item.created_at || ''}}</view>
+            <view class="text">{{item.share_text || '暂无文案'}}</view>
+            <view class="row">
+              <button class="small-btn" catchtap="usePostCard" data-index="{{index}}">使用卡片</button>
+              <button class="small-btn outline" catchtap="favoriteItem" data-type="post" data-index="{{index}}">收藏</button>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+
+    <block wx:else>
+      <block wx:for="{{cardList}}" wx:key="card_id">
+        <view class="item" bindtap="openDetail" data-type="card" data-index="{{index}}">
+          <image class="thumb" src="{{item.image_url}}" mode="aspectFill"></image>
+          <view class="body">
+            <view class="title">{{item.author_name || '用户'}}的卡片</view>
+            <view class="meta">{{item.created_at || ''}}</view>
+            <view class="text">{{item.emotion_text || '暂无情绪描述'}}</view>
+            <view class="row">
+              <button class="small-btn" catchtap="useCard" data-index="{{index}}">立即使用</button>
+              <button class="small-btn outline" catchtap="favoriteItem" data-type="card" data-index="{{index}}">收藏</button>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+
+    <view class="empty" wx:if="{{!loading && currentListLength === 0}}">暂无内容</view>
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+    <view class="loading" wx:if="{{!hasMore && currentListLength > 0}}">没有更多了</view>
+  </scroll-view>
+</view>

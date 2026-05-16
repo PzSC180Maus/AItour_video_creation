@@ -186,6 +186,7 @@ Page({
     const url = this.data.scene_url;
     if (url) {
       app.globalData.task_data.spot_url = url;
+      app.globalData.task_data.card_id = "";
       wx.navigateTo({ url: "../user_custom2/user_custom2" });
     } else {
       wx.showToast({ title: "请先拍照哟😘", icon: "none", duration: 800 });

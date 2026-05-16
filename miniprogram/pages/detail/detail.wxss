@@ -1,0 +1,155 @@
+page {
+  min-height: 100vh;
+  background: #f6fbf9;
+  color: #24372f;
+}
+
+.page {
+  padding: 28rpx;
+  box-sizing: border-box;
+}
+
+.hero,
+.comments {
+  padding: 22rpx;
+  border-radius: 18rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 24rpx rgba(33, 54, 45, 0.08);
+}
+
+.video,
+.image {
+  width: 100%;
+  height: 420rpx;
+  border-radius: 14rpx;
+  background: #e7efea;
+}
+
+.title {
+  margin-top: 20rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.author {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #7f8d87;
+}
+
+.copy {
+  margin-top: 16rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #3c5048;
+}
+
+.main-btn,
+.favorite {
+  height: 78rpx;
+  margin-top: 22rpx;
+  border-radius: 16rpx;
+  background: #20392f;
+  color: #ffffff;
+  font-size: 28rpx;
+}
+
+.main-btn::after,
+.favorite::after {
+  border: 0;
+}
+
+.target {
+  display: flex;
+  justify-content: space-between;
+  gap: 12rpx;
+  margin: 22rpx 0;
+}
+
+.stat {
+  flex: 1;
+  padding: 18rpx 8rpx;
+  border-radius: 14rpx;
+  background: #e8f3ef;
+  text-align: center;
+  font-size: 24rpx;
+  color: #315447;
+}
+
+.favorite {
+  width: 100%;
+  margin-bottom: 22rpx;
+  background: #baf5e6;
+  color: #1f3b31;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  margin-bottom: 12rpx;
+}
+
+.comment-editor {
+  padding-bottom: 18rpx;
+  border-bottom: 1rpx solid #edf2ef;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 132rpx;
+  padding: 18rpx;
+  box-sizing: border-box;
+  border-radius: 14rpx;
+  background: #f2f7f5;
+  font-size: 27rpx;
+  line-height: 1.5;
+}
+
+.comment-btn {
+  height: 72rpx;
+  margin-top: 14rpx;
+  border-radius: 14rpx;
+  background: #20392f;
+  color: #ffffff;
+  font-size: 27rpx;
+}
+
+.comment-btn::after {
+  border: 0;
+}
+
+.comment {
+  display: flex;
+  gap: 16rpx;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #edf2ef;
+}
+
+.avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #dfe9e4;
+}
+
+.comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-name {
+  font-size: 24rpx;
+  color: #788981;
+}
+
+.comment-content {
+  margin-top: 6rpx;
+  font-size: 27rpx;
+  line-height: 1.5;
+}
+
+.empty {
+  padding: 36rpx 0;
+  text-align: center;
+  color: #84938d;
+}

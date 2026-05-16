@@ -1,0 +1,79 @@
+page {
+  min-height: 100vh;
+  background: #f6fbf9;
+}
+
+.page {
+  padding: 28rpx;
+  box-sizing: border-box;
+}
+
+.panel,
+.empty-panel {
+  padding: 22rpx;
+  border-radius: 18rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 24rpx rgba(33, 54, 45, 0.08);
+}
+
+.empty-title {
+  color: #20392f;
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.empty-desc {
+  margin-top: 16rpx;
+  color: #6b7c73;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.video {
+  width: 100%;
+  height: 380rpx;
+  border-radius: 14rpx;
+  background: #e7efea;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  margin-top: 20rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+  border-radius: 14rpx;
+  background: #f2f7f5;
+  font-size: 28rpx;
+}
+
+.textarea {
+  min-height: 220rpx;
+  line-height: 1.5;
+}
+
+.main-btn {
+  height: 82rpx;
+  margin-top: 24rpx;
+  border-radius: 16rpx;
+  background: #20392f;
+  color: #ffffff;
+  font-size: 30rpx;
+}
+
+.main-btn::after {
+  border: 0;
+}
+
+.sub-btn {
+  height: 82rpx;
+  margin-top: 18rpx;
+  border-radius: 16rpx;
+  background: #edf5f1;
+  color: #20392f;
+  font-size: 30rpx;
+}
+
+.sub-btn::after {
+  border: 0;
+}

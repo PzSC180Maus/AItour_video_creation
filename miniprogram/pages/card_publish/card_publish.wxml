@@ -1,0 +1,10 @@
+<view class="page">
+  <view class="panel">
+    <view class="upload" bindtap="chooseImage">
+      <image wx:if="{{imageUrl}}" class="preview" src="{{imageUrl}}" mode="aspectFill"></image>
+      <view wx:else class="placeholder">上传图片</view>
+    </view>
+    <textarea class="textarea" value="{{emotionText}}" bindinput="onTextInput" placeholder="写下这张卡片的情绪和场景" maxlength="-1"></textarea>
+    <button class="main-btn" loading="{{publishing}}" disabled="{{publishing}}" bindtap="publishCard">发布卡片</button>
+  </view>
+</view>

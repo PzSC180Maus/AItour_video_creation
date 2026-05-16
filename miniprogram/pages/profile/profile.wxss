@@ -1,0 +1,104 @@
+page {
+  min-height: 100vh;
+  background: #f6fbf9;
+  color: #24372f;
+}
+
+.page {
+  padding: 28rpx;
+  box-sizing: border-box;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  padding: 22rpx;
+  border-radius: 18rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 24rpx rgba(33, 54, 45, 0.08);
+}
+
+.avatar {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 50%;
+  background: #dfe9e4;
+}
+
+.name {
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
+.sub {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #7d8d86;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin: 22rpx 0;
+}
+
+.tab {
+  padding: 16rpx 20rpx;
+  border-radius: 14rpx;
+  background: #ffffff;
+  font-size: 24rpx;
+  color: #60736b;
+}
+
+.tab.active {
+  background: #baf5e6;
+  color: #15392c;
+  font-weight: 700;
+}
+
+.list {
+  height: calc(100vh - 260rpx);
+}
+
+.item {
+  display: flex;
+  gap: 18rpx;
+  padding: 18rpx;
+  margin-bottom: 16rpx;
+  border-radius: 18rpx;
+  background: #ffffff;
+}
+
+.thumb {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 14rpx;
+  background: #e7efea;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.text {
+  margin-top: 10rpx;
+  max-height: 84rpx;
+  overflow: hidden;
+  font-size: 24rpx;
+  line-height: 1.45;
+  color: #3c5048;
+}
+
+.empty {
+  padding: 48rpx 0;
+  text-align: center;
+  color: #81918a;
+}
