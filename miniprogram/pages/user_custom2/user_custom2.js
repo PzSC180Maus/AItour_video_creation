@@ -101,7 +101,7 @@ Page({
     app.globalData.task_data.request = text || "请根据这张风景照片生成一段富有诗意的短视频脚本。";
 
     wx.navigateTo({
-      url: "../script/script",
+      url: "../dialogue/dialogue",
       fail(err) {
         console.error("跳转 script 失败：", err);
         wx.showToast({

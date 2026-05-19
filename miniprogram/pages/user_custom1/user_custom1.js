@@ -34,18 +34,28 @@ Page({
     currentThumbIndex: 0
   },
 
+  onLoad() {
+    this._uploading = false;
+  },
+
   onShow() {
     const defaultItem = {
       id: "default",
       url: "https://img95.699pic.com/photo/50695/3391.jpg_wh300.jpg!/fh/300/quality/90"
     };
+
+    if (!this.data.imglist || this.data.imglist.length === 0) {
+      this.setData({
+        imglist: [defaultItem],
+        scene_url: "",
+        Selectedimgid: defaultItem.id,
+        currentThumbIndex: 0
+      });
+    }
+
     this.setData({
       guidePhrase: this.pickRandomPhrase(),
-      transitionDuration: 0.6,
-      imglist: [defaultItem],
-      scene_url:"",
-      Selectedimgid: defaultItem.id,
-      currentThumbIndex: 0
+      transitionDuration: 0.6
     });
     this.startAnimation();
   },
@@ -108,7 +118,6 @@ Page({
     return GUIDE_PHRASES[idx];
   },
 
-  // Swiper 滑动时触发
   handleThumbChange(e) {
     if (e.detail.source === 'touch') {
       const idx = e.detail.current;
@@ -123,7 +132,6 @@ Page({
     }
   },
 
-  // 点击胶囊时触发
   chooseImglist(e) {
     const { id, url, index } = e.currentTarget.dataset;
     this.setData({
@@ -134,6 +142,10 @@ Page({
   },
 
   chooseAndUploadImage() {
+    if (this._uploading) {
+      wx.showToast({ title: "正在上传，请稍候", icon: "none" });
+      return;
+    }
     wx.showLoading({ title: "上传中..." });
     wx.chooseMedia({
       count: 1,
@@ -155,29 +167,34 @@ Page({
   },
 
   uploadFile(filePath) {
+    this._uploading = true;
     wx.cloud.uploadFile({
       cloudPath: `user-portrait-${Date.now()}.jpg`,
       filePath: filePath
-    }).then(res => {
-      return wx.cloud.getTempFileURL({ fileList: [res.fileID] });
-    }).then(res => {
-      const tempUrl = res.fileList[0]?.tempFileURL;
+    }).then(uploadRes => {
+      const fileID = uploadRes.fileID;
+      return wx.cloud.getTempFileURL({ fileList: [fileID] })
+        .then(urlRes => ({ fileID, urlRes }));
+    }).then(({ fileID, urlRes }) => {
+      const tempUrl = urlRes.fileList[0]?.tempFileURL;
       if (!tempUrl) throw new Error("获取链接失败");
 
-      const newItem = { id: `img-${Date.now()}`, url: tempUrl };
-      const newImgList = [newItem].concat(this.data.imglist);
+      const newItem = { id: fileID, url: tempUrl };
+      const prevList = (this.data.imglist || []).slice();
+      const newImgList = [newItem, ...prevList];
 
       this.setData({
         imglist: newImgList,
         scene_url: tempUrl,
         Selectedimgid: newItem.id,
-        currentThumbIndex: 0 // 新图片总是在最前面
+        currentThumbIndex: 0
       });
       wx.showToast({ title: "图片已上传", icon: "success" });
     }).catch(err => {
       console.error("上传或获取链接失败:", err);
       wx.showToast({ title: err.message || "上传失败", icon: "none" });
     }).finally(() => {
+      this._uploading = false;
       wx.hideLoading();
     });
   },

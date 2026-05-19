@@ -23,7 +23,7 @@ Page({
       },
       {
         id: 4,
-        cover: "https://ts1.tc.mm.bing.net/th/id/R-C.06b4bace057a98d761aec3635c998d05?rik=cABg0zGGXJF1Pg&riu=http%3a%2f%2fwww.qucaita.com%2ffiles%2fallimg%2f150313%2f23060KK0-0.jpg&ehk=s5yHidA6aAxG%2f2lHVTlRiJBBhZTm%2feze26LL6fbIFXY%3d&risl=&pid=ImgRaw&r=0",
+        cover: "https://ts1.tc.mm.bing.net/th/id/R-C.1fc590286ddb86170ea75016e3442365?rik=FEcHz6ZFAsyfpA&riu=http%3a%2f%2fimg2.selfimg.com.cn%2fuedvoguecms%2f2017%2f03%2f10%2f1489122657_pMQ2k2.jpg&ehk=P%2fkoOvswMxxw77vRT9Fp2nEETpmmdZAZI9kPQ6PW6Kw%3d&risl=&pid=ImgRaw&r=0",
         text: "油菜花田的金黄铺展，层次分明，适合定格春日生机与乡村田园氛围。"
       },
       {
