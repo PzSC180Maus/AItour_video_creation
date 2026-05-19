@@ -59,6 +59,7 @@ Page({
 
     app.globalData.task_data.spot_url = selectedSpot.cover;
     app.globalData.task_data.request = selectedSpot.text;
+    app.globalData.task_data.card_id = "";
 
     wx.navigateTo({
       url: "../dialogue/dialogue",

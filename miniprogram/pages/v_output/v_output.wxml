@@ -25,6 +25,7 @@
 
         <view class="actions">
           <button class="btn" bindtap="saveVideo">保存视频</button>
+          <button class="btn" bindtap="publishPost">发布到广场</button>
           <view class="actions-row">
             <button class="btn outline btn-sm" bindtap="backToExtend">延长视频</button>
             <button class="btn outline btn-sm" bindtap="backToGenerate">重新生成</button>

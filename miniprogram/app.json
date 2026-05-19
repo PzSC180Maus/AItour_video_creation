@@ -3,16 +3,20 @@
   "pages": [
     "pages/index/index",
     "pages/example/index",
-    "pages/user_custom1/user_custom1",
-    "pages/logs/logs",
     "pages/mode_select/mode_select",
+    "pages/user_custom1/user_custom1",
     "pages/user_custom2/user_custom2",
     "pages/scenery_select/scenery_select",
     "pages/dialogue/dialogue",
     "pages/script/script",
     "pages/v_config/v_config",
     "pages/wait/wait",
-    "pages/v_output/v_output"
+    "pages/v_output/v_output",
+    "pages/community/community",
+    "pages/detail/detail",
+    "pages/publish/publish",
+    "pages/card_publish/card_publish",
+    "pages/profile/profile"
   ],
   "window": {
     "backgroundColor": "#F0FAFA",
