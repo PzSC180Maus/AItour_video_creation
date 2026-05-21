@@ -1,5 +1,4 @@
 const communityService = require("../../utils/communityService.js");
-const cardStore = require("../../utils/cardStore.js");
 const profileStore = require("../../utils/profileStore.js");
 const app = getApp();
 
@@ -106,14 +105,10 @@ Page({
     this.setData({ loading: true });
 
     const payload = this.getPayload(tab);
-    const useCloudCard =
-      tab === "mycard" || tab === "card_liked";
-    const requestPromise = useCloudCard
-      ? cardStore.listCardsByIds(payload.card_list || [])
-      : this.requestProfileList(tab, payload).then((resp) => {
-          const data = resp && resp.data ? resp.data : {};
-          return Array.isArray(data.list) ? data.list : [];
-        });
+    const requestPromise = this.requestProfileList(tab, payload).then((resp) => {
+      const data = resp && resp.data ? resp.data : {};
+      return Array.isArray(data.list) ? data.list : [];
+    });
 
     requestPromise
       .then((resp) => {

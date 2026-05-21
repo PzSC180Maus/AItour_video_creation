@@ -1,5 +1,4 @@
 const communityService = require("../../utils/communityService.js");
-const cardStore = require("../../utils/cardStore.js");
 const profileStore = require("../../utils/profileStore.js");
 const app = getApp();
 
@@ -96,19 +95,7 @@ Page({
           throw new Error("card publish failed");
         }
 
-        return cardStore
-          .saveCard({
-            card_id: data.card_id,
-            target_id: data.target_id || "",
-            image_url: this.data.imageUrl,
-            emotion_text: this.data.emotionText,
-            author_openid: openid,
-            author_name: userInfo.nickName || "用户",
-            author_avatar: userInfo.avatarUrl || "",
-            visibility: "public",
-            status: "published"
-          })
-          .then(() => profileStore.saveCreatedId(openid, "card", data.card_id));
+        return profileStore.saveCreatedId(openid, "card", data.card_id);
       })
       .then(() => {
         wx.showToast({

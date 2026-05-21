@@ -36,7 +36,7 @@ Page({
   },
 
   goCreateVideo() {
-    wx.navigateTo({
+    wx.redirectTo({
       url: "/pages/mode_select/mode_select"
     });
   },

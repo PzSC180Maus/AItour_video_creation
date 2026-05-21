@@ -1,5 +1,4 @@
 const communityService = require("../../utils/communityService.js");
-const cardStore = require("../../utils/cardStore.js");
 const commentStore = require("../../utils/commentStore.js");
 const profileStore = require("../../utils/profileStore.js");
 const app = getApp();
@@ -45,24 +44,6 @@ Page({
       item,
       target: this.normalizeTarget(target)
     });
-
-    if (type === "card" && id) {
-      cardStore
-        .getCardById(id)
-        .then((cloudCard) => {
-          if (cloudCard) {
-            this.setData({
-              item: {
-                ...this.data.item,
-                ...cloudCard
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          console.warn("cloud card detail load failed", err);
-        });
-    }
 
     this.loadComments();
   },
@@ -168,18 +149,28 @@ Page({
   useCard() {
     const item = this.data.item || {};
 
-    cardStore
-      .recordUse(item.card_id)
-      .catch((err) => {
-        console.warn("card use count update failed", err);
+    communityService
+      .apiCommunityCardUse({
+        card_id: item.card_id
       })
-      .finally(() => {
-        app.globalData.task_data.spot_url = item.image_url || "";
-        app.globalData.task_data.request = item.emotion_text || "";
+      .then((resp) => {
+        const data = resp && resp.data ? resp.data : {};
+        const card = data.card || data || item;
+
+        app.globalData.task_data.spot_url = card.image_url || item.image_url || "";
+        app.globalData.task_data.request =
+          card.emotion_text || item.emotion_text || "";
         app.globalData.task_data.card_id = item.card_id || "";
 
         wx.navigateTo({
           url: "/pages/dialogue/dialogue"
+        });
+      })
+      .catch((err) => {
+        console.error("使用卡片失败", err);
+        wx.showToast({
+          title: "使用失败",
+          icon: "none"
         });
       });
   },
@@ -202,23 +193,14 @@ Page({
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
 
-        return cardStore.getCardById(item.card_id).then((cloudCard) => {
-          const card = cloudCard || data || {};
+        const card = data.card || data || {};
 
-          app.globalData.task_data.spot_url = card.image_url || "";
-          app.globalData.task_data.request = card.emotion_text || "";
-          app.globalData.task_data.card_id = item.card_id || "";
+        app.globalData.task_data.spot_url = card.image_url || "";
+        app.globalData.task_data.request = card.emotion_text || "";
+        app.globalData.task_data.card_id = item.card_id || "";
 
-          return cardStore
-            .recordUse(item.card_id)
-            .catch((err) => {
-              console.warn("card use count update failed", err);
-            })
-            .then(() => {
-              wx.navigateTo({
-                url: "/pages/dialogue/dialogue"
-              });
-            });
+        wx.navigateTo({
+          url: "/pages/dialogue/dialogue"
         });
       })
       .catch((err) => {

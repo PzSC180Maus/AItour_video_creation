@@ -18,6 +18,12 @@ Page({
     canIUseChooseAvatar: wx.canIUse("chooseAvatar"),
   },
 
+  enterCommunity() {
+    wx.redirectTo({
+      url: "../community/community"
+    });
+  },
+
   onLoad() {
     this.setData({
       logs: (wx.getStorageSync("logs") || []).map((log) => {
@@ -64,9 +70,7 @@ Page({
       console.log('Setting hasNavigated to true');
       app.globalData.hasNavigated = true;
       app.globalData.userInfo = this.data.userInfo;
-      wx.navigateTo({
-        url: '../mode_select/mode_select'
-      });
+      this.enterCommunity();
     }
   },
 
@@ -83,9 +87,7 @@ Page({
     if (hasUserInfo) {
       console.log('Setting hasNavigated to true');
       app.globalData.hasNavigated = true;
-      wx.navigateTo({
-        url: '../mode_select/mode_select'
-      });
+      this.enterCommunity();
     }
   },
 
@@ -96,9 +98,7 @@ Page({
         hasUserInfo: true,
       });
       app.globalData.userInfo = userInfo;
-      wx.navigateTo({
-        url: '../mode_select/mode_select'
-      });
+      this.enterCommunity();
     });
   },
 });
