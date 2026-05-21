@@ -19,10 +19,4 @@ Page({
       url: "../user_custom1/user_custom1",
     });
   },
-
-  community() {
-    wx.navigateTo({
-      url: "../community/community",
-    });
-  },
 });

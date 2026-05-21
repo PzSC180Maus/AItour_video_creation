@@ -3,7 +3,7 @@
   <view class="intro-card">
     <text class="page-title">游览小引</text>
     <text class="page-desc">
-      选择官方模板、个人描述定制，或进入社区广场复用大家分享的作品与卡片。
+      选择官方模板或个人描述定制，完成作品创作。
     </text>
   </view>
 
@@ -14,10 +14,6 @@
 
     <button class="mode-btn secondary-btn" bindtap="personalize">
       个人描述定制
-    </button>
-
-    <button class="mode-btn secondary-btn" bindtap="community">
-      社区广场
     </button>
   </view>
 </view>

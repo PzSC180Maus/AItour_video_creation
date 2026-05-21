@@ -30,6 +30,19 @@ const getMiniProgramCode = async () => {
   return upload.fileID;
 };
 
+// 创建 profiles 集合
+const createProfilesCollection = async () => {
+  try {
+    await db.createCollection("profiles");
+    return { success: true, msg: "profiles collection created" };
+  } catch (e) {
+    if (e.errCode === -502003) {
+      return { success: true, msg: "profiles collection already exists" };
+    }
+    return { success: false, errMsg: e.message };
+  }
+};
+
 // 创建集合
 const createCollection = async () => {
   try {
@@ -181,5 +194,7 @@ exports.main = async (event, context) => {
       return await insertRecord(event);
     case "deleteRecord":
       return await deleteRecord(event);
+    case "createProfilesCollection":
+      return await createProfilesCollection();
   }
 };

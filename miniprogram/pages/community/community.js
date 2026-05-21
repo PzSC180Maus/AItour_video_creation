@@ -1,5 +1,4 @@
 const communityService = require("../../utils/communityService.js");
-const cardStore = require("../../utils/cardStore.js");
 const profileStore = require("../../utils/profileStore.js");
 const app = getApp();
 
@@ -93,24 +92,19 @@ Page({
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
         const list = Array.isArray(data.list) ? data.list : [];
-        const listPromise =
-          type === "card" ? cardStore.hydrateCards(list) : Promise.resolve(list);
-
-        return listPromise.then((hydratedList) => {
-          if (type === "post") {
-            this.setData({
-              postList: hydratedList,
-              postPage: 1,
-              postHasMore: hydratedList.length >= this.data.pageSize
-            });
-          } else {
-            this.setData({
-              cardList: hydratedList,
-              cardPage: 1,
-              cardHasMore: hydratedList.length >= this.data.pageSize
-            });
-          }
-        });
+        if (type === "post") {
+          this.setData({
+            postList: list,
+            postPage: 1,
+            postHasMore: list.length >= this.data.pageSize
+          });
+        } else {
+          this.setData({
+            cardList: list,
+            cardPage: 1,
+            cardHasMore: list.length >= this.data.pageSize
+          });
+        }
       })
       .catch((err) => {
         console.error("社区列表加载失败", err);
@@ -140,24 +134,19 @@ Page({
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
         const list = Array.isArray(data.list) ? data.list : [];
-        const listPromise =
-          type === "card" ? cardStore.hydrateCards(list) : Promise.resolve(list);
-
-        return listPromise.then((hydratedList) => {
-          if (type === "post") {
-            this.setData({
-              postList: this.data.postList.concat(hydratedList),
-              postPage: nextPage,
-              postHasMore: hydratedList.length >= this.data.pageSize
-            });
-          } else {
-            this.setData({
-              cardList: this.data.cardList.concat(hydratedList),
-              cardPage: nextPage,
-              cardHasMore: hydratedList.length >= this.data.pageSize
-            });
-          }
-        });
+        if (type === "post") {
+          this.setData({
+            postList: this.data.postList.concat(list),
+            postPage: nextPage,
+            postHasMore: list.length >= this.data.pageSize
+          });
+        } else {
+          this.setData({
+            cardList: this.data.cardList.concat(list),
+            cardPage: nextPage,
+            cardHasMore: list.length >= this.data.pageSize
+          });
+        }
       })
       .catch((err) => {
         console.error("更多内容加载失败", err);
@@ -206,18 +195,28 @@ Page({
       return;
     }
 
-    cardStore
-      .recordUse(item.card_id)
-      .catch((err) => {
-        console.warn("card use count update failed", err);
+    communityService
+      .apiCommunityCardUse({
+        card_id: item.card_id
       })
-      .finally(() => {
-        app.globalData.task_data.spot_url = item.image_url || "";
-        app.globalData.task_data.request = item.emotion_text || "";
+      .then((resp) => {
+        const data = resp && resp.data ? resp.data : {};
+        const card = data.card || data || item;
+
+        app.globalData.task_data.spot_url = card.image_url || item.image_url || "";
+        app.globalData.task_data.request =
+          card.emotion_text || item.emotion_text || "";
         app.globalData.task_data.card_id = item.card_id || "";
 
         wx.navigateTo({
           url: "/pages/dialogue/dialogue"
+        });
+      })
+      .catch((err) => {
+        console.error("使用卡片失败", err);
+        wx.showToast({
+          title: "使用卡片失败",
+          icon: "none"
         });
       });
   },
@@ -240,23 +239,14 @@ Page({
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
 
-        return cardStore.getCardById(item.card_id).then((cloudCard) => {
-          const card = cloudCard || data || {};
+        const card = data.card || data || {};
 
-          app.globalData.task_data.spot_url = card.image_url || "";
-          app.globalData.task_data.request = card.emotion_text || "";
-          app.globalData.task_data.card_id = item.card_id || "";
+        app.globalData.task_data.spot_url = card.image_url || "";
+        app.globalData.task_data.request = card.emotion_text || "";
+        app.globalData.task_data.card_id = item.card_id || "";
 
-          return cardStore
-            .recordUse(item.card_id)
-            .catch((err) => {
-              console.warn("card use count update failed", err);
-            })
-            .then(() => {
-              wx.navigateTo({
-                url: "/pages/dialogue/dialogue"
-              });
-            });
+        wx.navigateTo({
+          url: "/pages/dialogue/dialogue"
         });
       })
       .catch((err) => {
