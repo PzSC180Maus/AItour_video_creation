@@ -36,7 +36,6 @@ Page({
           .then((urlRes) => {
             const item = urlRes.fileList && urlRes.fileList[0];
             const imageUrl = item && item.tempFileURL;
-
             if (!imageUrl) {
               throw new Error("missing temp file url");
             }
@@ -61,6 +60,37 @@ Page({
     this.setData({ emotionText: e.detail.value });
   },
 
+  normalizeAvatarUrl(avatarUrl) {
+    if (!avatarUrl) {
+      return Promise.resolve("");
+    }
+
+    if (/^https?:\/\//.test(avatarUrl) && !avatarUrl.startsWith("http://tmp/")) {
+      return Promise.resolve(avatarUrl);
+    }
+
+    return wx.cloud
+      .uploadFile({
+        cloudPath: "community-avatar-" + Date.now() + ".jpg",
+        filePath: avatarUrl
+      })
+      .then((uploadRes) =>
+        wx.cloud.getTempFileURL({
+          fileList: [uploadRes.fileID]
+        })
+      )
+      .then((urlRes) => {
+        const item = urlRes.fileList && urlRes.fileList[0];
+        const tempFileURL = item && item.tempFileURL;
+
+        if (!tempFileURL) {
+          throw new Error("missing avatar temp file url");
+        }
+
+        return tempFileURL;
+      });
+  },
+
   publishCard() {
     if (this.data.publishing) {
       return;
@@ -80,14 +110,16 @@ Page({
 
     this.setData({ publishing: true });
 
-    communityService
-      .apiCommunityCardPublish({
-        openid,
-        author_name: userInfo.nickName || "用户",
-        author_avatar: userInfo.avatarUrl || "",
-        image_url: this.data.imageUrl,
-        emotion_text: this.data.emotionText
-      })
+    this.normalizeAvatarUrl(userInfo.avatarUrl || "")
+      .then((authorAvatar) =>
+        communityService.apiCommunityCardPublish({
+          openid,
+          author_name: userInfo.nickName || "用户",
+          author_avatar: authorAvatar,
+          image_url: this.data.imageUrl,
+          emotion_text: this.data.emotionText
+        })
+      )
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
 
