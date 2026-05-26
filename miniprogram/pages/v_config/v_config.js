@@ -137,7 +137,7 @@ Page({
                 });
 
                 app.globalData.task_data.user_potrait = tempUrl;
-
+                
                 wx.showToast({
                   title: "图片已上传",
                   icon: "success"

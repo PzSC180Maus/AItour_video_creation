@@ -13,7 +13,7 @@ Page({
       },
       {
         id: 2,
-        cover: "https://img.daoyounet.com/FileUpload/gui-lin-shi-nei-jing-dian/YuLongHe.jpg",
+        cover: "https://ts3.tc.mm.bing.net/th/id/OIP-C.LLcSqgYu2fp1e19RmkgoMgHaFi?cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3",
         text: "广西桂林阳朔，峰林叠翠，漓江如练，最宜收录山水相映的清朗意境。"
       },
       {

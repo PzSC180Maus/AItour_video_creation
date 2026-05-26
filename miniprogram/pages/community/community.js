@@ -20,7 +20,6 @@ Page({
   onLoad() {
     this.refreshCurrent();
   },
-
   onPullDownRefresh() {
     this.refreshCurrent().finally(() => {
       wx.stopPullDownRefresh();
@@ -296,6 +295,9 @@ Page({
   },
 
   goPostPublish() {
+    app.globalData.task_data = {  
+      card_id: ""
+    };
     wx.navigateTo({
       url: "/pages/publish/publish"
     });

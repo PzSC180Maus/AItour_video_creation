@@ -27,6 +27,13 @@ Page({
     });
   },
 
+  onUnload() {
+    // 清理全局数据，避免残留影响后续任务
+    app.globalData.task_data = {  
+      card_id: ""
+    };
+  },
+
   onTitleInput(e) {
     this.setData({ title: e.detail.value });
   },
