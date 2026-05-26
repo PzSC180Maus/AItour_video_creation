@@ -295,9 +295,7 @@ Page({
   },
 
   goPostPublish() {
-    app.globalData.task_data = {  
-      card_id: ""
-    };
+    app.globalData.task_data.card_id = "";
     wx.navigateTo({
       url: "/pages/publish/publish"
     });
