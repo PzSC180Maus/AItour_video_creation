@@ -13,6 +13,10 @@ function normalizeProfile(openid, data) {
 
   return {
     openid,
+    nickName: (data && data.nickName) || (data && data.nick_name) || "用户",
+    avatarUrl: (data && data.avatarUrl) || (data && data.avatar_url) || "",
+    avatarFileID:
+      (data && data.avatarFileID) || (data && data.avatar_file_id) || "",
     created_post_list: Array.isArray(data && data.created_post_list)
       ? data.created_post_list
       : legacyPostList,
@@ -106,6 +110,59 @@ function updateProfileLists(openid, nextProfile) {
     });
 }
 
+function updateProfileUserInfo(openid, userInfo) {
+  const db = getDb();
+  const safeUserInfo = userInfo || {};
+
+  if (!db || !openid) {
+    return Promise.resolve(normalizeProfile(openid, safeUserInfo));
+  }
+
+  return ensureProfile(openid).then((profile) => {
+    const nextProfile = normalizeProfile(openid, {
+      ...profile,
+      nickName: safeUserInfo.nickName || profile.nickName || "用户",
+      avatarUrl: safeUserInfo.avatarUrl || profile.avatarUrl || "",
+      avatarFileID: safeUserInfo.avatarFileID || profile.avatarFileID || ""
+    });
+
+    return db
+      .collection(PROFILE_COLLECTION)
+      .where({ openid })
+      .limit(1)
+      .get()
+      .then((res) => {
+        const existed = res.data && res.data[0];
+
+        if (existed && existed._id) {
+          return db
+            .collection(PROFILE_COLLECTION)
+            .doc(existed._id)
+            .update({
+              data: {
+                nickName: nextProfile.nickName,
+                avatarUrl: nextProfile.avatarUrl,
+                avatarFileID: nextProfile.avatarFileID,
+                updated_at: Date.now()
+              }
+            })
+            .then(() => nextProfile);
+        }
+
+        return db
+          .collection(PROFILE_COLLECTION)
+          .add({
+            data: {
+              ...nextProfile,
+              created_at: Date.now(),
+              updated_at: Date.now()
+            }
+          })
+          .then(() => nextProfile);
+      });
+  });
+}
+
 function listHasId(list, id) {
   return Array.isArray(list) && list.some((item) => item && item.id === id);
 }
@@ -186,6 +243,7 @@ function toggleFavorite(openid, type, id) {
 
 module.exports = {
   ensureProfile,
+  saveUserInfo: updateProfileUserInfo,
   saveCreatedId,
   toggleFavorite,
   listHasId

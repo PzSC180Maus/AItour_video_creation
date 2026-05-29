@@ -1,5 +1,6 @@
 const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
+const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 Page({
@@ -71,16 +72,21 @@ Page({
 
     this.setData({ publishing: true });
 
-    communityService
-      .apiCommunityPostPublish({
-        openid,
-        card_id: this.data.cardId || "none",
-        author_name: userInfo.nickName || "用户",
-        author_avatar: userInfo.avatarUrl || "",
-        title: this.data.title || "旅行作品",
-        cover_url: this.data.coverUrl || "",
-        video_url: this.data.videoUrl,
-        share_text: this.data.shareText || ""
+    avatarStore
+      .saveUserInfo(openid, userInfo)
+      .then((savedUserInfo) => {
+        app.globalData.userInfo = savedUserInfo;
+
+        return communityService.apiCommunityPostPublish({
+          openid,
+          card_id: this.data.cardId || "none",
+          author_name: savedUserInfo.nickName || "用户",
+          author_avatar: savedUserInfo.avatarUrl || "",
+          title: this.data.title || "旅行作品",
+          cover_url: this.data.coverUrl || "",
+          video_url: this.data.videoUrl,
+          share_text: this.data.shareText || ""
+        });
       })
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};

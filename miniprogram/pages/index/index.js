@@ -1,107 +1,102 @@
-// index.js
-const util = require("../../utils/util.js");
 const app = getApp();
+const avatarStore = require("../../utils/avatarStore.js");
 
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+const DEFAULT_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
 
 Page({
   data: {
-    logs: [],
-    motto: "Your Story, Our Scenery",
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: "",
-    },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse("getUserProfile"),
-    canIUseNicknameComp: wx.canIUse("input.type.nickname"),
-    canIUseChooseAvatar: wx.canIUse("chooseAvatar"),
-  },
-
-  enterCommunity() {
-    wx.redirectTo({
-      url: "../community/community"
-    });
+    avatarUrl: DEFAULT_AVATAR,
+    avatarFileID: "",
+    nickName: "",
+    entering: false
   },
 
   onLoad() {
-    this.setData({
-      logs: (wx.getStorageSync("logs") || []).map((log) => {
-        return {
-          date: util.formatTime(new Date(log)),
-          timeStamp: log,
-        };
-      }),
-    });
-  },
+    const userInfo = app.globalData.userInfo || {};
 
-  onShow() {
-    console.log('onShow triggered, hasNavigated:', app.globalData.hasNavigated, 'globalData:', app.globalData);
-    if (app.globalData.hasNavigated) {
-      console.log('Before reset:', this.data.userInfo);
     this.setData({
-      userInfo: {
-        avatarUrl: defaultAvatarUrl,
-        nickName: "",
-      },
-      hasUserInfo: false,
+      avatarUrl: userInfo.avatarUrl || DEFAULT_AVATAR,
+      avatarFileID: userInfo.avatarFileID || "",
+      nickName: userInfo.nickName || ""
     });
-    console.log('After reset:', this.data.userInfo);
-    app.globalData.userInfo = this.data.userInfo;
-    app.globalData.hasNavigated = false;// 重置逻辑
+
+    if (app.ensureUserInfo) {
+      app.ensureUserInfo().then((savedUserInfo) => {
+        if (!savedUserInfo) {
+          return;
+        }
+
+        this.setData({
+          avatarUrl:
+            this.data.avatarUrl === DEFAULT_AVATAR
+              ? savedUserInfo.avatarUrl || DEFAULT_AVATAR
+              : this.data.avatarUrl,
+          avatarFileID: savedUserInfo.avatarFileID || this.data.avatarFileID || "",
+          nickName: this.data.nickName || savedUserInfo.nickName || ""
+        });
+      });
     }
-  },
-
-  bindViewTap() {
-    wx.navigateTo({
-      url: "../logs/logs",
-    });
   },
 
   onChooseAvatar(e) {
-    const { avatarUrl } = e.detail
-    const { nickName } = this.data.userInfo
-    const hasUserInfo = nickName && avatarUrl && avatarUrl !== defaultAvatarUrl;
+    const avatarUrl = e.detail && e.detail.avatarUrl;
+
+    if (!avatarUrl) {
+      return;
+    }
+
     this.setData({
-      "userInfo.avatarUrl": avatarUrl,
-      hasUserInfo: hasUserInfo,
-    })
-    if (hasUserInfo) {
-      console.log('Setting hasNavigated to true');
-      app.globalData.hasNavigated = true;
-      app.globalData.userInfo = this.data.userInfo;
-      this.enterCommunity();
-    }
-  },
-
-  onInputChange(e) {
-    const nickName = e.detail.value;
-    const newUserInfo = { ...this.data.userInfo, nickName };
-    const hasUserInfo = nickName && newUserInfo.avatarUrl && newUserInfo.avatarUrl !== defaultAvatarUrl;
-    this.setData({ 
-      userInfo: newUserInfo,
-      hasUserInfo: hasUserInfo, 
+      avatarUrl,
+      avatarFileID: ""
     });
-    app.globalData.userInfo = newUserInfo;
-  
-    if (hasUserInfo) {
-      console.log('Setting hasNavigated to true');
-      app.globalData.hasNavigated = true;
-      this.enterCommunity();
-    }
   },
 
-  getUserProfile(e) {
-    app.getUserInfo((userInfo) => {
-      this.setData({
-        userInfo: userInfo,
-        hasUserInfo: true,
+  onNicknameInput(e) {
+    this.setData({
+      nickName: e.detail.value
+    });
+  },
+
+  enterCommunity() {
+    if (this.data.entering) {
+      return;
+    }
+
+    const openid = app.globalData.task_data && app.globalData.task_data.openid;
+    const userInfo = {
+      nickName: this.data.nickName || "用户",
+      avatarUrl: this.data.avatarUrl === DEFAULT_AVATAR ? "" : this.data.avatarUrl,
+      avatarFileID: this.data.avatarFileID
+    };
+
+    if (!openid) {
+      wx.showToast({
+        title: "用户未初始化",
+        icon: "none"
       });
-      app.globalData.userInfo = userInfo;
-      this.enterCommunity();
-    });
-  },
+      return;
+    }
+
+    this.setData({ entering: true });
+
+    avatarStore
+      .saveUserInfo(openid, userInfo)
+      .then((savedUserInfo) => {
+        app.globalData.userInfo = savedUserInfo;
+
+        wx.redirectTo({
+          url: "../community/community"
+        });
+      })
+      .catch((err) => {
+        console.error("用户头像保存失败", err);
+        wx.showToast({
+          title: "头像保存失败",
+          icon: "none"
+        });
+      })
+      .finally(() => {
+        this.setData({ entering: false });
+      });
+  }
 });
-
-
-

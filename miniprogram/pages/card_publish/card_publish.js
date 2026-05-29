@@ -1,5 +1,6 @@
 const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
+const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 Page({
@@ -60,37 +61,6 @@ Page({
     this.setData({ emotionText: e.detail.value });
   },
 
-  normalizeAvatarUrl(avatarUrl) {
-    if (!avatarUrl) {
-      return Promise.resolve("");
-    }
-
-    if (/^https?:\/\//.test(avatarUrl) && !avatarUrl.startsWith("http://tmp/")) {
-      return Promise.resolve(avatarUrl);
-    }
-
-    return wx.cloud
-      .uploadFile({
-        cloudPath: "community-avatar-" + Date.now() + ".jpg",
-        filePath: avatarUrl
-      })
-      .then((uploadRes) =>
-        wx.cloud.getTempFileURL({
-          fileList: [uploadRes.fileID]
-        })
-      )
-      .then((urlRes) => {
-        const item = urlRes.fileList && urlRes.fileList[0];
-        const tempFileURL = item && item.tempFileURL;
-
-        if (!tempFileURL) {
-          throw new Error("missing avatar temp file url");
-        }
-
-        return tempFileURL;
-      });
-  },
-
   publishCard() {
     if (this.data.publishing) {
       return;
@@ -110,16 +80,19 @@ Page({
 
     this.setData({ publishing: true });
 
-    this.normalizeAvatarUrl(userInfo.avatarUrl || "")
-      .then((authorAvatar) =>
-        communityService.apiCommunityCardPublish({
+    avatarStore
+      .saveUserInfo(openid, userInfo)
+      .then((savedUserInfo) => {
+        app.globalData.userInfo = savedUserInfo;
+
+        return communityService.apiCommunityCardPublish({
           openid,
-          author_name: userInfo.nickName || "用户",
-          author_avatar: authorAvatar,
+          author_name: savedUserInfo.nickName || "用户",
+          author_avatar: savedUserInfo.avatarUrl || "",
           image_url: this.data.imageUrl,
           emotion_text: this.data.emotionText
-        })
-      )
+        });
+      })
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
 

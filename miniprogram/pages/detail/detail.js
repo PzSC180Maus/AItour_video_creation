@@ -1,6 +1,7 @@
 const communityService = require("../../utils/communityService.js");
 const commentStore = require("../../utils/commentStore.js");
 const profileStore = require("../../utils/profileStore.js");
+const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 Page({
@@ -121,14 +122,19 @@ Page({
 
     this.setData({ commenting: true });
 
-    commentStore
-      .addComment({
-        target_id: targetId,
-        target_type: this.data.type,
-        author_openid: openid,
-        author_name: userInfo.nickName || "用户",
-        author_avatar: userInfo.avatarUrl || "",
-        content
+    avatarStore
+      .saveUserInfo(openid, userInfo)
+      .then((savedUserInfo) => {
+        app.globalData.userInfo = savedUserInfo;
+
+        return commentStore.addComment({
+          target_id: targetId,
+          target_type: this.data.type,
+          author_openid: openid,
+          author_name: savedUserInfo.nickName || "用户",
+          author_avatar: savedUserInfo.avatarUrl || "",
+          content
+        });
       })
       .then(() => {
         this.setData({ commentInput: "" });

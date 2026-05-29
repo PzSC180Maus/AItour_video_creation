@@ -1,4 +1,7 @@
 // app.js
+const profileStore = require("./utils/profileStore.js");
+const avatarStore = require("./utils/avatarStore.js");
+
 App({
   onLaunch: function () {
     // 1. 初始化全局数据
@@ -35,13 +38,13 @@ App({
     }
 
     // 3. 获取 OpenID
-    this.getOpenId();
+    this.userInfoReady = this.getOpenId();
   },
 
   /** 调用云函数获取 openid */
   getOpenId() {
     const that = this;
-    wx.cloud.callFunction({
+    return wx.cloud.callFunction({
       name: "quickstartFunctions",
       data: {
         type: "getOpenId",
@@ -51,13 +54,61 @@ App({
       if (resp.result && resp.result.openid) {
         that.globalData.task_data.openid = resp.result.openid;
         console.log("✅ OpenID 获取成功:", that.globalData.task_data.openid);
+        return that.loadUserProfile(resp.result.openid);
       } else {
         console.warn("⚠️ 云函数返回异常:", resp);
+        return null;
       }
     })
     .catch((err) => {
       console.error("❌ OpenID 获取失败:", err);
+      return null;
     });
+  },
+
+  loadUserProfile(openid) {
+    if (!openid) {
+      return Promise.resolve(null);
+    }
+
+    return profileStore
+      .ensureProfile(openid)
+      .then((profile) => avatarStore.normalizeAvatar(
+        profile.avatarUrl || "",
+        profile.avatarFileID || ""
+      ).then((avatar) => ({
+        ...profile,
+        avatarUrl: avatar.avatarUrl,
+        avatarFileID: avatar.avatarFileID
+      })))
+      .then((profile) => {
+        const userInfo = {
+          nickName: profile.nickName || "",
+          avatarUrl: profile.avatarUrl || "",
+          avatarFileID: profile.avatarFileID || ""
+        };
+
+        this.globalData.userInfo = userInfo;
+        return userInfo;
+      })
+      .catch((err) => {
+        console.error("❌ 用户资料加载失败:", err);
+        return null;
+      });
+  },
+
+  ensureUserInfo() {
+    if (this.globalData.userInfo) {
+      return Promise.resolve(this.globalData.userInfo);
+    }
+
+    const openid = this.globalData.task_data && this.globalData.task_data.openid;
+
+    if (openid) {
+      return this.loadUserProfile(openid);
+    }
+
+    return this.userInfoReady || Promise.resolve(null);
   },
 
   // 新增方法：获取用户信息并同步到全局数据

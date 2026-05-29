@@ -1,134 +1,117 @@
 /**index.wxss**/
 page {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(
-    180deg,
-    #70efd1 0%,
-    #ddf0ba 45%,
-    #ffffff 100%
-  );
+  background: #ffffff;
 }
 
-page::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.36), transparent 40%),
-    linear-gradient(
-      180deg,
-      rgba(220, 242, 223, 0.22) 0%,
-      rgba(255, 255, 255, 0) 70%
-    );
-  pointer-events: none;
-  z-index: 0;
-}
-
-.container {
+.home-page {
   min-height: 100vh;
-  position: relative;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 120rpx 40rpx 80rpx;
-  box-sizing: border-box;
 }
 
-.scrollarea {
-  flex: 1;
-}
-
-.userinfo {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.hero-image {
   width: 100%;
+  height: 60vh;
+  flex-shrink: 0;
+  display: block;
 }
 
-.avatar-wrapper {
+.login-area {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  margin-top: 0;
+  padding: 20rpx 74rpx 48rpx;
+  box-sizing: border-box;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slogan {
+  width: 100%;
+  margin-bottom: 26rpx;
+  font-size: 38rpx;
+  line-height: 1.2;
+  font-weight: 700;
+  font-style: italic;
+  color: #075b2f;
+  text-align: center;
+  text-shadow: 0 8rpx 10rpx rgba(0, 0, 0, 0.18);
+}
+
+.avatar-button {
+  width: 164rpx;
+  height: 164rpx;
+  margin: 0 0 32rpx;
   padding: 0;
-  width: 132rpx !important;
-  height: 132rpx;
-  border-radius: 24rpx;
-  margin-top: 80rpx;
-  margin-bottom: 72rpx;
-  overflow: hidden;
+  border-radius: 50%;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    rgba(232, 248, 244, 0.74),
-    rgba(201, 232, 226, 0.46)
-  );
-  border: 2rpx solid rgba(255, 255, 255, 0.46);
-  box-shadow:
-    0 16rpx 36rpx rgba(35, 76, 72, 0.14),
-    inset 0 2rpx 0 rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  box-shadow: none;
+  line-height: 1;
 }
 
-.avatar-wrapper::after {
+.avatar-button::after {
   border: none;
 }
 
 .avatar {
+  width: 164rpx;
+  height: 164rpx;
+  border-radius: 50%;
   display: block;
-  width: 112rpx;
-  height: 112rpx;
-  border-radius: 18rpx;
+  background: #edf7f3;
+  box-shadow: 0 14rpx 26rpx rgba(25, 82, 75, 0.16);
 }
 
-.nickname-wrapper {
-  width: 88%;
-  display: flex;
-  align-items: center;
-  padding: 24rpx 28rpx;
+.login-input {
+  width: 100%;
+  height: 88rpx;
+  margin-bottom: 34rpx;
+  padding: 0 54rpx;
   box-sizing: border-box;
-  border-radius: 28rpx;
-  background: linear-gradient(
-    135deg,
-    rgba(239, 250, 247, 0.84),
-    rgba(214, 237, 231, 0.54)
-  );
-  border: 2rpx solid rgba(255, 255, 255, 0.48);
-  box-shadow:
-    0 16rpx 34rpx rgba(31, 72, 69, 0.12),
-    inset 0 2rpx 0 rgba(255, 255, 255, 0.45);
-  color: #173c3c;
+  background: #ffffff;
+  border-left: 4rpx solid #26c8dd;
+  border-right: 4rpx solid #26c8dd;
+  border-bottom: 4rpx solid #26c8dd;
+  border-top: 0;
+  border-radius: 0 0 42rpx 42rpx;
+  color: #263f45;
+  font-size: 34rpx;
+  box-shadow: 0 14rpx 26rpx rgba(0, 0, 0, 0.13);
 }
 
-.nickname-label {
-  width: 132rpx;
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #165757;
-  letter-spacing: 2rpx;
+.input-placeholder {
+  color: #9ba7aa;
 }
 
-.nickname-input {
-  flex: 1;
-  font-size: 30rpx;
-  color: #173c3c;
-  letter-spacing: 2rpx;
-}
-
-.usermotto {
-  position: relative;
-  z-index: 1;
-  margin-top: 400rpx;
-  text-align: center;
-}
-
-.user-motto {
+.start-button {
+  width: 420rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  margin-top: 4rpx;
+  padding: 0;
+  border-radius: 50rpx;
+  background: #3da2bf;
+  color: #ffffff;
   font-size: 42rpx;
-  font-weight: 600;
-  color: #123c3c;
-  letter-spacing: 4rpx;
-  text-shadow:
-    0 2rpx 8rpx rgba(255, 255, 255, 0.42),
-    0 8rpx 18rpx rgba(22, 78, 72, 0.08);
+  font-weight: 700;
+  box-shadow: 0 16rpx 26rpx rgba(0, 0, 0, 0.18);
+}
+
+.start-button::after {
+  border: none;
+}
+
+.start-button:active {
+  background: #338eaa;
+  transform: translateY(2rpx);
 }
