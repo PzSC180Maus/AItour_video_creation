@@ -1,22 +1,51 @@
 <!--pages/script/script.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
+<view class="page">
+  <scroll-view class="scrollarea" scroll-y>
+    <view class="page-shell">
+      <view class="top-bar">
+        <view class="title-pill">视频脚本生成啦~</view>
+      </view>
+
       <view class="script-card">
         <textarea
           class="script-text"
           value="{{scriptContent}}"
           bindinput="onScriptInput"
           placeholder="脚本生成中..."
+          placeholder-class="script-placeholder"
           maxlength="-1"
         />
       </view>
 
-      <button class="main-btn" bindtap="changeVersion" loading="{{loading}}">
-        <text class="main-btn-text">不满意？换一版</text>
-      </button>
+      <view class="action-group">
+        <button class="action-btn primary-btn" bindtap="goConfigPage" disabled="{{loading}}">
+          <text class="action-btn-text">开始生成</text>
+        </button>
 
-      <view class="bottom-tip" bindtap="goConfigPage">
-        <text class="bottom-tip-text">选好了！这个不错</text>
+        <button class="action-btn secondary-btn" bindtap="goBack">
+          <text class="action-btn-text">返回修改</text>
+        </button>
       </view>
+    </view>
+  </scroll-view>
+
+  <view class="bottom-dock">
+    <view class="nav-icon" bindtap="goCommunity">
+      <view class="stack-symbol">
+        <view class="stack-layer stack-layer-top"></view>
+        <view class="stack-layer stack-layer-mid"></view>
+        <view class="stack-layer stack-layer-bottom"></view>
+      </view>
+    </view>
+    <view class="nav-icon compose" bindtap="goCreate">
+      <view class="compose-symbol">
+        <view class="compose-base"></view>
+        <view class="compose-pen-cutout"></view>
+        <view class="compose-pen"></view>
+      </view>
+    </view>
+    <view class="nav-icon" bindtap="goProfile">
+      <view class="user-symbol"></view>
+    </view>
   </view>
-</scroll-view>
+</view>

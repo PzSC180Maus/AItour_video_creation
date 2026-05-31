@@ -1,10 +1,10 @@
-import WxRequest from 'mina-request'
+import WxRequest from "mina-request";
 
-const app = getApp()
+const app = getApp();
 
 const wxRequest = new WxRequest({
-  baseURL: 'https://ruralv.cn'
-})
+  baseURL: "https://ruralv.cn"
+});
 
 Page({
   data: {
@@ -12,19 +12,18 @@ Page({
     url: "/api/script",
     scriptContent: "",
     loading: false,
-    request: "生成这个视频的脚本script."
-    
+    request: "生成这个视频的脚本 script."
   },
 
-onShow() {
-  this.setData({
-    count: app.globalData.task_data.count,
-  });
-  setTimeout(() => {
-    this.initScriptPage();
-  }, 200);
-},
-  
+  onShow() {
+    this.setData({
+      count: app.globalData.task_data.count
+    });
+    setTimeout(() => {
+      this.initScriptPage();
+    }, 200);
+  },
+
   async initScriptPage() {
     try {
       await this.ensureTaskDataReady();
@@ -66,7 +65,7 @@ onShow() {
       }, 200);
     });
   },
-  
+
   async sendTaskData() {
     if (this.data.loading) return;
 
@@ -109,6 +108,16 @@ onShow() {
     await this.sendTaskData();
   },
 
+  goBack() {
+    wx.navigateBack({
+      fail() {
+        wx.redirectTo({
+          url: "/pages/dialogue/dialogue"
+        });
+      }
+    });
+  },
+
   onScriptInput(e) {
     const value = e.detail.value;
 
@@ -144,19 +153,40 @@ onShow() {
 
   goConfigPage() {
     const count = this.data.count;
-    const user_text = "请生成一段适合小红书或朋友圈发布的旅行文案。";
-    if(count==0){
-    wx.navigateTo({
-      url: "../v_config/v_config",
-    });
-  }else{
+    const userText = "请生成一段适合小红书或朋友圈发布的旅行文案。";
+
+    if (count === 0) {
+      wx.navigateTo({
+        url: "../v_config/v_config"
+      });
+      return;
+    }
+
     app.globalData.video_extend = true;
     app.globalData.task_data.video_request = this.data.scriptContent;
-    app.globalData.task_data.request = user_text;
+    app.globalData.task_data.request = userText;
     wx.navigateTo({
-      url:"../wait/wait",
-    })
-  }
-},
+      url: "../wait/wait"
+    });
+  },
+
+  goCommunity() {
+    wx.redirectTo({
+      url: "/pages/community/community"
+    });
+  },
+
+  goCreate() {
+    wx.navigateTo({
+      url: "/pages/scenery_select/scenery_select"
+    });
+  },
+
+  goProfile() {
+    wx.navigateTo({
+      url: "/pages/profile/profile"
+    });
+  },
+
   onShareAppMessage() {}
 });
