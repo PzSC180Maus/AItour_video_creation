@@ -1,5 +1,6 @@
 const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
+const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 Page({
@@ -75,6 +76,55 @@ Page({
     return request ? request(payload) : Promise.resolve({ data: { list: [] } });
   },
 
+  attachAuthorProfiles(list) {
+    const safeList = Array.isArray(list) ? list : [];
+    const openids = safeList.map((item) => item && item.openid).filter(Boolean);
+
+    if (!openids.length) {
+      return Promise.resolve(safeList);
+    }
+
+    return profileStore
+      .getProfilesByOpenids(openids)
+      .then((profileMap) => {
+        const normalizedProfiles = {};
+
+        return Promise.all(
+          Object.keys(profileMap).map((openid) => {
+            const profile = profileMap[openid];
+
+            return avatarStore
+              .normalizeAvatar(profile.avatarUrl || "", profile.avatarFileID || "")
+              .then((avatar) => {
+                normalizedProfiles[openid] = {
+                  ...profile,
+                  avatarUrl: avatar.avatarUrl,
+                  avatarFileID: avatar.avatarFileID
+                };
+              });
+          })
+        ).then(() =>
+          safeList.map((item) => {
+            const profile = normalizedProfiles[item.openid];
+
+            if (!profile) {
+              return item;
+            }
+
+            return {
+              ...item,
+              author_name: profile.nickName || item.author_name || "用户",
+              author_avatar: profile.avatarUrl || item.author_avatar || ""
+            };
+          })
+        );
+      })
+      .catch((err) => {
+        console.error("空间作者资料补全失败", err);
+        return safeList;
+      });
+  },
+
   getPayload(tab) {
     const openid = app.globalData.task_data && app.globalData.task_data.openid;
 
@@ -107,7 +157,8 @@ Page({
     const payload = this.getPayload(tab);
     const requestPromise = this.requestProfileList(tab, payload).then((resp) => {
       const data = resp && resp.data ? resp.data : {};
-      return Array.isArray(data.list) ? data.list : [];
+      const list = Array.isArray(data.list) ? data.list : [];
+      return this.attachAuthorProfiles(list);
     });
 
     requestPromise

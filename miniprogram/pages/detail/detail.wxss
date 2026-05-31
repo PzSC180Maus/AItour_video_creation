@@ -32,9 +32,23 @@ page {
 }
 
 .author {
-  margin-top: 8rpx;
   font-size: 24rpx;
   color: #7f8d87;
+}
+
+.author-line {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 8rpx;
+}
+
+.author-avatar {
+  width: 38rpx;
+  height: 38rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #dfe9e4;
 }
 
 .copy {

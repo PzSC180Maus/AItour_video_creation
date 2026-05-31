@@ -80,8 +80,6 @@ Page({
         return communityService.apiCommunityPostPublish({
           openid,
           card_id: this.data.cardId || "none",
-          author_name: savedUserInfo.nickName || "用户",
-          author_avatar: savedUserInfo.avatarUrl || "",
           title: this.data.title || "旅行作品",
           cover_url: this.data.coverUrl || "",
           video_url: this.data.videoUrl,

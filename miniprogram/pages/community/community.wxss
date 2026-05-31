@@ -121,6 +121,25 @@ page {
   color: #7d8d86;
 }
 
+.author-line {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 8rpx;
+}
+
+.author-line .meta {
+  margin-top: 0;
+}
+
+.author-avatar {
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #e7efea;
+}
+
 .text {
   margin-top: 12rpx;
   min-height: 64rpx;

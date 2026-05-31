@@ -2,7 +2,10 @@
   <view class="hero" wx:if="{{type === 'post'}}">
     <video class="video" src="{{item.video_url}}" poster="{{item.cover_url}}" controls></video>
     <view class="title">{{item.title || '旅行作品'}}</view>
-    <view class="author">{{item.author_name || '用户'}}</view>
+    <view class="author-line">
+      <image class="author-avatar" wx:if="{{item.author_avatar}}" src="{{item.author_avatar}}" mode="aspectFill"></image>
+      <text class="author">{{item.author_name || '用户'}}</text>
+    </view>
     <view class="copy">{{item.share_text || '暂无文案'}}</view>
     <button class="main-btn" bindtap="usePostCard">使用绑定卡片</button>
   </view>
@@ -30,7 +33,7 @@
     </view>
     <block wx:for="{{target.List}}" wx:key="comment_id">
       <view class="comment">
-        <image class="avatar" src="{{item.author_avatar}}" mode="aspectFill"></image>
+        <image class="avatar" wx:if="{{item.author_avatar}}" src="{{item.author_avatar}}" mode="aspectFill"></image>
         <view class="comment-body">
           <view class="comment-name">{{item.author_name || '用户'}}</view>
           <view class="comment-content">{{item.content}}</view>

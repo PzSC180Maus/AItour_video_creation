@@ -1,5 +1,6 @@
 const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
+const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 Page({
@@ -82,6 +83,55 @@ Page({
       : this.requestCommunityCard(page);
   },
 
+  attachAuthorProfiles(list) {
+    const safeList = Array.isArray(list) ? list : [];
+    const openids = safeList.map((item) => item && item.openid).filter(Boolean);
+
+    if (!openids.length) {
+      return Promise.resolve(safeList);
+    }
+
+    return profileStore
+      .getProfilesByOpenids(openids)
+      .then((profileMap) => {
+        const normalizedProfiles = {};
+
+        return Promise.all(
+          Object.keys(profileMap).map((openid) => {
+            const profile = profileMap[openid];
+
+            return avatarStore
+              .normalizeAvatar(profile.avatarUrl || "", profile.avatarFileID || "")
+              .then((avatar) => {
+                normalizedProfiles[openid] = {
+                  ...profile,
+                  avatarUrl: avatar.avatarUrl,
+                  avatarFileID: avatar.avatarFileID
+                };
+              });
+          })
+        ).then(() =>
+          safeList.map((item) => {
+            const profile = normalizedProfiles[item.openid];
+
+            if (!profile) {
+              return item;
+            }
+
+            return {
+              ...item,
+              author_name: profile.nickName || item.author_name || "用户",
+              author_avatar: profile.avatarUrl || item.author_avatar || ""
+            };
+          })
+        );
+      })
+      .catch((err) => {
+        console.error("作者资料补全失败", err);
+        return safeList;
+      });
+  },
+
   refreshCurrent() {
     const type = this.data.activeTab;
 
@@ -91,6 +141,9 @@ Page({
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
         const list = Array.isArray(data.list) ? data.list : [];
+        return this.attachAuthorProfiles(list);
+      })
+      .then((list) => {
         if (type === "post") {
           this.setData({
             postList: list,
@@ -133,6 +186,9 @@ Page({
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
         const list = Array.isArray(data.list) ? data.list : [];
+        return this.attachAuthorProfiles(list);
+      })
+      .then((list) => {
         if (type === "post") {
           this.setData({
             postList: this.data.postList.concat(list),

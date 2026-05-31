@@ -21,7 +21,10 @@
           <image class="thumb" src="{{item.cover_url}}" mode="aspectFill"></image>
           <view class="body">
             <view class="title">{{item.title || '旅行作品'}}</view>
-            <view class="meta">{{item.author_name || '用户'}} · {{item.created_at || ''}}</view>
+            <view class="author-line">
+              <image class="author-avatar" wx:if="{{item.author_avatar}}" src="{{item.author_avatar}}" mode="aspectFill"></image>
+              <text class="meta">{{item.author_name || '用户'}} · {{item.created_at || ''}}</text>
+            </view>
             <view class="text">{{item.share_text || '暂无文案'}}</view>
             <view class="row">
               <button class="small-btn" catchtap="usePostCard" data-index="{{index}}">使用卡片</button>
@@ -38,7 +41,10 @@
           <image class="thumb" src="{{item.image_url}}" mode="aspectFill"></image>
           <view class="body">
             <view class="title">{{item.author_name || '用户'}}的卡片</view>
-            <view class="meta">{{item.created_at || ''}}</view>
+            <view class="author-line">
+              <image class="author-avatar" wx:if="{{item.author_avatar}}" src="{{item.author_avatar}}" mode="aspectFill"></image>
+              <text class="meta">{{item.created_at || ''}}</text>
+            </view>
             <view class="text">{{item.emotion_text || '暂无情绪描述'}}</view>
             <view class="row">
               <button class="small-btn" catchtap="useCard" data-index="{{index}}">立即使用</button>

@@ -32,21 +32,75 @@ Page({
     };
   },
 
+  attachAuthorProfiles(list) {
+    const safeList = Array.isArray(list) ? list : [];
+    const openids = safeList
+      .map((item) => item && (item.openid || item.author_openid))
+      .filter(Boolean);
+
+    if (!openids.length) {
+      return Promise.resolve(safeList);
+    }
+
+    return profileStore
+      .getProfilesByOpenids(openids)
+      .then((profileMap) => {
+        const normalizedProfiles = {};
+
+        return Promise.all(
+          Object.keys(profileMap).map((openid) => {
+            const profile = profileMap[openid];
+
+            return avatarStore
+              .normalizeAvatar(profile.avatarUrl || "", profile.avatarFileID || "")
+              .then((avatar) => {
+                normalizedProfiles[openid] = {
+                  ...profile,
+                  avatarUrl: avatar.avatarUrl,
+                  avatarFileID: avatar.avatarFileID
+                };
+              });
+          })
+        ).then(() =>
+          safeList.map((item) => {
+            const openid = item.openid || item.author_openid;
+            const profile = normalizedProfiles[openid];
+
+            if (!profile) {
+              return item;
+            }
+
+            return {
+              ...item,
+              author_name: profile.nickName || item.author_name || "用户",
+              author_avatar: profile.avatarUrl || item.author_avatar || ""
+            };
+          })
+        );
+      })
+      .catch((err) => {
+        console.error("详情作者资料补全失败", err);
+        return safeList;
+      });
+  },
+
   onLoad(options) {
     const item = app.globalData.community_current_item || {};
     const target = item.target || item.Target || {};
     const type = options.type || item.type || "post";
     const id = options.id || item.post_id || item.card_id || "";
 
-    this.setData({
-      type,
-      id,
-      targetId: options.target_id || item.target_id || "",
-      item,
-      target: this.normalizeTarget(target)
-    });
+    this.attachAuthorProfiles([item]).then((items) => {
+      this.setData({
+        type,
+        id,
+        targetId: options.target_id || item.target_id || "",
+        item: items[0] || item,
+        target: this.normalizeTarget(target)
+      });
 
-    this.loadComments();
+      this.loadComments();
+    });
   },
 
   getCommentTargetId() {
@@ -73,6 +127,7 @@ Page({
 
     return commentStore
       .listByTarget(targetId)
+      .then((comments) => this.attachAuthorProfiles(comments))
       .then((comments) => {
         this.setData({
           target: {
@@ -131,8 +186,6 @@ Page({
           target_id: targetId,
           target_type: this.data.type,
           author_openid: openid,
-          author_name: savedUserInfo.nickName || "用户",
-          author_avatar: savedUserInfo.avatarUrl || "",
           content
         });
       })
