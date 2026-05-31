@@ -1,4 +1,3 @@
-// pages/result/result.js
 const app = getApp();
 
 Page({
@@ -14,8 +13,8 @@ Page({
     const taskData = app.globalData.task_data || {};
 
     this.setData({
-      count: app.globalData.task_data.count,
-      script: app.globalData.task_data.scriptContent,
+      count: taskData.count || 0,
+      script: taskData.scriptContent || "",
       videoUrl: app.globalData.video_url || app.globalData.videoUrl || "",
       coverUrl: taskData.spot_url || "",
       finalResponse: app.globalData.final_response || ""
@@ -29,10 +28,10 @@ Page({
     });
   },
 
-  backToExtend(){
-    const count = this.data.count;
-    const newCount = count + 1;
-    if(newCount >= 3){
+  backToExtend() {
+    const newCount = this.data.count + 1;
+
+    if (newCount >= 3) {
       wx.showToast({
         title: "已达视频延长上限",
         icon: "none"
@@ -41,18 +40,31 @@ Page({
       wx.redirectTo({
         url: "/pages/mode_select/mode_select"
       });
-    }else{
+      return;
+    }
+
     app.globalData.task_data.count = newCount;
     app.globalData.task_data.request = this.data.script;
     wx.redirectTo({
       url: "/pages/dialogue/dialogue"
     });
-  }
   },
 
   publishPost() {
     wx.navigateTo({
       url: "/pages/publish/publish"
+    });
+  },
+
+  goCommunity() {
+    wx.redirectTo({
+      url: "/pages/community/community"
+    });
+  },
+
+  goProfile() {
+    wx.navigateTo({
+      url: "/pages/profile/profile"
     });
   },
 
@@ -74,31 +86,32 @@ Page({
     wx.downloadFile({
       url: videoUrl,
       success(res) {
-        if (res.statusCode === 200) {
-          wx.saveVideoToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success() {
-              wx.hideLoading();
-              wx.showToast({
-                title: "已保存到相册",
-                icon: "success"
-              });
-            },
-            fail() {
-              wx.hideLoading();
-              wx.showToast({
-                title: "保存失败或未授权",
-                icon: "none"
-              });
-            }
-          });
-        } else {
+        if (res.statusCode !== 200) {
           wx.hideLoading();
           wx.showToast({
             title: "下载失败",
             icon: "none"
           });
+          return;
         }
+
+        wx.saveVideoToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success() {
+            wx.hideLoading();
+            wx.showToast({
+              title: "已保存到相册",
+              icon: "success"
+            });
+          },
+          fail() {
+            wx.hideLoading();
+            wx.showToast({
+              title: "保存失败或未授权",
+              icon: "none"
+            });
+          }
+        });
       },
       fail() {
         wx.hideLoading();
@@ -108,5 +121,5 @@ Page({
         });
       }
     });
-  },
+  }
 });

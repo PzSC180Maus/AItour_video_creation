@@ -1,30 +1,68 @@
 <view class="page">
-  <view class="profile">
-    <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
-    <view>
-      <view class="name">{{userInfo.nickName || '用户'}}</view>
-      <view class="sub">我的内容与收藏</view>
+  <view class="profile-head">
+    <view class="top-user-icon"></view>
+    <view class="title-row">
+      <text class="profile-title">Profile</text>
+      <view class="edit-icon"></view>
+    </view>
+    <view class="identity-row">
+      <view class="avatar-wrap">
+        <image wx:if="{{userInfo.avatarUrl}}" class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+        <view wx:else class="avatar avatar-placeholder">
+          <view class="avatar-user-symbol"></view>
+        </view>
+      </view>
+      <view class="identity">
+        <view>Name: {{userInfo.nickName || '用户'}}</view>
+        <view>ID: @{{profile.openid || 'user'}}</view>
+        <view class="follow-row">Following: 10   Friends: 9</view>
+      </view>
+    </view>
+    <view class="chip-row">
+      <view class="chip">⊛ Add friends</view>
+      <view class="chip">⊛ Student</view>
+      <view class="chip">⊛ Designer</view>
     </view>
   </view>
 
-  <view class="tabs">
-    <view class="tab {{activeTab === 'mypost' ? 'active' : ''}}" data-tab="mypost" bindtap="switchTab">我的作品</view>
-    <view class="tab {{activeTab === 'mycard' ? 'active' : ''}}" data-tab="mycard" bindtap="switchTab">我的卡片</view>
-    <view class="tab {{activeTab === 'post_liked' ? 'active' : ''}}" data-tab="post_liked" bindtap="switchTab">收藏作品</view>
-    <view class="tab {{activeTab === 'card_liked' ? 'active' : ''}}" data-tab="card_liked" bindtap="switchTab">收藏卡片</view>
+  <view class="tab-row primary-tabs">
+    <view class="tab {{activeTab === 'mypost' || activeTab === 'mycard' ? 'active' : ''}}" data-tab="mypost" bindtap="switchTab">Mine</view>
+    <view class="tab {{activeTab === 'post_liked' || activeTab === 'card_liked' ? 'active' : ''}}" data-tab="post_liked" bindtap="switchTab">Collections</view>
+  </view>
+  <view class="tab-row secondary-tabs">
+    <view class="tab {{activeTab === 'mypost' || activeTab === 'post_liked' ? 'active' : ''}}" data-tab="{{activeTab === 'post_liked' || activeTab === 'card_liked' ? 'post_liked' : 'mypost'}}" bindtap="switchTab">Videos</view>
+    <view class="tab {{activeTab === 'mycard' || activeTab === 'card_liked' ? 'active' : ''}}" data-tab="{{activeTab === 'post_liked' || activeTab === 'card_liked' ? 'card_liked' : 'mycard'}}" bindtap="switchTab">Model cards</view>
   </view>
 
-  <scroll-view class="list" scroll-y>
-    <block wx:for="{{currentList}}" wx:key="target_id">
-      <view class="item" bindtap="openDetail" data-index="{{index}}">
-        <image class="thumb" src="{{item.cover_url || item.image_url}}" mode="aspectFill"></image>
-        <view class="body">
-          <view class="title">{{item.title || item.author_name || '内容'}}</view>
-          <view class="text">{{item.share_text || item.emotion_text || '暂无内容'}}</view>
+  <scroll-view class="grid-scroll" scroll-y>
+    <view class="grid">
+      <block wx:for="{{currentList}}" wx:key="target_id">
+        <view class="work-card" bindtap="openDetail" data-index="{{index}}">
+          <image class="thumb" src="{{item.cover_url || item.image_url}}" mode="aspectFill"></image>
         </view>
-      </view>
-    </block>
+      </block>
+    </view>
     <view class="empty" wx:if="{{!loading && currentList.length === 0}}">暂无内容</view>
     <view class="empty" wx:if="{{loading}}">加载中...</view>
   </scroll-view>
+
+  <view class="bottom-dock">
+    <view class="nav-icon" bindtap="goCommunity">
+      <view class="stack-symbol">
+        <view class="stack-layer stack-layer-top"></view>
+        <view class="stack-layer stack-layer-mid"></view>
+        <view class="stack-layer stack-layer-bottom"></view>
+      </view>
+    </view>
+    <view class="nav-icon compose" bindtap="goCreate">
+      <view class="compose-symbol">
+        <view class="compose-base"></view>
+        <view class="compose-pen-cutout"></view>
+        <view class="compose-pen"></view>
+      </view>
+    </view>
+    <view class="nav-icon active">
+      <view class="user-symbol"></view>
+    </view>
+  </view>
 </view>

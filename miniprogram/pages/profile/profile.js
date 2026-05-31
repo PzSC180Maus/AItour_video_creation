@@ -7,6 +7,7 @@ Page({
     activeTab: "mypost",
     userInfo: {},
     profile: {
+      openid: "",
       created_post_list: [],
       created_card_list: [],
       favorite_post_list: [],
@@ -79,15 +80,7 @@ Page({
     const openid = app.globalData.task_data && app.globalData.task_data.openid;
 
     if (tab === "mypost" || tab === "mycard") {
-      return tab === "mypost"
-        ? {
-            openid,
-            post_list: this.data.profile.created_post_list || []
-          }
-        : {
-            openid,
-            card_list: this.data.profile.created_card_list || []
-          };
+      return { openid };
     }
 
     if (tab === "post_liked") {
@@ -104,15 +97,10 @@ Page({
   loadTab(tab) {
     this.setData({ loading: true });
 
-    const payload = this.getPayload(tab);
-    const requestPromise = this.requestProfileList(tab, payload).then((resp) => {
-      const data = resp && resp.data ? resp.data : {};
-      return Array.isArray(data.list) ? data.list : [];
-    });
-
-    requestPromise
+    this.requestProfileList(tab, this.getPayload(tab))
       .then((resp) => {
-        const list = Array.isArray(resp) ? resp : [];
+        const data = resp && resp.data ? resp.data : {};
+        const list = Array.isArray(data.list) ? data.list : [];
         const nextCache = {
           ...this.data.cache,
           [tab]: list
@@ -153,6 +141,28 @@ Page({
         encodeURIComponent(item.target_id || "") +
         "&id=" +
         encodeURIComponent(item.post_id || item.card_id || "")
+    });
+  },
+
+  goBack() {
+    wx.navigateBack({
+      fail() {
+        wx.redirectTo({
+          url: "/pages/community/community"
+        });
+      }
+    });
+  },
+
+  goCommunity() {
+    wx.redirectTo({
+      url: "/pages/community/community"
+    });
+  },
+
+  goCreate() {
+    wx.navigateTo({
+      url: "/pages/scenery_select/scenery_select"
     });
   }
 });
