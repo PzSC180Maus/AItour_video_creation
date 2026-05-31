@@ -248,6 +248,16 @@ onInputChange(e) {
   });
 },
 
+goBack() {
+  wx.navigateBack({
+    fail() {
+      wx.redirectTo({
+        url: "/pages/community/community"
+      });
+    }
+  });
+},
+
 async sendUserMessage() {
   if (!this.data.initialized || this.data.loading) {
     return;

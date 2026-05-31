@@ -1,37 +1,78 @@
-<!--pages/scenery_select/scenery_select.wxml-->
-<view class="container">
-  <scroll-view
-    class="rail-scroll"
-    scroll-y="true"
-    show-scrollbar="false"
-    enhanced="true"
-  >
-    <view class="rail-list">
-      <view
-        wx:for="{{spotList}}"
-        wx:key="id"
-        id="spot-{{item.id}}"
-        class="rail-item rail-item-{{index}}"
-      >
-        <view
-          class="card {{current === index ? 'active' : ''}}"
-          data-index="{{index}}"
-          bindtap="selectSpot"
-        >
-          <view class="card-media">
-            <image class="card-image" src="{{item.cover}}" mode="aspectFill"></image>
-            <view class="play-icon"></view>
-          </view>
-
-          <view class="card-content">
-            <text class="card-desc">{{item.text}}</text>
-          </view>
+<view class="page">
+  <view class="top-dock">
+    <view class="dock-icon">
+      <view class="video-symbol"></view>
+    </view>
+    <view class="dock-icon">
+      <view class="card-symbol">
+        <view class="camera-bump"></view>
+        <view class="camera-refresh">
+          <view class="refresh-arc refresh-arc-top"></view>
+          <view class="refresh-arc refresh-arc-bottom"></view>
+          <view class="refresh-arrow refresh-arrow-one"></view>
+          <view class="refresh-arrow refresh-arrow-two"></view>
         </view>
       </view>
     </view>
+    <view class="dock-icon">
+      <view class="search-symbol"></view>
+    </view>
+  </view>
+
+  <scroll-view class="template-scroll" scroll-y>
+    <view class="headline-row">
+      <view class="headline-pill">猜你喜欢</view>
+      <view class="trend">
+        <text class="trend-fire">🔥🔥🔥</text>
+        <text>520视频限定同款模板！</text>
+      </view>
+    </view>
+
+    <view class="feature-grid">
+      <block wx:for="{{spotList}}" wx:key="id">
+        <view wx:if="{{index < 2}}" class="feature-card {{current === index ? 'active' : ''}}" data-index="{{index}}" bindtap="selectSpot">
+          <image class="feature-image" src="{{item.cover}}" mode="aspectFill"></image>
+          <view class="tag">#{{item.text}}</view>
+        </view>
+      </block>
+    </view>
+
+    <view class="recommend-panel">
+      <view class="recommend-head">
+        <view class="recommend-pill">推荐模板</view>
+        <view class="search-bar">
+          <view class="panel-search-symbol"></view>
+        </view>
+      </view>
+      <view class="recommend-grid">
+        <block wx:for="{{recommendList}}" wx:key="id">
+          <view class="template-card {{current === index + 2 ? 'active' : ''}}" data-index="{{index + 2}}" bindtap="selectSpot">
+            <image class="template-image" src="{{item.cover}}" mode="aspectFill"></image>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <button class="confirm-btn" bindtap="confirmSelection">选好啦~就这个模板</button>
   </scroll-view>
 
-  <view class="action-bar">
-    <button class="confirm-btn" bindtap="confirmSelection">选好了</button>
+  <view class="bottom-dock">
+    <view class="nav-icon">
+      <view class="stack-symbol">
+        <view class="stack-layer stack-layer-top"></view>
+        <view class="stack-layer stack-layer-mid"></view>
+        <view class="stack-layer stack-layer-bottom"></view>
+      </view>
+    </view>
+    <view class="nav-icon compose active" bindtap="confirmSelection">
+      <view class="compose-symbol">
+        <view class="compose-base"></view>
+        <view class="compose-pen-cutout"></view>
+        <view class="compose-pen"></view>
+      </view>
+    </view>
+    <view class="nav-icon">
+      <view class="user-symbol"></view>
+    </view>
   </view>
 </view>

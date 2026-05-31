@@ -5,6 +5,7 @@ Page({
   data: {
     current: 0,
     selectedSpot: null,
+    recommendList: [],
     spotList: [
       {
         id: 1,
@@ -44,6 +45,13 @@ Page({
     });
 
     console.log("selected spot:", selectedSpot);
+  },
+
+  onLoad() {
+    this.setData({
+      selectedSpot: this.data.spotList[0],
+      recommendList: this.data.spotList.slice(2)
+    });
   },
 
   confirmSelection() {

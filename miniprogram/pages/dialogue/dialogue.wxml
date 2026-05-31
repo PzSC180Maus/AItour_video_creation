@@ -1,12 +1,22 @@
 <!--pages/dialogue/dialogue.wxml-->
 <view class="page">
+  <view class="ambient ambient-one"></view>
+  <view class="ambient ambient-two"></view>
+  <view class="ambient ambient-three"></view>
+  <view class="ambient ambient-four"></view>
+
+  <view class="top-bar">
+    <button class="back-btn" bindtap="goBack" aria-label="返回"></button>
+    <view class="title-pill">与AI旅拍管家畅聊吧~</view>
+    <view class="top-spacer"></view>
+  </view>
+
   <scroll-view class="chat-scroll" scroll-y scroll-with-animation>
     <view class="chat-list">
       <block wx:for="{{messages}}" wx:key="index">
         <view class="message-row {{item.role === 'user' ? 'user-row' : 'bot-row'}}">
-          <image class="avatar" src="{{item.avatar}}"></image>
+          <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
           <view class="bubble-wrap">
-            <text class="speaker-name">{{item.name}}</text>
             <view class="bubble {{item.role === 'user' ? 'user-bubble' : 'bot-bubble'}}">
               <text class="bubble-text">{{item.content}}</text>
             </view>
@@ -15,9 +25,8 @@
       </block>
 
       <view wx:if="{{showBotTyping}}" class="message-row bot-row">
-        <image class="avatar {{botAnimClass}}" src="{{bot_avatar}}"></image>
+        <image class="avatar {{botAnimClass}}" src="{{bot_avatar}}" mode="aspectFill"></image>
         <view class="bubble-wrap">
-          <text class="speaker-name">{{bot_name}}</text>
           <view class="bubble bot-bubble">
             <text class="bubble-text">正在输入...</text>
           </view>
@@ -28,23 +37,28 @@
 
   <view class="footer">
     <view class="input-bar">
+      <button class="tool-btn camera-btn" aria-label="相册">
+        <image class="tool-icon tool-icon-gallery" src="/images/dialogue/input-gallery.svg" mode="aspectFit"></image>
+      </button>
       <textarea
         class="chat-input"
         value="{{inputValue}}"
         bindinput="onInputChange"
+        bindconfirm="sendUserMessage"
+        confirm-type="send"
         placeholder="{{initialized ? '继续补充你的想法' : '正在初始化对话...'}}"
+        placeholder-class="chat-placeholder"
         auto-height
         maxlength="-1"
         cursor-spacing="24"
         disabled="{{!initialized || loading}}"
       />
-      <button class="send-btn" bindtap="sendUserMessage" disabled="{{!initialized || loading}}">
-        发送
+      <button class="tool-btn mic-btn" aria-label="语音">
+        <image class="tool-icon tool-icon-mic" src="/images/dialogue/input-mic.svg" mode="aspectFit"></image>
+      </button>
+      <button class="tool-btn plus-btn" bindtap="finishDrawing" aria-label="结束并生成">
+        <image class="tool-icon tool-icon-plus" src="/images/dialogue/input-plus.svg" mode="aspectFit"></image>
       </button>
     </view>
-
-    <button class="finish-btn" bindtap="finishDrawing">
-      结束会话
-    </button>
   </view>
 </view>

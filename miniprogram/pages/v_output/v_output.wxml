@@ -1,8 +1,10 @@
 <view class="page">
-  <view class="container">
-    <view class="content">
-      <view class="card">
-        <view class="video-wrap">
+  <scroll-view class="content-scroll" scroll-y show-scrollbar="{{false}}">
+    <view class="content-shell">
+      <view class="video-shell">
+        <view class="petal petal-left"></view>
+        <view class="petal petal-right"></view>
+        <view class="video-card">
           <video
             class="video"
             src="{{videoUrl}}"
@@ -12,26 +14,47 @@
             object-fit="cover"
           ></video>
         </view>
-
-        <view class="headline">您的视频制作完成</view>
-        <view class="desc">下方为本次生成的文案内容</view>
-
-        <view class="copy-card">
-          <view class="copy-title">生成文案</view>
-          <scroll-view class="copy-scroll" scroll-y="true">
-            <text class="copy-text" selectable="{{true}}">{{finalResponse || "暂无生成文案"}}</text>
-          </scroll-view>
-        </view>
-
-        <view class="actions">
-          <button class="btn" bindtap="saveVideo">保存视频</button>
-          <button class="btn" bindtap="publishPost">发布到广场</button>
-          <view class="actions-row">
-            <button class="btn outline btn-sm" bindtap="backToExtend">延长视频</button>
-            <button class="btn outline btn-sm" bindtap="backToGenerate">重新生成</button>
-          </view>
-        </view>
       </view>
+
+      <view class="copy-card">
+        <view class="copy-title">文案推荐：</view>
+        <scroll-view class="copy-scroll" scroll-y>
+          <text class="copy-text" selectable="{{true}}">{{finalResponse || "暂无生成文案"}}</text>
+        </scroll-view>
+      </view>
+
+      <view class="tag-card">
+        <text class="tag-text">{{finalResponse || "#我的旅行视频 #AI旅拍 #记录此刻"}}</text>
+      </view>
+
+      <view class="actions-panel">
+        <button class="action-pill action-pill-primary" bindtap="saveVideo">
+          <text>下载视频</text>
+          <view class="download-icon"></view>
+        </button>
+        <button class="action-pill action-pill-secondary" bindtap="publishPost">发布作品</button>
+        <button class="action-pill action-pill-secondary" bindtap="backToGenerate">重新生成</button>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="bottom-dock">
+    <view class="nav-icon" bindtap="goCommunity">
+      <view class="stack-symbol">
+        <view class="stack-layer stack-layer-top"></view>
+        <view class="stack-layer stack-layer-mid"></view>
+        <view class="stack-layer stack-layer-bottom"></view>
+      </view>
+    </view>
+    <view class="nav-icon compose" bindtap="publishPost">
+      <view class="compose-symbol">
+        <view class="compose-base"></view>
+        <view class="compose-pen-cutout"></view>
+        <view class="compose-pen"></view>
+      </view>
+    </view>
+    <view class="nav-icon" bindtap="goProfile">
+      <view class="user-symbol"></view>
     </view>
   </view>
 </view>

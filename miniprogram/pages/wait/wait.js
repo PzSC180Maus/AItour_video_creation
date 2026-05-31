@@ -88,12 +88,13 @@ Page({
 }
 
       const videoData = videoResp && videoResp.data ? videoResp.data : {};
+      const videoTaskId = videoData.video_id || videoData.task_id || "";
 
-      if (videoData.task_id) {
+      if (videoTaskId) {
         app.globalData.task_data = {
           ...(app.globalData.task_data || {}),
-          task_id: videoData.task_id,
-          video_id: videoData.task_id
+          task_id: videoTaskId,
+          video_id: videoTaskId
         };
       }
       this.setData({
@@ -101,6 +102,16 @@ Page({
       });
       wx.hideLoading();
       console.log("轮询使用的 task_data:", app.globalData.task_data);
+
+      if (!videoTaskId) {
+        console.error("视频任务启动成功但缺少 video_id/task_id:", videoData);
+        wx.showToast({
+          title: "视频任务创建异常",
+          icon: "none"
+        });
+        return;
+      }
+
       this.startPolling();
     } catch (err) {
       wx.hideLoading();
@@ -174,8 +185,23 @@ Page({
   async checkVideoStatus() {
     try {
       const taskData = app.globalData.task_data || {};
+      const pollingVideoId = taskData.video_id || taskData.task_id;
 
-      const pollingTaskData = { ...taskData };
+      if (!pollingVideoId) {
+        this.clearPolling();
+        this.clearFakeProgress();
+        wx.showToast({
+          title: "缺少视频任务ID",
+          icon: "none"
+        });
+        return;
+      }
+
+      const pollingTaskData = {
+        ...taskData,
+        task_id: pollingVideoId,
+        video_id: pollingVideoId
+      };
 
       const resp = await wxRequest.post(this.data.videoStatusUrl, {
         task_data: pollingTaskData
@@ -212,6 +238,15 @@ Page({
       }
     } catch (err) {
       console.error("轮询视频状态失败：", err);
+      const detail =
+        err &&
+        err.response &&
+        err.response.data &&
+        (err.response.data.detail || err.response.data.error_message);
+
+      if (detail) {
+        console.error("状态查询失败详情:", detail);
+      }
     }
   },
 

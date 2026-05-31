@@ -11,7 +11,13 @@ function post(url, data) {
       header: {
         "Content-Type": "application/json"
       },
-      success: resolve,
+      success: (resp) => {
+        if (resp.statusCode >= 400) {
+          reject(resp);
+          return;
+        }
+        resolve(resp);
+      },
       fail: reject
     });
   });

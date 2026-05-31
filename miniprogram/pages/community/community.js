@@ -15,12 +15,15 @@ Page({
     cardHasMore: true,
     loading: false,
     currentListLength: 0,
-    hasMore: true
+    hasMore: true,
+    leftList: [],
+    rightList: []
   },
 
   onLoad() {
     this.refreshCurrent();
   },
+
   onPullDownRefresh() {
     this.refreshCurrent().finally(() => {
       wx.stopPullDownRefresh();
@@ -34,10 +37,27 @@ Page({
       this.data.activeTab === "post"
         ? this.data.postHasMore
         : this.data.cardHasMore;
+    const leftList = [];
+    const rightList = [];
+
+    list.forEach((item, index) => {
+      const nextItem = {
+        ...item,
+        __index: index
+      };
+
+      if (index % 2 === 0) {
+        leftList.push(nextItem);
+      } else {
+        rightList.push(nextItem);
+      }
+    });
 
     this.setData({
       currentListLength: list.length,
-      hasMore
+      hasMore,
+      leftList,
+      rightList
     });
   },
 
@@ -144,6 +164,7 @@ Page({
         return this.attachAuthorProfiles(list);
       })
       .then((list) => {
+
         if (type === "post") {
           this.setData({
             postList: list,
@@ -189,6 +210,7 @@ Page({
         return this.attachAuthorProfiles(list);
       })
       .then((list) => {
+
         if (type === "post") {
           this.setData({
             postList: this.data.postList.concat(list),
@@ -293,7 +315,6 @@ Page({
       })
       .then((resp) => {
         const data = resp && resp.data ? resp.data : {};
-
         const card = data.card || data || {};
 
         app.globalData.task_data.spot_url = card.image_url || "";
@@ -355,6 +376,15 @@ Page({
     wx.navigateTo({
       url: "/pages/publish/publish"
     });
+  },
+
+  goPublishCurrent() {
+    if (this.data.activeTab === "post") {
+      this.goPostPublish();
+      return;
+    }
+
+    this.goCardPublish();
   },
 
   goProfile() {
