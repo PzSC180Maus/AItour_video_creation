@@ -87,8 +87,6 @@ Page({
 
         return communityService.apiCommunityCardPublish({
           openid,
-          author_name: savedUserInfo.nickName || "用户",
-          author_avatar: savedUserInfo.avatarUrl || "",
           image_url: this.data.imageUrl,
           emotion_text: this.data.emotionText
         });

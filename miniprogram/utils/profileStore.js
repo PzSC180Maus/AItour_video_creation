@@ -66,6 +66,35 @@ function ensureProfile(openid) {
     });
 }
 
+function getProfilesByOpenids(openids) {
+  const db = getDb();
+  const uniqueOpenids = Array.from(new Set((openids || []).filter(Boolean)));
+
+  if (!db || !uniqueOpenids.length) {
+    return Promise.resolve({});
+  }
+
+  const _ = db.command;
+
+  return db
+    .collection(PROFILE_COLLECTION)
+    .where({
+      openid: _.in(uniqueOpenids)
+    })
+    .get()
+    .then((res) => {
+      const profiles = {};
+      const list = Array.isArray(res.data) ? res.data : [];
+
+      list.forEach((item) => {
+        const profile = normalizeProfile(item.openid, item);
+        profiles[profile.openid] = profile;
+      });
+
+      return profiles;
+    });
+}
+
 function updateProfileLists(openid, nextProfile) {
   const db = getDb();
 
@@ -243,6 +272,7 @@ function toggleFavorite(openid, type, id) {
 
 module.exports = {
   ensureProfile,
+  getProfilesByOpenids,
   saveUserInfo: updateProfileUserInfo,
   saveCreatedId,
   toggleFavorite,
