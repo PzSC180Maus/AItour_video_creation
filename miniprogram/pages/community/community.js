@@ -3,6 +3,8 @@ const profileStore = require("../../utils/profileStore.js");
 const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
+const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
+
 Page({
   data: {
     activeTab: "post",
@@ -103,9 +105,15 @@ Page({
       : this.requestCommunityCard(page);
   },
 
+  getAuthorOpenid(item) {
+    return item && (item.openid || item.author_openid || item.user_openid || "");
+  },
+
   attachAuthorProfiles(list) {
     const safeList = Array.isArray(list) ? list : [];
-    const openids = safeList.map((item) => item && item.openid).filter(Boolean);
+    const openids = safeList
+      .map((item) => this.getAuthorOpenid(item))
+      .filter(Boolean);
 
     if (!openids.length) {
       return Promise.resolve(safeList);
@@ -128,20 +136,33 @@ Page({
                   avatarUrl: avatar.avatarUrl,
                   avatarFileID: avatar.avatarFileID
                 };
+              })
+              .catch((err) => {
+                console.warn("作者头像链接转换失败:", openid, err);
+                normalizedProfiles[openid] = {
+                  ...profile,
+                  avatarUrl: profile.avatarUrl || DEFAULT_USER_AVATAR,
+                  avatarFileID: profile.avatarFileID || ""
+                };
               });
           })
         ).then(() =>
           safeList.map((item) => {
-            const profile = normalizedProfiles[item.openid];
+            const profile = normalizedProfiles[this.getAuthorOpenid(item)];
 
             if (!profile) {
-              return item;
+              return {
+                ...item,
+                author_name: item.author_name || "用户",
+                author_avatar: item.author_avatar || DEFAULT_USER_AVATAR
+              };
             }
 
             return {
               ...item,
               author_name: profile.nickName || item.author_name || "用户",
-              author_avatar: profile.avatarUrl || item.author_avatar || ""
+              author_avatar:
+                profile.avatarUrl || item.author_avatar || DEFAULT_USER_AVATAR
             };
           })
         );
