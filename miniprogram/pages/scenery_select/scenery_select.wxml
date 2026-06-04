@@ -1,24 +1,4 @@
-<view class="page">
-  <view class="top-dock">
-    <view class="dock-icon">
-      <view class="video-symbol"></view>
-    </view>
-    <view class="dock-icon">
-      <view class="card-symbol">
-        <view class="camera-bump"></view>
-        <view class="camera-refresh">
-          <view class="refresh-arc refresh-arc-top"></view>
-          <view class="refresh-arc refresh-arc-bottom"></view>
-          <view class="refresh-arrow refresh-arrow-one"></view>
-          <view class="refresh-arrow refresh-arrow-two"></view>
-        </view>
-      </view>
-    </view>
-    <view class="dock-icon">
-      <view class="search-symbol"></view>
-    </view>
-  </view>
-
+ <home-back-button></home-back-button>
   <scroll-view class="template-scroll" scroll-y>
     <view class="headline-row">
       <view class="headline-pill">猜你喜欢</view>
@@ -52,27 +32,5 @@
         </block>
       </view>
     </view>
-
-    <button class="confirm-btn" bindtap="confirmSelection">选好啦~就这个模板</button>
   </scroll-view>
-
-  <view class="bottom-dock">
-    <view class="nav-icon">
-      <view class="stack-symbol">
-        <view class="stack-layer stack-layer-top"></view>
-        <view class="stack-layer stack-layer-mid"></view>
-        <view class="stack-layer stack-layer-bottom"></view>
-      </view>
-    </view>
-    <view class="nav-icon compose active" bindtap="confirmSelection">
-      <view class="compose-symbol">
-        <view class="compose-base"></view>
-        <view class="compose-pen-cutout"></view>
-        <view class="compose-pen"></view>
-      </view>
-    </view>
-    <view class="nav-icon">
-      <view class="user-symbol"></view>
-    </view>
-  </view>
-</view>
+  <button class="confirm-btn" bindtap="confirmSelection">选好啦~就这个模板</button>

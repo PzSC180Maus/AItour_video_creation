@@ -19,7 +19,8 @@ Page({
     currentListLength: 0,
     hasMore: true,
     leftList: [],
-    rightList: []
+    rightList: [],
+    showPublishMenu: false
   },
 
   onLoad() {
@@ -385,7 +386,14 @@ Page({
         });
       });
   },
+  goPublishCurrent() {
+    this.setData({ showPublishMenu: true });
+  },
 
+  // 隐藏发布菜单
+  hidePublishMenu() {
+    this.setData({ showPublishMenu: false });
+  },
   goCardPublish() {
     wx.navigateTo({
       url: "/pages/card_publish/card_publish"
@@ -397,17 +405,7 @@ Page({
     wx.navigateTo({
       url: "/pages/publish/publish"
     });
-  },
-
-  goPublishCurrent() {
-    if (this.data.activeTab === "post") {
-      this.goPostPublish();
-      return;
-    }
-
-    this.goCardPublish();
-  },
-
+  }, 
   goProfile() {
     wx.navigateTo({
       url: "/pages/profile/profile"

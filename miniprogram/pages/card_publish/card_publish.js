@@ -1,6 +1,4 @@
 const communityService = require("../../utils/communityService.js");
-const profileStore = require("../../utils/profileStore.js");
-const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 Page({
@@ -62,62 +60,47 @@ Page({
   },
 
   publishCard() {
-    if (this.data.publishing) {
-      return;
-    }
+  if (this.data.publishing) {
+    return;
+  }
 
-    const taskData = app.globalData.task_data || {};
-    const userInfo = app.globalData.userInfo || {};
-    const openid = taskData.openid || "";
+  const taskData = app.globalData.task_data || {};
+  const openid = taskData.openid || "";
 
-    if (!openid || !this.data.imageUrl || !this.data.emotionText.trim()) {
+  if (!openid || !this.data.imageUrl || !this.data.emotionText.trim()) {
+    wx.showToast({
+      title: "请补全卡片信息",
+      icon: "none"
+    });
+    return;
+  }
+
+  this.setData({ publishing: true });
+
+  communityService
+    .apiCommunityCardPublish({
+      openid,
+      image_url: this.data.imageUrl,
+      emotion_text: this.data.emotionText
+    })
+    .then(() => {
       wx.showToast({
-        title: "请补全卡片信息",
+        title: "发布成功",
+        icon: "success"
+      });
+      wx.redirectTo({
+        url: "/pages/community/community"
+      });
+    })
+    .catch((err) => {
+      console.error("发布卡片失败", err);
+      wx.showToast({
+        title: "发布失败",
         icon: "none"
       });
-      return;
-    }
-
-    this.setData({ publishing: true });
-
-    avatarStore
-      .saveUserInfo(openid, userInfo)
-      .then((savedUserInfo) => {
-        app.globalData.userInfo = savedUserInfo;
-
-        return communityService.apiCommunityCardPublish({
-          openid,
-          image_url: this.data.imageUrl,
-          emotion_text: this.data.emotionText
-        });
-      })
-      .then((resp) => {
-        const data = resp && resp.data ? resp.data : {};
-
-        if (!data.success || !data.card_id) {
-          throw new Error("card publish failed");
-        }
-
-        return profileStore.saveCreatedId(openid, "card", data.card_id);
-      })
-      .then(() => {
-        wx.showToast({
-          title: "发布成功",
-          icon: "success"
-        });
-        wx.redirectTo({
-          url: "/pages/community/community"
-        });
-      })
-      .catch((err) => {
-        console.error("发布卡片失败", err);
-        wx.showToast({
-          title: "发布失败",
-          icon: "none"
-        });
-      })
-      .finally(() => {
-        this.setData({ publishing: false });
-      });
-  }
+    })
+    .finally(() => {
+      this.setData({ publishing: false });
+    });
+}
 });

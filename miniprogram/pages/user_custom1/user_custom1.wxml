@@ -1,4 +1,5 @@
 <view class="page">
+      <home-back-button></home-back-button>
   <swiper
     class="img-strip"
     current="{{currentThumbIndex}}"

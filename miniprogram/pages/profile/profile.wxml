@@ -1,4 +1,27 @@
 <view class="page">
+  <!-- 发布菜单遮罩层 -->
+  <view class="publish-overlay {{showPublishMenu ? 'show' : ''}}" bindtap="hidePublishMenu" catchtouchmove="preventMove"></view>
+  
+  <!-- 发布菜单弹出层 -->
+  <view class="publish-menu {{showPublishMenu ? 'show' : ''}}">
+  <view class="menu-item" catchtap="goPublishPost">
+    <view class="menu-icon">
+      <view class="post-symbol">
+        <view class="post-symbol-play"></view>
+      </view>
+    </view>
+    <text class="menu-text">发布视频帖子</text>
+  </view>
+  <view class="menu-item" catchtap="goCreateTemplate">
+    <view class="menu-icon">
+      <view class="template-symbol">
+        <view class="template-symbol-grid"></view>
+      </view>
+    </view>
+    <text class="menu-text">制作视频模板</text>
+  </view>
+</view>
+
   <view class="profile-head">
     <view class="top-user-icon"></view>
     <view class="title-row">
@@ -26,25 +49,34 @@
   </view>
 
   <view class="tab-row primary-tabs">
-    <view class="tab {{activeTab === 'mypost' || activeTab === 'mycard' ? 'active' : ''}}" data-tab="mypost" bindtap="switchTab">Mine</view>
-    <view class="tab {{activeTab === 'post_liked' || activeTab === 'card_liked' ? 'active' : ''}}" data-tab="post_liked" bindtap="switchTab">Collections</view>
+    <view class="tab {{activeTab === 'mypost' ? 'active' : ''}}" data-tab="mypost" bindtap="switchTab">我的帖子</view>
+    <view class="tab {{activeTab === 'mycard' ? 'active' : ''}}" data-tab="mycard" bindtap="switchTab">我制作的模板</view>
   </view>
   <view class="tab-row secondary-tabs">
-    <view class="tab {{activeTab === 'mypost' || activeTab === 'post_liked' ? 'active' : ''}}" data-tab="{{activeTab === 'post_liked' || activeTab === 'card_liked' ? 'post_liked' : 'mypost'}}" bindtap="switchTab">Videos</view>
-    <view class="tab {{activeTab === 'mycard' || activeTab === 'card_liked' ? 'active' : ''}}" data-tab="{{activeTab === 'post_liked' || activeTab === 'card_liked' ? 'card_liked' : 'mycard'}}" bindtap="switchTab">Model cards</view>
+    <view class="tab {{activeTab === 'post_liked' ? 'active' : ''}}" data-tab="post_liked" bindtap="switchTab">收藏帖子</view>
+    <view class="tab {{activeTab === 'card_liked' ? 'active' : ''}}" data-tab="card_liked" bindtap="switchTab">收藏模板</view>
   </view>
 
-  <scroll-view class="grid-scroll" scroll-y>
-    <view class="grid">
-      <block wx:for="{{currentList}}" wx:key="target_id">
-        <view class="work-card" bindtap="openDetail" data-index="{{index}}">
+<scroll-view class="grid-scroll" scroll-y>
+  <view class="grid">
+    <block wx:for="{{currentList}}" wx:key="target_id">
+      <view class="work-card" bindtap="openDetail" data-index="{{index}}">
+        <view class="card-container">
           <image class="thumb" src="{{item.cover_url || item.image_url}}" mode="aspectFill"></image>
+          <!-- 根据 post_id 判断类型显示标题 -->
+          <view class="card-title" wx:if="{{item.post_id && item.title}}">
+            <text class="title-text">{{item.title}}</text>
+          </view>
+          <view class="card-title" wx:elif="{{!item.post_id && item.emotion_text}}">
+            <text class="title-text">{{item.emotion_text}}</text>
+          </view>
         </view>
-      </block>
-    </view>
-    <view class="empty" wx:if="{{!loading && currentList.length === 0}}">暂无内容</view>
-    <view class="empty" wx:if="{{loading}}">加载中...</view>
-  </scroll-view>
+      </view>
+    </block>
+  </view>
+  <view class="empty" wx:if="{{!loading && currentList.length === 0}}">暂无内容</view>
+  <view class="empty" wx:if="{{loading}}">加载中...</view>
+</scroll-view>
 
   <view class="bottom-dock">
     <view class="nav-icon" bindtap="goCommunity">

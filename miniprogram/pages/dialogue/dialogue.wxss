@@ -61,16 +61,12 @@ page {
 
 .top-bar {
   position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: 72rpx 1fr 72rpx;
+  display: flex;
   align-items: center;
-  gap: 18rpx;
-  padding-top: env(safe-area-inset-top);
-  margin-bottom: 36rpx;
+  justify-content: center;
 }
 
-.back-btn,
+
 .tool-btn {
   padding: 0;
   margin: 0;
@@ -81,34 +77,9 @@ page {
   box-sizing: border-box;
 }
 
-.back-btn::after,
+
 .tool-btn::after {
   border: 0;
-}
-
-.back-btn {
-  position: relative;
-  width: 72rpx;
-  min-width: 72rpx;
-  max-width: 72rpx;
-  height: 72rpx;
-  min-height: 72rpx;
-  max-height: 72rpx;
-  border-radius: 50%;
-  background: rgba(255, 248, 234, 0.96);
-  box-shadow: 0 10rpx 26rpx rgba(72, 59, 37, 0.12);
-}
-
-.back-btn::before {
-  content: "";
-  position: absolute;
-  left: 28rpx;
-  top: 23rpx;
-  width: 18rpx;
-  height: 18rpx;
-  border-left: 4rpx solid #1e312f;
-  border-bottom: 4rpx solid #1e312f;
-  transform: rotate(45deg);
 }
 
 .title-pill {
@@ -158,8 +129,8 @@ page {
 }
 
 .avatar {
-  width: 66rpx;
-  height: 66rpx;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
   flex-shrink: 0;
   background: #d7efe8;

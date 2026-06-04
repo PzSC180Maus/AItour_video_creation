@@ -56,18 +56,6 @@ Page({
     });
   },
 
-  goCommunity() {
-    wx.redirectTo({
-      url: "/pages/community/community"
-    });
-  },
-
-  goProfile() {
-    wx.navigateTo({
-      url: "/pages/profile/profile"
-    });
-  },
-
   saveVideo() {
     const videoUrl = this.data.videoUrl;
 

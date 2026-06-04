@@ -32,57 +32,71 @@ Page({
     };
   },
 
-  attachAuthorProfiles(list) {
-    const safeList = Array.isArray(list) ? list : [];
-    const openids = safeList
-      .map((item) => item && (item.openid || item.author_openid))
-      .filter(Boolean);
+ attachAuthorProfiles(list) {
+  const safeList = Array.isArray(list) ? list : [];
+  const openids = safeList
+    .map((item) => item && (item.openid || item.author_openid))
+    .filter(Boolean);
 
-    if (!openids.length) {
-      return Promise.resolve(safeList);
-    }
+  if (!openids.length) {
+    return Promise.resolve(safeList);
+  }
 
-    return profileStore
-      .getProfilesByOpenids(openids)
-      .then((profileMap) => {
-        const normalizedProfiles = {};
+  const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
 
-        return Promise.all(
-          Object.keys(profileMap).map((openid) => {
-            const profile = profileMap[openid];
+  return profileStore
+    .getProfilesByOpenids(openids)
+    .then((profileMap) => {
+      const normalizedProfiles = {};
 
-            return avatarStore
-              .normalizeAvatar(profile.avatarUrl || "", profile.avatarFileID || "")
-              .then((avatar) => {
-                normalizedProfiles[openid] = {
-                  ...profile,
-                  avatarUrl: avatar.avatarUrl,
-                  avatarFileID: avatar.avatarFileID
-                };
-              });
-          })
-        ).then(() =>
-          safeList.map((item) => {
-            const openid = item.openid || item.author_openid;
-            const profile = normalizedProfiles[openid];
+      return Promise.all(
+        Object.keys(profileMap).map((openid) => {
+          const profile = profileMap[openid];
 
-            if (!profile) {
-              return item;
-            }
+          return avatarStore
+            .normalizeAvatar(profile.avatarUrl || "", profile.avatarFileID || "")
+            .then((avatar) => {
+              normalizedProfiles[openid] = {
+                ...profile,
+                avatarUrl: avatar.avatarUrl,
+                avatarFileID: avatar.avatarFileID
+              };
+            })
+            .catch((err) => {
+              console.warn("作者头像链接转换失败:", openid, err);
+              normalizedProfiles[openid] = {
+                ...profile,
+                avatarUrl: profile.avatarUrl || DEFAULT_USER_AVATAR,
+                avatarFileID: profile.avatarFileID || ""
+              };
+            });
+        })
+      ).then(() =>
+        safeList.map((item) => {
+          const openid = item.openid || item.author_openid;
+          const profile = normalizedProfiles[openid];
 
+          if (!profile) {
             return {
               ...item,
-              author_name: profile.nickName || item.author_name || "用户",
-              author_avatar: profile.avatarUrl || item.author_avatar || ""
+              author_name: item.author_name || "用户",
+              author_avatar: item.author_avatar || DEFAULT_USER_AVATAR
             };
-          })
-        );
-      })
-      .catch((err) => {
-        console.error("详情作者资料补全失败", err);
-        return safeList;
-      });
-  },
+          }
+
+          return {
+            ...item,
+            author_name: profile.nickName || item.author_name || "用户",
+            author_avatar: profile.avatarUrl || item.author_avatar || DEFAULT_USER_AVATAR
+          };
+        })
+      );
+    })
+    .catch((err) => {
+      console.error("作者资料补全失败", err);
+      return safeList;
+    });
+},
 
   onLoad(options) {
     const item = app.globalData.community_current_item || {};
@@ -158,52 +172,46 @@ Page({
   },
 
   submitComment() {
-    if (this.data.commenting) {
-      return;
-    }
+  if (this.data.commenting) {
+    return;
+  }
 
-    const content = (this.data.commentInput || "").trim();
-    const targetId = this.getCommentTargetId();
-    const openid = app.globalData.task_data && app.globalData.task_data.openid;
-    const userInfo = app.globalData.userInfo || {};
+  const content = (this.data.commentInput || "").trim();
+  const targetId = this.getCommentTargetId();
+  const openid = app.globalData.task_data && app.globalData.task_data.openid;
 
-    if (!openid || !targetId || !content) {
+  if (!openid || !targetId || !content) {
+    wx.showToast({
+      title: "请先填写评论",
+      icon: "none"
+    });
+    return;
+  }
+
+  this.setData({ commenting: true });
+
+  commentStore
+    .addComment({
+      target_id: targetId,
+      target_type: this.data.type,
+      author_openid: openid,
+      content
+    })
+    .then(() => {
+      this.setData({ commentInput: "" });
+      return this.loadComments();
+    })
+    .catch((err) => {
+      console.error("评论发布失败", err);
       wx.showToast({
-        title: "请先填写评论",
+        title: "评论发布失败",
         icon: "none"
       });
-      return;
-    }
-
-    this.setData({ commenting: true });
-
-    avatarStore
-      .saveUserInfo(openid, userInfo)
-      .then((savedUserInfo) => {
-        app.globalData.userInfo = savedUserInfo;
-
-        return commentStore.addComment({
-          target_id: targetId,
-          target_type: this.data.type,
-          author_openid: openid,
-          content
-        });
-      })
-      .then(() => {
-        this.setData({ commentInput: "" });
-        return this.loadComments();
-      })
-      .catch((err) => {
-        console.error("评论发布失败", err);
-        wx.showToast({
-          title: "评论发布失败",
-          icon: "none"
-        });
-      })
-      .finally(() => {
-        this.setData({ commenting: false });
-      });
-  },
+    })
+    .finally(() => {
+      this.setData({ commenting: false });
+    });
+},
 
   useCard() {
     const item = this.data.item || {};

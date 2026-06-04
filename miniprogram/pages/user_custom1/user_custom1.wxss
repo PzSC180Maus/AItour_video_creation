@@ -30,6 +30,13 @@ page::before {
   min-height: 100vh;
 }
 
+home-back-button {
+  position: fixed;
+  top: 50rpx;      /* 距离顶部位置 */
+  left: 20rpx;      /* 距离左侧位置 */
+  z-index: 100;     /* 确保在 scroll-view 上方 */
+}
+
 /* ========== 顶部图片列表（swiper） ========== */
 .img-strip {
   position: fixed;

@@ -21,6 +21,7 @@ Page({
       post_liked: [],
       card_liked: []
     },
+    showPublishMenu: false,
     loading: false
   },
 
@@ -145,37 +146,37 @@ Page({
   },
 
   loadTab(tab) {
-    this.setData({ loading: true });
+  this.setData({ loading: true });
 
-    const payload = this.getPayload(tab);
+  const payload = this.getPayload(tab);
 
-    this.requestProfileList(tab, payload)
-      .then((resp) => {
-        const data = resp && resp.data ? resp.data : {};
-        const list = Array.isArray(data.list) ? data.list : [];
-        return this.attachAuthorProfiles(list);
-      })
-      .then((list) => {
-        const nextCache = {
-          ...this.data.cache,
-          [tab]: list
-        };
+  this.requestProfileList(tab, payload)
+    .then((resp) => {
+      const data = resp && resp.data ? resp.data : {};
+      const list = Array.isArray(data.list) ? data.list : [];
+      return this.attachAuthorProfiles(list);
+    })
+    .then((list) => {
+      const nextCache = {
+        ...this.data.cache,
+        [tab]: list
+      };
 
-        this.setData({
-          cache: nextCache,
-          currentList: list
-        });
-      })
-      .catch((err) => {
-        console.error("空间列表加载失败", err);
-        wx.showToast({
-          title: "加载失败",
-          icon: "none"
-        });
-      })
-      .finally(() => {
-        this.setData({ loading: false });
+      this.setData({
+        cache: nextCache,
+        currentList: list
       });
+    })
+    .catch((err) => {
+      console.error("空间列表加载失败", err);
+      wx.showToast({
+        title: "加载失败",
+        icon: "none"
+      });
+    })
+    .finally(() => {
+      this.setData({ loading: false });
+    });
   },
 
   openDetail(e) {
@@ -216,8 +217,25 @@ Page({
   },
 
   goCreate() {
-    wx.navigateTo({
-      url: "/pages/scenery_select/scenery_select"
-    });
-  }
+    this.setData({ showPublishMenu: true });
+  },
+
+    // 隐藏发布菜单
+  hidePublishMenu() {
+    this.setData({ showPublishMenu: false });
+  },
+
+  // 发布视频帖子
+goPublishPost() {
+  app.globalData.task_data.card_id = "";
+  wx.navigateTo({
+    url: '/pages/publish/publish'
+  });
+},
+
+goCreateTemplate() {
+  wx.navigateTo({
+    url: '/pages/card_publish/card_publish'
+  });
+}
 });

@@ -1,5 +1,6 @@
 <!--pages/script/script.wxml-->
 <view class="page">
+    <home-back-button></home-back-button>
   <scroll-view class="scrollarea" scroll-y>
     <view class="page-shell">
       <view class="top-bar">
@@ -28,24 +29,4 @@
       </view>
     </view>
   </scroll-view>
-
-  <view class="bottom-dock">
-    <view class="nav-icon" bindtap="goCommunity">
-      <view class="stack-symbol">
-        <view class="stack-layer stack-layer-top"></view>
-        <view class="stack-layer stack-layer-mid"></view>
-        <view class="stack-layer stack-layer-bottom"></view>
-      </view>
-    </view>
-    <view class="nav-icon compose" bindtap="goCreate">
-      <view class="compose-symbol">
-        <view class="compose-base"></view>
-        <view class="compose-pen-cutout"></view>
-        <view class="compose-pen"></view>
-      </view>
-    </view>
-    <view class="nav-icon" bindtap="goProfile">
-      <view class="user-symbol"></view>
-    </view>
-  </view>
 </view>

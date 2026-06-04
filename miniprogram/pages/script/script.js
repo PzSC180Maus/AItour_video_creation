@@ -169,24 +169,5 @@ Page({
       url: "../wait/wait"
     });
   },
-
-  goCommunity() {
-    wx.redirectTo({
-      url: "/pages/community/community"
-    });
-  },
-
-  goCreate() {
-    wx.navigateTo({
-      url: "/pages/scenery_select/scenery_select"
-    });
-  },
-
-  goProfile() {
-    wx.navigateTo({
-      url: "/pages/profile/profile"
-    });
-  },
-
   onShareAppMessage() {}
 });

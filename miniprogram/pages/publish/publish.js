@@ -1,6 +1,4 @@
 const communityService = require("../../utils/communityService.js");
-const profileStore = require("../../utils/profileStore.js");
-const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 Page({
@@ -53,13 +51,12 @@ Page({
     });
   },
 
-  publishPost() {
+    publishPost() {
     if (this.data.publishing) {
       return;
     }
 
     const taskData = app.globalData.task_data || {};
-    const userInfo = app.globalData.userInfo || {};
     const openid = taskData.openid || "";
 
     if (!openid || !this.data.videoUrl) {
@@ -72,28 +69,14 @@ Page({
 
     this.setData({ publishing: true });
 
-    avatarStore
-      .saveUserInfo(openid, userInfo)
-      .then((savedUserInfo) => {
-        app.globalData.userInfo = savedUserInfo;
-
-        return communityService.apiCommunityPostPublish({
-          openid,
-          card_id: this.data.cardId || "none",
-          title: this.data.title || "旅行作品",
-          cover_url: this.data.coverUrl || "",
-          video_url: this.data.videoUrl,
-          share_text: this.data.shareText || ""
-        });
-      })
-      .then((resp) => {
-        const data = resp && resp.data ? resp.data : {};
-
-        if (!data.success || !data.post_id) {
-          throw new Error("post publish failed");
-        }
-
-        return profileStore.saveCreatedId(openid, "post", data.post_id);
+    communityService
+      .apiCommunityPostPublish({
+        openid,
+        card_id: this.data.cardId || "none",
+        title: this.data.title || "旅行作品",
+        cover_url: this.data.coverUrl || "",
+        video_url: this.data.videoUrl,
+        share_text: this.data.shareText || ""
       })
       .then(() => {
         wx.showToast({

@@ -5,11 +5,11 @@
   <view class="ambient ambient-three"></view>
   <view class="ambient ambient-four"></view>
 
-  <view class="top-bar">
-    <button class="back-btn" bindtap="goBack" aria-label="返回"></button>
-    <view class="title-pill">与AI旅拍管家畅聊吧~</view>
-    <view class="top-spacer"></view>
-  </view>
+<view class="top-bar">
+  <home-back-button></home-back-button>
+  <view class="title-pill">与AI旅拍管家畅聊吧~</view>
+  <view class="top-spacer"></view>
+</view>
 
   <scroll-view class="chat-scroll" scroll-y scroll-with-animation>
     <view class="chat-list">
@@ -37,8 +37,8 @@
 
   <view class="footer">
     <view class="input-bar">
-      <button class="tool-btn camera-btn" aria-label="相册">
-        <image class="tool-icon tool-icon-gallery" src="/images/dialogue/input-gallery.svg" mode="aspectFit"></image>
+      <button class="tool-btn camera-btn" bindtap="finishDrawing" aria-label="跳转">
+        <image class="tool-icon tool-icon-gallery" src="/images/icons/stop.png" mode="aspectFit"></image>
       </button>
       <textarea
         class="chat-input"
@@ -53,12 +53,10 @@
         cursor-spacing="24"
         disabled="{{!initialized || loading}}"
       />
-      <button class="tool-btn mic-btn" aria-label="语音">
-        <image class="tool-icon tool-icon-mic" src="/images/dialogue/input-mic.svg" mode="aspectFit"></image>
-      </button>
-      <button class="tool-btn plus-btn" bindtap="finishDrawing" aria-label="结束并生成">
-        <image class="tool-icon tool-icon-plus" src="/images/dialogue/input-plus.svg" mode="aspectFit"></image>
+      <button class="tool-btn plus-btn" bindtap="sendUserMessage" aria-label="发送">
+        <image class="tool-icon tool-icon-plus" src="/images/icons/send.png" mode="aspectFit"></image>
       </button>
     </view>
   </view>
 </view>
+

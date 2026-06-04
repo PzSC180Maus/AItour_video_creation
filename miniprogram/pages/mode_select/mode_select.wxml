@@ -1,5 +1,6 @@
 <!--pages/mode_select/mode_select.wxml-->
 <view class="container">
+  <home-back-button></home-back-button>
   <view class="intro-card">
     <text class="page-title">游览小引</text>
     <text class="page-desc">

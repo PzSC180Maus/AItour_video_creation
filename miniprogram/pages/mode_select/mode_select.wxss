@@ -25,7 +25,12 @@ page::before {
   pointer-events: none;
   z-index: 0;
 }
-
+home-back-button {
+  position: fixed;
+  top: 50rpx;      /* 距离顶部位置 */
+  left: 20rpx;      /* 距离左侧位置 */
+  z-index: 100;     /* 确保在 scroll-view 上方 */
+}
 .container {
   min-height: 100vh;
   position: relative;
