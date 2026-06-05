@@ -43,6 +43,41 @@ const createProfilesCollection = async () => {
   }
 };
 
+// 批量把头像 fileID 换成临时 URL，供前端显示他人头像。
+const getAvatarTempUrls = async (event) => {
+  const fileIDs = Array.from(
+    new Set(
+      (event.fileIDs || []).filter(
+        (fileID) => typeof fileID === "string" && fileID
+      )
+    )
+  );
+
+  if (!fileIDs.length) {
+    return {
+      success: true,
+      urls: {},
+    };
+  }
+
+  const res = await cloud.getTempFileURL({
+    fileList: fileIDs,
+  });
+  const urls = {};
+
+  (res.fileList || []).forEach((item) => {
+    if (item.fileID && item.tempFileURL) {
+      urls[item.fileID] = item.tempFileURL;
+    }
+  });
+
+  return {
+    success: true,
+    urls,
+    fileList: res.fileList || [],
+  };
+};
+
 // 创建集合
 const createCollection = async () => {
   try {
@@ -196,5 +231,7 @@ exports.main = async (event, context) => {
       return await deleteRecord(event);
     case "createProfilesCollection":
       return await createProfilesCollection();
+    case "getAvatarTempUrls":
+      return await getAvatarTempUrls(event);
   }
 };

@@ -1,6 +1,5 @@
 const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
-const avatarStore = require("../../utils/avatarStore.js");
 const app = getApp();
 
 const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
@@ -110,6 +109,31 @@ Page({
     return item && (item.openid || item.author_openid || item.user_openid || "");
   },
 
+  requestAvatarTempUrls(fileIDs) {
+    const safeFileIDs = Array.from(new Set((fileIDs || []).filter(Boolean)));
+
+    if (!safeFileIDs.length) {
+      return Promise.resolve({});
+    }
+
+    return wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "getAvatarTempUrls",
+          fileIDs: safeFileIDs
+        }
+      })
+      .then((resp) => {
+        const result = resp && resp.result ? resp.result : {};
+        return result.urls || {};
+      })
+      .catch((err) => {
+        console.error("头像临时链接获取失败", err);
+        return {};
+      });
+  },
+
   attachAuthorProfiles(list) {
     const safeList = Array.isArray(list) ? list : [];
     const openids = safeList
@@ -123,33 +147,13 @@ Page({
     return profileStore
       .getProfilesByOpenids(openids)
       .then((profileMap) => {
-        const normalizedProfiles = {};
+        const avatarFileIDs = Object.keys(profileMap)
+          .map((openid) => profileMap[openid] && profileMap[openid].avatarFileID)
+          .filter(Boolean);
 
-        return Promise.all(
-          Object.keys(profileMap).map((openid) => {
-            const profile = profileMap[openid];
-
-            return avatarStore
-              .normalizeAvatar(profile.avatarUrl || "", profile.avatarFileID || "")
-              .then((avatar) => {
-                normalizedProfiles[openid] = {
-                  ...profile,
-                  avatarUrl: avatar.avatarUrl,
-                  avatarFileID: avatar.avatarFileID
-                };
-              })
-              .catch((err) => {
-                console.warn("作者头像链接转换失败:", openid, err);
-                normalizedProfiles[openid] = {
-                  ...profile,
-                  avatarUrl: profile.avatarUrl || DEFAULT_USER_AVATAR,
-                  avatarFileID: profile.avatarFileID || ""
-                };
-              });
-          })
-        ).then(() =>
+        return this.requestAvatarTempUrls(avatarFileIDs).then((avatarUrlMap) =>
           safeList.map((item) => {
-            const profile = normalizedProfiles[this.getAuthorOpenid(item)];
+            const profile = profileMap[this.getAuthorOpenid(item)];
 
             if (!profile) {
               return {
@@ -163,7 +167,10 @@ Page({
               ...item,
               author_name: profile.nickName || item.author_name || "用户",
               author_avatar:
-                profile.avatarUrl || item.author_avatar || DEFAULT_USER_AVATAR
+                avatarUrlMap[profile.avatarFileID] ||
+                profile.avatarUrl ||
+                item.author_avatar ||
+                DEFAULT_USER_AVATAR
             };
           })
         );
