@@ -1,5 +1,17 @@
- <home-back-button></home-back-button>
+<view class="page">
   <scroll-view class="template-scroll" scroll-y>
+    <view class="top-dock">
+      <view class="nav-icon" bindtap="goCommunity">
+        <image class="top-icon-img video-img" src="/images/icons/top-video.png" mode="aspectFit"></image>
+      </view>
+      <view class="nav-icon compose" bindtap="goPublish">
+        <image class="top-icon-img camera-img" src="/images/icons/top-camera-refresh.png" mode="aspectFit"></image>
+      </view>
+      <view class="nav-icon" bindtap="goProfile">
+        <image class="top-icon-img search-img" src="/images/icons/top-search.png" mode="aspectFit"></image>
+      </view>
+    </view>
+
     <view class="headline-row">
       <view class="headline-pill">猜你喜欢</view>
       <view class="trend">
@@ -34,3 +46,15 @@
     </view>
   </scroll-view>
   <button class="confirm-btn" bindtap="confirmSelection">选好啦~就这个模板</button>
+  <view class="bottom-dock">
+    <view class="nav-icon" bindtap="goCommunity">
+      <image class="dock-icon-img stack-img" src="/images/icons/post-stack.png" mode="aspectFit"></image>
+    </view>
+    <view class="nav-icon compose" bindtap="goPublish">
+      <image class="dock-icon-img compose-img" src="/images/icons/post-compose.png" mode="aspectFit"></image>
+    </view>
+    <view class="nav-icon" bindtap="goProfile">
+      <image class="dock-icon-img user-img" src="/images/icons/post-user.png" mode="aspectFit"></image>
+    </view>
+  </view>
+</view>

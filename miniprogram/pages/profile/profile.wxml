@@ -80,21 +80,13 @@
 
   <view class="bottom-dock">
     <view class="nav-icon" bindtap="goCommunity">
-      <view class="stack-symbol">
-        <view class="stack-layer stack-layer-top"></view>
-        <view class="stack-layer stack-layer-mid"></view>
-        <view class="stack-layer stack-layer-bottom"></view>
-      </view>
+      <image class="dock-icon-img stack-img" src="/images/icons/post-stack.png" mode="aspectFit"></image>
     </view>
     <view class="nav-icon compose" bindtap="goCreate">
-      <view class="compose-symbol">
-        <view class="compose-base"></view>
-        <view class="compose-pen-cutout"></view>
-        <view class="compose-pen"></view>
-      </view>
+      <image class="dock-icon-img compose-img" src="/images/icons/post-compose.png" mode="aspectFit"></image>
     </view>
     <view class="nav-icon active">
-      <view class="user-symbol"></view>
+      <image class="dock-icon-img user-img" src="/images/icons/post-user.png" mode="aspectFit"></image>
     </view>
   </view>
 </view>

@@ -82,5 +82,23 @@ Page({
         });
       }
     });
+  },
+
+  goCommunity() {
+    wx.redirectTo({
+      url: "/pages/community/community"
+    });
+  },
+
+  goPublish() {
+    wx.navigateTo({
+      url: "/pages/card_publish/card_publish"
+    });
+  },
+
+  goProfile() {
+    wx.redirectTo({
+      url: "/pages/profile/profile"
+    });
   }
 });

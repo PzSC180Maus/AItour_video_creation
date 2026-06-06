@@ -4,7 +4,9 @@ const app = getApp();
 Page({
   data: {
     imageUrl: "",
+    title: "",
     emotionText: "",
+    locationName: "",
     publishing: false
   },
 
@@ -59,48 +61,70 @@ Page({
     this.setData({ emotionText: e.detail.value });
   },
 
-  publishCard() {
-  if (this.data.publishing) {
-    return;
-  }
+  onTitleInput(e) {
+    this.setData({ title: e.detail.value });
+  },
 
-  const taskData = app.globalData.task_data || {};
-  const openid = taskData.openid || "";
+  onLocationInput(e) {
+    this.setData({ locationName: e.detail.value });
+  },
 
-  if (!openid || !this.data.imageUrl || !this.data.emotionText.trim()) {
-    wx.showToast({
-      title: "请补全卡片信息",
-      icon: "none"
+  backToCommunity() {
+    wx.redirectTo({
+      url: "/pages/community/community"
     });
-    return;
-  }
+  },
 
-  this.setData({ publishing: true });
+  goProfile() {
+    wx.redirectTo({
+      url: "/pages/profile/profile"
+    });
+  },
 
-  communityService
-    .apiCommunityCardPublish({
-      openid,
-      image_url: this.data.imageUrl,
-      emotion_text: this.data.emotionText
-    })
-    .then(() => {
+  publishCard() {
+    if (this.data.publishing) {
+      return;
+    }
+
+    const taskData = app.globalData.task_data || {};
+    const openid = taskData.openid || "";
+
+    if (!openid || !this.data.imageUrl || !this.data.emotionText.trim()) {
       wx.showToast({
-        title: "发布成功",
-        icon: "success"
-      });
-      wx.redirectTo({
-        url: "/pages/community/community"
-      });
-    })
-    .catch((err) => {
-      console.error("发布卡片失败", err);
-      wx.showToast({
-        title: "发布失败",
+        title: "请补全卡片信息",
         icon: "none"
       });
-    })
-    .finally(() => {
-      this.setData({ publishing: false });
-    });
-}
+      return;
+    }
+
+    this.setData({ publishing: true });
+
+    communityService
+      .apiCommunityCardPublish({
+        openid,
+        image_url: this.data.imageUrl,
+        emotion_text: this.data.emotionText,
+        title: this.data.title || "旅行卡片",
+        location_name: (this.data.locationName || "").trim()
+      })
+      .then(() => {
+        wx.showToast({
+          title: "发布成功",
+          icon: "success"
+        });
+        wx.redirectTo({
+          url: "/pages/community/community"
+        });
+      })
+      .catch((err) => {
+        console.error("发布卡片失败", err);
+        wx.showToast({
+          title: "发布失败",
+          icon: "none"
+        });
+      })
+      .finally(() => {
+        this.setData({ publishing: false });
+      });
+  }
 });

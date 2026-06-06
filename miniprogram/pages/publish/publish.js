@@ -8,6 +8,7 @@ Page({
     videoUrl: "",
     coverUrl: "",
     shareText: "",
+    locationName: "",
     hasVideo: false,
     publishing: false
   },
@@ -22,6 +23,7 @@ Page({
       videoUrl,
       coverUrl: app.globalData.coverUrl || taskData.spot_url || "",
       shareText: app.globalData.final_response || "",
+      locationName: taskData.location_name || taskData.spot_name || "",
       hasVideo: !!videoUrl
     });
   },
@@ -39,6 +41,10 @@ Page({
     this.setData({ shareText: e.detail.value });
   },
 
+  onLocationInput(e) {
+    this.setData({ locationName: e.detail.value });
+  },
+
   goCreateVideo() {
     wx.redirectTo({
       url: "/pages/mode_select/mode_select"
@@ -51,7 +57,13 @@ Page({
     });
   },
 
-    publishPost() {
+  goProfile() {
+    wx.redirectTo({
+      url: "/pages/profile/profile"
+    });
+  },
+
+  publishPost() {
     if (this.data.publishing) {
       return;
     }
@@ -76,7 +88,8 @@ Page({
         title: this.data.title || "旅行作品",
         cover_url: this.data.coverUrl || "",
         video_url: this.data.videoUrl,
-        share_text: this.data.shareText || ""
+        share_text: this.data.shareText || "",
+        location_name: (this.data.locationName || "").trim()
       })
       .then(() => {
         wx.showToast({
