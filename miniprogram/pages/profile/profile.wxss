@@ -299,137 +299,27 @@ page {
   border: 4rpx solid #ffffff;
 }
 
-.stack-symbol,
-.compose-symbol,
-.user-symbol {
-  position: relative;
+.bottom-dock .dock-icon-img {
+  display: block;
+  width: 48rpx;
+  height: 48rpx;
 }
 
-.stack-symbol {
-  width: 42rpx;
-  height: 42rpx;
+.bottom-dock .stack-img {
+  width: 45rpx;
+  height: 45rpx;
 }
 
-.stack-layer {
-  position: absolute;
-  left: 4rpx;
-  width: 34rpx;
-  height: 13rpx;
+.bottom-dock .compose-img {
+  width: 45rpx;
+  height: 45rpx;
+  transform: translate(2rpx, -3rpx);
 }
 
-.stack-layer-top {
-  top: 5rpx;
-  left: 5rpx;
-  width: 34rpx;
-  height: 25rpx;
-  background: #102127;
-  clip-path: polygon(50% 0, 100% 33%, 50% 66%, 0 33%);
-}
-
-.stack-layer-mid {
-  top: 23rpx;
-}
-
-.stack-layer-bottom {
-  top: 27rpx;
-}
-
-.stack-layer-mid::before,
-.stack-layer-mid::after,
-.stack-layer-bottom::before,
-.stack-layer-bottom::after {
-  content: "";
-  position: absolute;
-  top: 2rpx;
-  width: 21rpx;
-  height: 4rpx;
-  border-radius: 7rpx;
-  background: #102127;
-}
-
-.stack-layer-mid::before,
-.stack-layer-bottom::before {
-  left: 0;
-  transform: rotate(25deg);
-  transform-origin: right center;
-}
-
-.stack-layer-mid::after,
-.stack-layer-bottom::after {
-  right: 0;
-  transform: rotate(-25deg);
-  transform-origin: left center;
-}
-
-.compose-symbol {
-  width: 36rpx;
-  height: 36rpx;
-}
-
-.compose-base,
-.compose-pen-cutout,
-.compose-pen {
-  position: absolute;
-}
-
-.compose-base {
-  left: 4rpx;
-  bottom: 3rpx;
-  width: 30rpx;
-  height: 30rpx;
-  border-radius: 5rpx;
-  background: #102127;
-}
-
-.compose-pen-cutout {
-  left: 8rpx;
-  top: -14rpx;
-  width: 16rpx;
-  height: 37rpx;
-  border-radius: 8rpx 8rpx 2rpx 2rpx;
-  background: #69ccc5;
-  transform: rotate(42deg);
-  transform-origin: center bottom;
-  clip-path: polygon(0 0, 100% 0, 100% 76%, 50% 100%, 0 76%);
-}
-
-.compose-pen {
-  left: 15rpx;
-  top: -11rpx;
-  width: 10rpx;
-  height: 31rpx;
-  border-radius: 8rpx 8rpx 2rpx 2rpx;
-  background: #102127;
-  transform: rotate(42deg);
-  transform-origin: center bottom;
-  clip-path: polygon(0 0, 100% 0, 100% 76%, 50% 100%, 0 76%);
-}
-
-.user-symbol {
-  width: 36rpx;
-  height: 36rpx;
-}
-
-.user-symbol::before {
-  content: "";
-  position: absolute;
-  left: 11rpx;
-  top: 3rpx;
-  width: 14rpx;
-  height: 14rpx;
-  border-radius: 50%;
-  background: #102127;
-}
-
-.user-symbol::after {
-  content: "";
-  position: absolute;
-  left: 5rpx;
-  bottom: 3rpx;
-  width: 26rpx;
-  height: 17rpx;
-  border-radius: 18rpx 18rpx 8rpx 8rpx;
-  background: #102127;
+.bottom-dock .user-img {
+  width: 45rpx;
+  height: 45rpx;
+  transform: translate(-1rpx, -3rpx);
 }
 
 .publish-overlay {

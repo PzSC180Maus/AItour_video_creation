@@ -15,13 +15,6 @@ page {
     linear-gradient(180deg, #f2fff2 0%, #ddf8ef 50%, #cbeff1 100%);
 }
 
-home-back-button {
-  position: fixed;
-  top: 50rpx;
-  left: 20rpx;
-  z-index: 100;
-}
-
 .content-scroll {
   height: calc(100vh - 176rpx - env(safe-area-inset-top));
 }

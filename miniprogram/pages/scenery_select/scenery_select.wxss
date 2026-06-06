@@ -1,24 +1,40 @@
 
 .page {
   min-height: 100vh;
-  padding: 166rpx 28rpx 132rpx;
+  padding: 40rpx 28rpx 190rpx;
   box-sizing: border-box;
   background: linear-gradient(180deg, #fff8ec 0 138rpx, #d2f0eb 138rpx 100%);
 }
 
-home-back-button {
-  position: fixed;
-  top: 50rpx;      /* 距离顶部位置 */
-  left: 20rpx;      /* 距离左侧位置 */
-  z-index: 100;     /* 确保在 scroll-view 上方 */
+.template-scroll {
+  height: calc(100vh - 230rpx - env(safe-area-inset-top));
+  margin-top: 0;
+  padding: 112rpx 8rpx 82rpx;
+  box-sizing: border-box;
+  background: #d2f0eb;  /* 添加背景色，与 page 渐变底部颜色一致 */
 }
 
 .template-scroll {
-  height: calc(100vh - 252rpx - env(safe-area-inset-top));
-  margin-top: 72rpx;
-  padding: 0 8rpx 150rpx;
+  background: transparent;
+}
+
+.top-dock {
+  position: fixed;
+  top: calc(46rpx + env(safe-area-inset-top));
+  left: 88rpx;
+  z-index: 20;
+  width: 300rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80rpx;
+  padding: 0 22rpx;
+  border-radius: 44rpx;
+  background: rgba(255, 253, 247, 0.98);
+  box-shadow:
+    0 12rpx 22rpx rgba(34, 41, 43, 0.18),
+    inset 0 0 0 1rpx rgba(255, 255, 255, 0.86);
   box-sizing: border-box;
-  background: #d2f0eb;  /* 添加背景色，与 page 渐变底部颜色一致 */
 }
 
 .headline-row {
@@ -109,7 +125,7 @@ home-back-button {
 
 .recommend-panel {
   margin-top: 28rpx;
-  padding: 0 24rpx 20rpx;
+  padding: 0 24rpx 0;
   border-radius: 34rpx;
   background: rgba(177, 233, 226, 0.9);
   box-shadow: 0 10rpx 16rpx rgba(57, 100, 99, 0.24);
@@ -176,9 +192,13 @@ home-back-button {
 }
 
 .confirm-btn {
+  position: fixed;
+  left: 50%;
+  bottom: calc(124rpx + env(safe-area-inset-bottom));
+  z-index: 31;
   width: 316rpx;
   height: 56rpx;
-  margin: 22rpx auto 32rpx;
+  margin: 0;
   padding: 0;
   border-radius: 0 0 30rpx 30rpx;
   color: rgba(75, 86, 88, 0.62);
@@ -187,8 +207,96 @@ home-back-button {
   text-align: center;
   background: #ffffff;
   box-shadow: 0 3rpx 0 #2bbfd3;
+  transform: translateX(-50%);
 }
 
 .confirm-btn::after {
   border: 0;
+}
+
+.bottom-dock {
+  position: fixed;
+  left: 64rpx;
+  right: 64rpx;
+  bottom: calc(28rpx + env(safe-area-inset-bottom));
+  z-index: 30;
+  height: 88rpx;
+  padding: 0 52rpx;
+  border-radius: 46rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 8rpx 18rpx rgba(37, 65, 66, 0.16);
+  box-sizing: border-box;
+}
+
+.nav-icon {
+  position: relative;
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #18252d;
+  box-sizing: border-box;
+}
+
+.bottom-dock .nav-icon {
+  width: 62rpx;
+  height: 62rpx;
+  background: #69ccc5;
+  box-shadow: 0 7rpx 13rpx rgba(20, 79, 82, 0.22);
+}
+
+.top-icon-img {
+  display: block;
+  width: 34rpx;
+  height: 34rpx;
+}
+
+.video-img {
+  width: 40rpx;
+  height: 40rpx;
+  transform: translateX(0);
+}
+
+.camera-img {
+  width: 35rpx;
+  height: 35rpx;
+  transform: translateY(0rpx);
+}
+
+.search-img {
+  width: 65rpx;
+  height: 65rpx;
+  transform: translate(0, 0);
+}
+
+.bottom-dock .dock-icon-img,
+.top-dock .dock-icon-img {
+  display: block;
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.bottom-dock .stack-img,
+.top-dock .stack-img {
+  width: 45rpx;
+  height: 45rpx;
+}
+
+.bottom-dock .compose-img,
+.top-dock .compose-img {
+  width: 45rpx;
+  height: 45rpx;
+  transform: translate(2rpx, -3rpx);
+}
+
+.bottom-dock .user-img,
+.top-dock .user-img {
+  width: 45rpx;
+  height: 45rpx;
+  transform: translate(-1rpx, -3rpx);
 }

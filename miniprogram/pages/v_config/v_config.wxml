@@ -1,5 +1,5 @@
 ﻿<view class="page">
-      <home-back-button></home-back-button>
+  <home-back-button></home-back-button>
   <view class="container">
     <view class="upload-card" bindtap="chooseAndUploadImage">
       <block wx:if="{{avatarUrl}}">

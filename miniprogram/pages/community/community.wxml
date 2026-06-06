@@ -20,22 +20,13 @@
   </view>
   <view class="top-dock">
     <view class="dock-icon {{activeTab === 'post' ? 'active' : ''}}" data-tab="post" bindtap="switchTab">
-      <view class="video-symbol"></view>
+      <image class="top-icon-img video-img" src="/images/icons/top-video.png" mode="aspectFit"></image>
     </view>
     <view class="dock-icon {{activeTab === 'card' ? 'active' : ''}}" data-tab="card" bindtap="switchTab">
-      <view class="card-symbol">
-        <view class="camera-bump"></view>
-        <view class="camera-refresh">
-          <view class="refresh-ring"></view>
-          <view class="refresh-arc refresh-arc-top"></view>
-          <view class="refresh-arc refresh-arc-bottom"></view>
-          <view class="refresh-arrow refresh-arrow-one"></view>
-          <view class="refresh-arrow refresh-arrow-two"></view>
-        </view>
-      </view>
+      <image class="top-icon-img camera-img" src="/images/icons/top-camera-refresh.png" mode="aspectFit"></image>
     </view>
     <view class="dock-icon" bindtap="refreshCurrent">
-      <view class="search-symbol"></view>
+      <image class="top-icon-img search-img" src="/images/icons/top-search.png" mode="aspectFit"></image>
     </view>
   </view>
 
@@ -83,21 +74,13 @@
 
   <view class="bottom-dock">
     <view class="nav-icon {{activeTab === 'post' ? 'active' : ''}}" data-tab="post" bindtap="switchTab">
-      <view class="stack-symbol">
-        <view class="stack-layer stack-layer-top"></view>
-        <view class="stack-layer stack-layer-mid"></view>
-        <view class="stack-layer stack-layer-bottom"></view>
-      </view>
+      <image class="dock-icon-img stack-img" src="/images/icons/post-stack.png" mode="aspectFit"></image>
     </view>
     <view class="nav-icon compose" bindtap="goPublishCurrent">
-      <view class="compose-symbol">
-        <view class="compose-base"></view>
-        <view class="compose-pen-cutout"></view>
-        <view class="compose-pen"></view>
-      </view>
+      <image class="dock-icon-img compose-img" src="/images/icons/post-compose.png" mode="aspectFit"></image>
     </view>
     <view class="nav-icon" bindtap="goProfile">
-      <view class="user-symbol"></view>
+      <image class="dock-icon-img user-img" src="/images/icons/post-user.png" mode="aspectFit"></image>
     </view>
   </view>
 </view>

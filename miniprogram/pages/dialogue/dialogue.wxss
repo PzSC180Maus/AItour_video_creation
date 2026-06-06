@@ -66,6 +66,17 @@ page {
   justify-content: center;
 }
 
+home-back-button {
+  position: fixed;
+  top: 50rpx;
+  left: 20rpx;
+  z-index: 100;
+}
+
+.top-spacer {
+  width: 72rpx;
+  height: 72rpx;
+}
 
 .tool-btn {
   padding: 0;
@@ -97,11 +108,6 @@ page {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.top-spacer {
-  width: 72rpx;
-  height: 72rpx;
 }
 
 .chat-scroll {

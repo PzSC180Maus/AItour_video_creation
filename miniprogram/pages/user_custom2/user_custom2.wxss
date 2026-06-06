@@ -8,6 +8,13 @@ page {
   );
 }
 
+home-back-button {
+  position: fixed;
+  top: 50rpx;
+  left: 20rpx;
+  z-index: 100;
+}
+
 .page {
   display: flex;
   flex-direction: column;
@@ -15,12 +22,6 @@ page {
   min-height: 100vh;
   padding: 60rpx 16rpx 48rpx;
   box-sizing: border-box;
-}
-home-back-button {
-  position: fixed;
-  top: 50rpx;      /* 距离顶部位置 */
-  left: 20rpx;      /* 距离左侧位置 */
-  z-index: 100;     /* 确保在 scroll-view 上方 */
 }
 /* ========== 羊皮卷输入区（中间偏上） ========== */
 .parchment-card {

@@ -1,6 +1,5 @@
 <!--pages/script/script.wxml-->
 <view class="page">
-    <home-back-button></home-back-button>
   <scroll-view class="scrollarea" scroll-y>
     <view class="page-shell">
       <view class="top-bar">
