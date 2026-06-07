@@ -14,9 +14,10 @@ page {
 
 .hero-image {
   width: 100%;
-  height: 60vh;
+  height: 66vh;
   flex-shrink: 0;
   display: block;
+  background: #f9fbf7;
 }
 
 .login-area {
@@ -24,7 +25,7 @@ page {
   flex: 1;
   min-height: 0;
   margin-top: 0;
-  padding: 20rpx 74rpx 48rpx;
+  padding: 10rpx 74rpx 48rpx;
   box-sizing: border-box;
   background: #ffffff;
   display: flex;
@@ -35,6 +36,9 @@ page {
 .slogan {
   width: 100%;
   margin-bottom: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 38rpx;
   line-height: 1.2;
   font-weight: 700;
@@ -42,6 +46,11 @@ page {
   color: #075b2f;
   text-align: center;
   text-shadow: 0 8rpx 10rpx rgba(0, 0, 0, 0.18);
+}
+
+.slogan-gap {
+  width: 60rpx;
+  flex-shrink: 0;
 }
 
 .avatar-button {
@@ -82,8 +91,8 @@ page {
   border-left: 4rpx solid #26c8dd;
   border-right: 4rpx solid #26c8dd;
   border-bottom: 4rpx solid #26c8dd;
-  border-top: 0;
-  border-radius: 0 0 42rpx 42rpx;
+  border-top: 4rpx solid #26c8dd;
+  border-radius: 42rpx 42rpx 42rpx 42rpx;
   color: #263f45;
   font-size: 34rpx;
   box-shadow: 0 14rpx 26rpx rgba(0, 0, 0, 0.13);
