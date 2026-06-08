@@ -1,4 +1,5 @@
 <view class="page">
+  <home-back-button></home-back-button>
   <scroll-view class="template-scroll" scroll-y>
     <view class="top-dock">
       <view class="nav-icon" bindtap="goCommunity">

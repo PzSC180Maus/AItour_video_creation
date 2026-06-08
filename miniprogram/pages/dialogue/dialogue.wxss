@@ -252,8 +252,8 @@ home-back-button {
 }
 
 .tool-icon-gallery {
-  width: 36rpx;
-  height: 36rpx;
+  width: 56rpx;
+  height: 56rpx;
 }
 
 .tool-icon-mic {
@@ -262,6 +262,6 @@ home-back-button {
 }
 
 .tool-icon-plus {
-  width: 56rpx;
-  height: 56rpx;
+  width: 40rpx;
+  height: 40rpx;
 }

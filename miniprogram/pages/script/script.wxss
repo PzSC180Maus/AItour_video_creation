@@ -5,7 +5,9 @@ page {
 }
 
 .page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   position: relative;
   overflow: hidden;
   background:
@@ -15,17 +17,23 @@ page {
 }
 
 .scrollarea {
-  height: calc(100vh - 122rpx - env(safe-area-inset-bottom));
+  flex: 1;
+  overflow-y: auto;
+  /* 不需要显式 height */
 }
-
+home-back-button {
+  position: fixed;
+  top: 50rpx;
+  left: 20rpx;
+  z-index: 100;
+}
 .page-shell {
-  min-height: 100%;
+  min-height: 80vh; /* ★ 控制卡片区域占屏幕75% */
   display: flex;
   flex-direction: column;
   padding: calc(24rpx + env(safe-area-inset-top)) 24rpx 16rpx;
   box-sizing: border-box;
 }
-
 .top-bar {
   display: flex;
   justify-content: center;
@@ -65,14 +73,14 @@ page {
   flex: 1;
   width: 100%;
   height: 100%;
-  min-height: 624rpx;
+  min-height: 60vh;
   font-size: 28rpx;
   line-height: 1.68;
   color: #1f2c30;
   background: transparent;
   border: 0;
   box-sizing: border-box;
-  padding: 14rpx 16rpx;
+  padding: 18rpx 20rpx;
   display: block;
 }
 
@@ -112,172 +120,4 @@ page {
   color: #1d2124;
   font-size: 28rpx;
   font-weight: 600;
-}
-
-.bottom-dock {
-  position: fixed;
-  left: 34rpx;
-  right: 34rpx;
-  bottom: calc(14rpx + env(safe-area-inset-bottom));
-  z-index: 20;
-  height: 92rpx;
-  padding: 0 56rpx;
-  border-radius: 46rpx;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.84);
-  box-shadow: 0 8rpx 18rpx rgba(37, 65, 66, 0.16);
-  box-sizing: border-box;
-}
-
-.nav-icon {
-  position: relative;
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #69ccc5;
-  box-shadow: 0 7rpx 13rpx rgba(20, 79, 82, 0.22);
-}
-
-.nav-icon.compose {
-  box-shadow:
-    0 0 0 6rpx rgba(255, 255, 255, 0.32),
-    0 7rpx 13rpx rgba(20, 79, 82, 0.22);
-}
-
-.stack-symbol,
-.compose-symbol,
-.user-symbol {
-  position: relative;
-}
-
-.stack-symbol {
-  width: 42rpx;
-  height: 42rpx;
-}
-
-.stack-layer {
-  position: absolute;
-  left: 4rpx;
-  width: 34rpx;
-  height: 13rpx;
-}
-
-.stack-layer-top {
-  top: 5rpx;
-  left: 5rpx;
-  width: 34rpx;
-  height: 25rpx;
-  background: #102127;
-  clip-path: polygon(50% 0, 100% 33%, 50% 66%, 0 33%);
-}
-
-.stack-layer-mid {
-  top: 23rpx;
-}
-
-.stack-layer-bottom {
-  top: 27rpx;
-}
-
-.stack-layer-mid::before,
-.stack-layer-mid::after,
-.stack-layer-bottom::before,
-.stack-layer-bottom::after {
-  content: "";
-  position: absolute;
-  top: 2rpx;
-  width: 21rpx;
-  height: 4rpx;
-  border-radius: 7rpx;
-  background: #102127;
-}
-
-.stack-layer-mid::before,
-.stack-layer-bottom::before {
-  left: 0;
-  transform: rotate(25deg);
-  transform-origin: right center;
-}
-
-.stack-layer-mid::after,
-.stack-layer-bottom::after {
-  right: 0;
-  transform: rotate(-25deg);
-  transform-origin: left center;
-}
-
-.compose-symbol {
-  width: 36rpx;
-  height: 36rpx;
-}
-
-.compose-base,
-.compose-pen-cutout,
-.compose-pen {
-  position: absolute;
-}
-
-.compose-base {
-  left: 4rpx;
-  bottom: 3rpx;
-  width: 30rpx;
-  height: 30rpx;
-  border-radius: 5rpx;
-  background: #102127;
-}
-
-.compose-pen-cutout {
-  left: 8rpx;
-  top: -14rpx;
-  width: 16rpx;
-  height: 37rpx;
-  border-radius: 8rpx 8rpx 2rpx 2rpx;
-  background: #69ccc5;
-  transform: rotate(42deg);
-  transform-origin: center bottom;
-  clip-path: polygon(0 0, 100% 0, 100% 76%, 50% 100%, 0 76%);
-}
-
-.compose-pen {
-  left: 15rpx;
-  top: -11rpx;
-  width: 10rpx;
-  height: 31rpx;
-  border-radius: 8rpx 8rpx 2rpx 2rpx;
-  background: #102127;
-  transform: rotate(42deg);
-  transform-origin: center bottom;
-  clip-path: polygon(0 0, 100% 0, 100% 76%, 50% 100%, 0 76%);
-}
-
-.user-symbol {
-  width: 36rpx;
-  height: 36rpx;
-}
-
-.user-symbol::before {
-  content: "";
-  position: absolute;
-  left: 11rpx;
-  top: 3rpx;
-  width: 14rpx;
-  height: 14rpx;
-  border-radius: 50%;
-  background: #102127;
-}
-
-.user-symbol::after {
-  content: "";
-  position: absolute;
-  left: 5rpx;
-  bottom: 3rpx;
-  width: 26rpx;
-  height: 17rpx;
-  border-radius: 18rpx 18rpx 8rpx 8rpx;
-  background: #102127;
 }

@@ -18,7 +18,7 @@ Page({
     const videoUrl = app.globalData.video_url || app.globalData.videoUrl || "";
 
     this.setData({
-      title: "我的旅行作品",
+      title: "",
       cardId: taskData.card_id || "",
       videoUrl,
       coverUrl: app.globalData.coverUrl || taskData.spot_url || "",
@@ -71,7 +71,7 @@ Page({
     const taskData = app.globalData.task_data || {};
     const openid = taskData.openid || "";
 
-    if (!openid || !this.data.videoUrl) {
+    if (!openid || !this.data.videoUrl || !this.data.title) {
       wx.showToast({
         title: "缺少发布信息",
         icon: "none"

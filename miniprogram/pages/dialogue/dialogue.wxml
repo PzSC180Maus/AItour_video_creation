@@ -38,7 +38,7 @@
   <view class="footer">
     <view class="input-bar">
       <button class="tool-btn camera-btn" bindtap="finishDrawing" aria-label="跳转">
-        <image class="tool-icon tool-icon-gallery" src="/images/icons/stop.png" mode="aspectFit"></image>
+        <image class="tool-icon tool-icon-gallery" src="/images/icons/stop.svg" mode="aspectFit"></image>
       </button>
       <textarea
         class="chat-input"
@@ -54,7 +54,7 @@
         disabled="{{!initialized || loading}}"
       />
       <button class="tool-btn plus-btn" bindtap="sendUserMessage" aria-label="发送">
-        <image class="tool-icon tool-icon-plus" src="/images/icons/send.png" mode="aspectFit"></image>
+        <image class="tool-icon tool-icon-plus" src="/images/icons/send.svg" mode="aspectFit"></image>
       </button>
     </view>
   </view>

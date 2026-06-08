@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "视频生成结果",
   "navigationStyle": "default",
-  "usingComponents": {}
+  "usingComponents": {
+    "home-back-button": "../../components/homeBackButton/goback"
+  }
 }

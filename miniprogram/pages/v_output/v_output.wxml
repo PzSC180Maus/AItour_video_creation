@@ -1,4 +1,5 @@
 <view class="page">
+  <home-back-button></home-back-button>
   <scroll-view class="content-scroll" scroll-y show-scrollbar="{{false}}">
     <view class="content-shell">
       <view class="video-shell">
@@ -24,7 +25,7 @@
       </view>
 
       <view class="tag-card">
-        <text class="tag-text">{{finalResponse || "#我的旅行视频 #AI旅拍 #记录此刻"}}</text>
+        <text class="tag-text">{{"#我的旅行视频 #AI旅拍 #记录此刻"}}</text>
       </view>
 
       <view class="actions-panel">

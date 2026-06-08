@@ -6,7 +6,6 @@
     </view>
 
     <view class="content-box">
-      <input class="title-input" value="{{title}}" bindinput="onTitleInput" placeholder="添加标题" placeholder-class="title-placeholder" />
       <textarea class="textarea" value="{{emotionText}}" bindinput="onTextInput" placeholder="输入正文内容" placeholder-class="text-placeholder" maxlength="-1"></textarea>
     </view>
 

@@ -39,7 +39,12 @@ page {
   box-shadow: 0 2rpx 6rpx rgba(70, 70, 70, 0.12);
   z-index: 1;
 }
-
+home-back-button {
+  position: fixed;
+  top: 50rpx;
+  left: 20rpx;
+  z-index: 100;
+}
 .petal-left {
   left: 296rpx;
   transform: rotate(-24deg);
