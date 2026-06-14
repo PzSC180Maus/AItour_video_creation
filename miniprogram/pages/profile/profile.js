@@ -1,6 +1,7 @@
 const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
 const avatarStore = require("../../utils/avatarStore.js");
+const avatarRefresh = require("../../utils/avatarRefresh.js");
 const app = getApp();
 
 Page({
@@ -29,7 +30,46 @@ Page({
     this.setData({
       userInfo: app.globalData.userInfo || {}
     });
+    this.refreshCurrentUserInfo();
     this.loadProfile();
+  },
+
+  onShow() {
+    this.refreshCurrentUserInfo();
+  },
+
+  refreshCurrentUserInfo() {
+    const openid = app.globalData.task_data && app.globalData.task_data.openid;
+
+    if (openid && app.loadUserProfile) {
+      return app.loadUserProfile(openid).then((userInfo) => {
+        if (!userInfo) {
+          return null;
+        }
+
+        this.setData({
+          userInfo
+        });
+
+        return userInfo;
+      });
+    }
+
+    if (!app.ensureUserInfo) {
+      return Promise.resolve(null);
+    }
+
+    return app.ensureUserInfo().then((userInfo) => {
+      if (!userInfo) {
+        return null;
+      }
+
+      this.setData({
+        userInfo
+      });
+
+      return userInfo;
+    });
   },
 
   loadProfile() {
@@ -116,7 +156,9 @@ Page({
             return {
               ...item,
               author_name: profile.nickName || item.author_name || "用户",
-              author_avatar: profile.avatarUrl || item.author_avatar || ""
+              author_avatar: profile.avatarUrl || item.author_avatar || "",
+              author_avatar_file_id:
+                profile.avatarFileID || item.author_avatar_file_id || ""
             };
           })
         );
@@ -198,6 +240,32 @@ Page({
         "&id=" +
         encodeURIComponent(item.post_id || item.card_id || "")
     });
+  },
+
+  refreshProfileAvatarOnError() {
+    const userInfo = this.data.userInfo || {};
+    const avatarFileID = avatarRefresh.getAvatarFileID(userInfo);
+
+    if (!avatarFileID) {
+      return;
+    }
+
+    avatarStore
+      .getTempFileURL(avatarFileID)
+      .then((avatarUrl) => {
+        const nextUserInfo = {
+          ...this.data.userInfo,
+          avatarUrl
+        };
+
+        app.globalData.userInfo = nextUserInfo;
+        this.setData({
+          userInfo: nextUserInfo
+        });
+      })
+      .catch((err) => {
+        console.warn("个人页头像临时链接刷新失败", err);
+      });
   },
 
   goBack() {

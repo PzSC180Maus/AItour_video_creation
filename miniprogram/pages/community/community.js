@@ -1,5 +1,7 @@
 const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
+const avatarStore = require("../../utils/avatarStore.js");
+const avatarRefresh = require("../../utils/avatarRefresh.js");
 const app = getApp();
 
 const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
@@ -162,7 +164,8 @@ Page({
               return {
                 ...item,
                 author_name: item.author_name || "用户",
-                author_avatar: item.author_avatar || DEFAULT_USER_AVATAR
+                author_avatar: item.author_avatar || DEFAULT_USER_AVATAR,
+                author_avatar_file_id: item.author_avatar_file_id || ""
               };
             }
 
@@ -173,7 +176,9 @@ Page({
                 avatarUrlMap[profile.avatarFileID] ||
                 profile.avatarUrl ||
                 item.author_avatar ||
-                DEFAULT_USER_AVATAR
+                DEFAULT_USER_AVATAR,
+              author_avatar_file_id:
+                profile.avatarFileID || item.author_avatar_file_id || ""
             };
           })
         );
@@ -273,6 +278,39 @@ Page({
   getItem(type, index) {
     const list = type === "post" ? this.data.postList : this.data.cardList;
     return list[Number(index)];
+  },
+
+  refreshAvatarOnError(e) {
+    const type = e.currentTarget.dataset.type;
+    const index = Number(e.currentTarget.dataset.index);
+    const item = this.getItem(type, index);
+    const avatarFileID = avatarRefresh.getAvatarFileID(item);
+
+    if (!avatarFileID) {
+      return;
+    }
+
+    avatarStore
+      .getTempFileURL(avatarFileID)
+      .then((avatarUrl) => {
+        const listKey = type === "post" ? "postList" : "cardList";
+        const list = avatarRefresh.updateListItemAvatar(
+          this.data[listKey],
+          "target_id",
+          item.target_id,
+          avatarUrl
+        );
+
+        this.setData(
+          {
+            [listKey]: list
+          },
+          () => this.syncListState()
+        );
+      })
+      .catch((err) => {
+        console.warn("头像临时链接刷新失败", err);
+      });
   },
 
   openDetail(e) {

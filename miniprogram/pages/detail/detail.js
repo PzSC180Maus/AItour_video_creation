@@ -2,6 +2,7 @@ const communityService = require("../../utils/communityService.js");
 const commentStore = require("../../utils/commentStore.js");
 const profileStore = require("../../utils/profileStore.js");
 const avatarStore = require("../../utils/avatarStore.js");
+const avatarRefresh = require("../../utils/avatarRefresh.js");
 const app = getApp();
 
 Page({
@@ -80,14 +81,17 @@ Page({
             return {
               ...item,
               author_name: item.author_name || "用户",
-              author_avatar: item.author_avatar || DEFAULT_USER_AVATAR
+              author_avatar: item.author_avatar || DEFAULT_USER_AVATAR,
+              author_avatar_file_id: item.author_avatar_file_id || ""
             };
           }
 
           return {
             ...item,
             author_name: profile.nickName || item.author_name || "用户",
-            author_avatar: profile.avatarUrl || item.author_avatar || DEFAULT_USER_AVATAR
+            author_avatar: profile.avatarUrl || item.author_avatar || DEFAULT_USER_AVATAR,
+            author_avatar_file_id:
+              profile.avatarFileID || item.author_avatar_file_id || ""
           };
         })
       );
@@ -212,6 +216,60 @@ Page({
       this.setData({ commenting: false });
     });
 },
+
+  refreshDetailAvatarOnError() {
+    const item = this.data.item || {};
+    const avatarFileID = avatarRefresh.getAvatarFileID(item);
+
+    if (!avatarFileID) {
+      return;
+    }
+
+    avatarStore
+      .getTempFileURL(avatarFileID)
+      .then((avatarUrl) => {
+        this.setData({
+          item: {
+            ...this.data.item,
+            author_avatar: avatarUrl
+          }
+        });
+      })
+      .catch((err) => {
+        console.warn("详情作者头像临时链接刷新失败", err);
+      });
+  },
+
+  refreshCommentAvatarOnError(e) {
+    const index = Number(e.currentTarget.dataset.index);
+    const comments = (this.data.target && this.data.target.List) || [];
+    const comment = comments[index];
+    const avatarFileID = avatarRefresh.getAvatarFileID(comment);
+
+    if (!avatarFileID) {
+      return;
+    }
+
+    avatarStore
+      .getTempFileURL(avatarFileID)
+      .then((avatarUrl) => {
+        const nextComments = comments.slice();
+        nextComments[index] = {
+          ...nextComments[index],
+          author_avatar: avatarUrl
+        };
+
+        this.setData({
+          target: {
+            ...this.data.target,
+            List: nextComments
+          }
+        });
+      })
+      .catch((err) => {
+        console.warn("评论头像临时链接刷新失败", err);
+      });
+  },
 
   useCard() {
     const item = this.data.item || {};

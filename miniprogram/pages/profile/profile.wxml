@@ -30,7 +30,7 @@
     </view>
     <view class="identity-row">
       <view class="avatar-wrap">
-        <image wx:if="{{userInfo.avatarUrl}}" class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+        <image wx:if="{{userInfo.avatarUrl}}" class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" binderror="refreshProfileAvatarOnError"></image>
         <view wx:else class="avatar avatar-placeholder">
           <view class="avatar-user-symbol"></view>
         </view>

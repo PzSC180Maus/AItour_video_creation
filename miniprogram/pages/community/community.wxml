@@ -39,7 +39,7 @@
               <image class="cover" src="{{activeTab === 'post' ? item.cover_url : item.image_url}}" mode="aspectFill"></image>
               <view wx:if="{{activeTab === 'post'}}" class="play-dot"></view>
               <view class="caption">
-                <image class="avatar" src="{{item.author_avatar}}" mode="aspectFill"></image>
+                <image class="avatar" src="{{item.author_avatar}}" mode="aspectFill" binderror="refreshAvatarOnError" data-type="{{activeTab}}" data-index="{{item.__index}}"></image>
                 <view class="caption-text">
                   <view class="title">{{activeTab === 'post' ? (item.title || '旅行作品') : (item.emotion_text || '我的旅行卡片')}}</view>
                   <view class="name">{{item.author_name || '用户'}}</view>
@@ -55,7 +55,7 @@
               <image class="cover" src="{{activeTab === 'post' ? item.cover_url : item.image_url}}" mode="aspectFill"></image>
               <view wx:if="{{activeTab === 'post'}}" class="play-dot"></view>
               <view class="caption">
-                <image class="avatar" src="{{item.author_avatar}}" mode="aspectFill"></image>
+                <image class="avatar" src="{{item.author_avatar}}" mode="aspectFill" binderror="refreshAvatarOnError" data-type="{{activeTab}}" data-index="{{item.__index}}"></image>
                 <view class="caption-text">
                   <view class="title">{{activeTab === 'post' ? (item.title || '旅行作品') : (item.emotion_text || '我的旅行卡片')}}</view>
                   <view class="name">{{item.author_name || '用户'}}</view>
