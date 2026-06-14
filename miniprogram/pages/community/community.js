@@ -88,14 +88,17 @@ Page({
   requestCommunityPost(page) {
     return communityService.apiCommunityPost({
       page,
-      page_size: this.data.pageSize
+      page_size: this.data.pageSize,
+      landscape: app.globalData.task_data.landscape || "sharepool"
+      
     });
   },
 
   requestCommunityCard(page) {
     return communityService.apiCommunityCard({
       page,
-      page_size: this.data.pageSize
+      page_size: this.data.pageSize,
+      landscape: app.globalData.task_data.landscape || "sharepool"
     });
   },
 

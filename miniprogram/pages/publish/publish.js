@@ -85,6 +85,7 @@ Page({
       .apiCommunityPostPublish({
         openid,
         card_id: this.data.cardId || "none",
+        landscape: app.globalData.task_data.landscape || "sharepool",
         title: this.data.title || "旅行作品",
         cover_url: this.data.coverUrl || "",
         video_url: this.data.videoUrl,

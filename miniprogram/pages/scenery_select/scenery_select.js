@@ -68,7 +68,8 @@ Page({
     app.globalData.task_data.spot_url = selectedSpot.cover;
     app.globalData.task_data.request = selectedSpot.text;
     app.globalData.task_data.card_id = "";
-
+    app.globalData.task_data.landscape = selectedSpot.landscape || "sharepool";
+    app.globalData.task_data.landscape_name = selectedSpot.landscapeName || "公共分享池";
     wx.navigateTo({
       url: "../dialogue/dialogue",
       success: () => {

@@ -102,6 +102,7 @@ Page({
     communityService
       .apiCommunityCardPublish({
         openid,
+        landscape: app.globalData.task_data.landscape || "sharepool",
         image_url: this.data.imageUrl,
         emotion_text: this.data.emotionText,
         title: this.data.title || "旅行卡片",

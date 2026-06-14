@@ -42,7 +42,7 @@
     <!-- 底部评论输入框 -->
     <view class="comment-editor-bottom">
       <textarea class="comment-input" value="{{commentInput}}" bindinput="onCommentInput" placeholder="写下你的评论" maxlength="300"></textarea>
-      <image class="send-btn" src="/images/icons/send.png" bindtap="submitComment" mode="aspectFill"></image>
+      <image class="send-btn" src="/images/icons/send.svg" bindtap="submitComment" mode="aspectFill"></image>
     </view>
   </view>
 </view>

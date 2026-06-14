@@ -21,6 +21,8 @@ App({
          video_request: "",
          scriptContent: "",
          user_potrait: "",
+         landscape: "sharepool",
+         landscape_name: "公共分享池",
       },
       video_url: null,
       final_response: null,//存最后小红书配文
