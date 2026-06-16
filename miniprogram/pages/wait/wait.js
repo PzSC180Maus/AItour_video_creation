@@ -17,6 +17,7 @@ Page({
     pollingTimer: null,
     fakeTimer: null,
     requestUrl: "/api/share",
+    genshotUrl: "/api/first_shot",
     extendURL: "/api/video/extend",
     videoReq: "/api/video",
     videoStatusUrl: "/api/video/status"
@@ -58,6 +59,38 @@ Page({
     });
 
     const fullTaskData = { ...taskData };
+
+    // ========== 新增：非 extend 模式下先请求首帧图片 ==========
+    if (!this.data.use_extend) {
+      try {
+        const shotResp = await wxRequest.post(this.data.genshotUrl, {
+          task_data: fullTaskData,
+          timeout: 180000  // 150秒，比 app.json 的 180s 略小留出余量
+        });
+        const shotData = shotResp && shotResp.data ? shotResp.data : {};
+
+        if (shotData.success === true && shotData.cover_url) {
+          // 更新页面封面图
+          this.setData({
+            coverUrl: shotData.cover_url
+          });
+          // 同步更新 globalData 中的 spot_url
+          app.globalData.task_data = {
+            ...(app.globalData.task_data || {}),
+            spot_url: shotData.cover_url
+          };
+          // 刷新 fullTaskData，确保后续请求使用最新的 spot_url
+          fullTaskData.spot_url = shotData.cover_url;
+          console.log("首帧图片生成成功，cover_url:", shotData.cover_url);
+        } else {
+          console.log("首帧图片生成失败或未返回 cover_url，继续后续流程");
+        }
+      } catch (err) {
+        // first_shot 失败不阻塞后续流程
+        console.error("首帧图片请求失败：", err);
+      }
+    }
+    // ========== 新增结束 ==========
 
     try {
       const shareResp = await wxRequest.post(this.data.requestUrl, {

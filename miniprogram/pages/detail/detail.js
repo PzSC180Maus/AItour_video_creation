@@ -5,6 +5,8 @@ const avatarStore = require("../../utils/avatarStore.js");
 const avatarRefresh = require("../../utils/avatarRefresh.js");
 const app = getApp();
 
+const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
+
 Page({
   data: {
     type: "post",
@@ -33,74 +35,87 @@ Page({
     };
   },
 
- attachAuthorProfiles(list) {
-  const safeList = Array.isArray(list) ? list : [];
-  const openids = safeList
-    .map((item) => item && (item.openid || item.author_openid))
-    .filter(Boolean);
+  // ====== 新增：与 community.js 一致的 openid 提取方法 ======
+  getAuthorOpenid(item) {
+    return item && (item.openid || item.author_openid || item.user_openid || "");
+  },
 
-  if (!openids.length) {
-    return Promise.resolve(safeList);
-  }
+  // ====== 新增：与 community.js 一致的头像云函数批量调用 ======
+  requestAvatarTempUrls(fileIDs) {
+    const safeFileIDs = Array.from(new Set((fileIDs || []).filter(Boolean)));
 
-  const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
+    if (!safeFileIDs.length) {
+      return Promise.resolve({});
+    }
 
-  return profileStore
-    .getProfilesByOpenids(openids)
-    .then((profileMap) => {
-      const normalizedProfiles = {};
+    return wx.cloud
+      .callFunction({
+        name: "quickstartFunctions",
+        data: {
+          type: "getAvatarTempUrls",
+          fileIDs: safeFileIDs
+        }
+      })
+      .then((resp) => {
+        const result = resp && resp.result ? resp.result : {};
+        return result.urls || {};
+      })
+      .catch((err) => {
+        console.error("头像临时链接获取失败", err);
+        return {};
+      });
+  },
 
-      return Promise.all(
-        Object.keys(profileMap).map((openid) => {
-          const profile = profileMap[openid];
+  // ====== 修改：对齐 community.js 的头像处理逻辑 ======
+  attachAuthorProfiles(list) {
+    const safeList = Array.isArray(list) ? list : [];
+    const openids = safeList
+      .map((item) => this.getAuthorOpenid(item))
+      .filter(Boolean);
 
-          return avatarStore
-            .normalizeAvatar(profile.avatarUrl || "", profile.avatarFileID || "")
-            .then((avatar) => {
-              normalizedProfiles[openid] = {
-                ...profile,
-                avatarUrl: avatar.avatarUrl,
-                avatarFileID: avatar.avatarFileID
+    if (!openids.length) {
+      return Promise.resolve(safeList);
+    }
+
+    return profileStore
+      .getProfilesByOpenids(openids)
+      .then((profileMap) => {
+        const avatarFileIDs = Object.keys(profileMap)
+          .map((openid) => profileMap[openid] && profileMap[openid].avatarFileID)
+          .filter(Boolean);
+
+        return this.requestAvatarTempUrls(avatarFileIDs).then((avatarUrlMap) =>
+          safeList.map((item) => {
+            const profile = profileMap[this.getAuthorOpenid(item)];
+
+            if (!profile) {
+              return {
+                ...item,
+                author_name: item.author_name || "用户",
+                author_avatar: item.author_avatar || DEFAULT_USER_AVATAR,
+                author_avatar_file_id: item.author_avatar_file_id || ""
               };
-            })
-            .catch((err) => {
-              console.warn("作者头像链接转换失败:", openid, err);
-              normalizedProfiles[openid] = {
-                ...profile,
-                avatarUrl: profile.avatarUrl || DEFAULT_USER_AVATAR,
-                avatarFileID: profile.avatarFileID || ""
-              };
-            });
-        })
-      ).then(() =>
-        safeList.map((item) => {
-          const openid = item.openid || item.author_openid;
-          const profile = normalizedProfiles[openid];
+            }
 
-          if (!profile) {
             return {
               ...item,
-              author_name: item.author_name || "用户",
-              author_avatar: item.author_avatar || DEFAULT_USER_AVATAR,
-              author_avatar_file_id: item.author_avatar_file_id || ""
+              author_name: profile.nickName || item.author_name || "用户",
+              author_avatar:
+                avatarUrlMap[profile.avatarFileID] ||
+                profile.avatarUrl ||
+                item.author_avatar ||
+                DEFAULT_USER_AVATAR,
+              author_avatar_file_id:
+                profile.avatarFileID || item.author_avatar_file_id || ""
             };
-          }
-
-          return {
-            ...item,
-            author_name: profile.nickName || item.author_name || "用户",
-            author_avatar: profile.avatarUrl || item.author_avatar || DEFAULT_USER_AVATAR,
-            author_avatar_file_id:
-              profile.avatarFileID || item.author_avatar_file_id || ""
-          };
-        })
-      );
-    })
-    .catch((err) => {
-      console.error("作者资料补全失败", err);
-      return safeList;
-    });
-},
+          })
+        );
+      })
+      .catch((err) => {
+        console.error("作者资料补全失败", err);
+        return safeList;
+      });
+  },
 
   onLoad(options) {
     const item = app.globalData.community_current_item || {};
@@ -176,46 +191,46 @@ Page({
   },
 
   submitComment() {
-  if (this.data.commenting) {
-    return;
-  }
+    if (this.data.commenting) {
+      return;
+    }
 
-  const content = (this.data.commentInput || "").trim();
-  const targetId = this.getCommentTargetId();
-  const openid = app.globalData.task_data && app.globalData.task_data.openid;
+    const content = (this.data.commentInput || "").trim();
+    const targetId = this.getCommentTargetId();
+    const openid = app.globalData.task_data && app.globalData.task_data.openid;
 
-  if (!openid || !targetId || !content) {
-    wx.showToast({
-      title: "请先填写评论",
-      icon: "none"
-    });
-    return;
-  }
-
-  this.setData({ commenting: true });
-
-  commentStore
-    .addComment({
-      target_id: targetId,
-      target_type: this.data.type,
-      author_openid: openid,
-      content
-    })
-    .then(() => {
-      this.setData({ commentInput: "" });
-      return this.loadComments();
-    })
-    .catch((err) => {
-      console.error("评论发布失败", err);
+    if (!openid || !targetId || !content) {
       wx.showToast({
-        title: "评论发布失败",
+        title: "请先填写评论",
         icon: "none"
       });
-    })
-    .finally(() => {
-      this.setData({ commenting: false });
-    });
-},
+      return;
+    }
+
+    this.setData({ commenting: true });
+
+    commentStore
+      .addComment({
+        target_id: targetId,
+        target_type: this.data.type,
+        author_openid: openid,
+        content
+      })
+      .then(() => {
+        this.setData({ commentInput: "" });
+        return this.loadComments();
+      })
+      .catch((err) => {
+        console.error("评论发布失败", err);
+        wx.showToast({
+          title: "评论发布失败",
+          icon: "none"
+        });
+      })
+      .finally(() => {
+        this.setData({ commenting: false });
+      });
+  },
 
   refreshDetailAvatarOnError() {
     const item = this.data.item || {};
