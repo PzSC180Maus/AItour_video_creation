@@ -2,6 +2,7 @@ const communityService = require("../../utils/communityService.js");
 const profileStore = require("../../utils/profileStore.js");
 const avatarStore = require("../../utils/avatarStore.js");
 const avatarRefresh = require("../../utils/avatarRefresh.js");
+const landscapeUtil = require("../../utils/landscape.js");
 const app = getApp();
 
 const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
@@ -9,6 +10,9 @@ const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lc
 Page({
   data: {
     activeTab: "post",
+    landscapeOptions: landscapeUtil.LANDSCAPE_OPTIONS,
+    currentLandscape: landscapeUtil.getLandscapeOption("sharepool"),
+    landscapeIndex: 0,
     pageSize: 10,
     postPage: 1,
     cardPage: 1,
@@ -25,7 +29,104 @@ Page({
   },
 
   onLoad() {
+    this.syncLandscapeState();
     this.refreshCurrent();
+  },
+
+  onShow() {
+    const nextLandscape = app.globalData.task_data.landscape || "sharepool";
+
+    if (nextLandscape !== this.data.currentLandscape.id) {
+      const option = this.syncLandscapeState();
+
+      this.setData(
+        {
+          postPage: 1,
+          cardPage: 1,
+          postList: [],
+          cardList: [],
+          postHasMore: true,
+          cardHasMore: true,
+          currentListLength: 0,
+          hasMore: true,
+          leftList: [],
+          rightList: []
+        },
+        () => {
+          this.refreshCurrent();
+        }
+      );
+      return option;
+    }
+
+    return this.syncLandscapeState();
+  },
+
+  syncLandscapeState() {
+    const option = landscapeUtil.syncTaskLandscape(
+      app.globalData.task_data,
+      app.globalData.task_data.landscape || "sharepool"
+    );
+    const landscapeIndex = Math.max(
+      0,
+      this.data.landscapeOptions.findIndex((item) => item.id === option.id)
+    );
+
+    this.setData({
+      currentLandscape: option,
+      landscapeIndex
+    });
+
+    return option;
+  },
+
+  switchLandscape(e) {
+    const landscape = e.currentTarget.dataset.landscape || "sharepool";
+    const option = landscapeUtil.syncTaskLandscape(
+      app.globalData.task_data,
+      landscape
+    );
+    const landscapeIndex = Math.max(
+      0,
+      this.data.landscapeOptions.findIndex((item) => item.id === option.id)
+    );
+
+    this.setData(
+      {
+        currentLandscape: option,
+        landscapeIndex,
+        postPage: 1,
+        cardPage: 1,
+        postList: [],
+        cardList: [],
+        postHasMore: true,
+        cardHasMore: true,
+        currentListLength: 0,
+        hasMore: true,
+        leftList: [],
+        rightList: []
+      },
+      () => {
+        this.refreshCurrent();
+      }
+    );
+  },
+
+  onLandscapeSwiperChange(e) {
+    const index = Number(e.detail.current);
+    const option = this.data.landscapeOptions[index];
+
+    if (!option || option.id === this.data.currentLandscape.id) {
+      return;
+    }
+
+    this.switchLandscape({
+      currentTarget: {
+        dataset: {
+          landscape: option.id
+        }
+      }
+    });
   },
 
   onPullDownRefresh() {
@@ -354,6 +455,10 @@ Page({
         app.globalData.task_data.request =
           card.emotion_text || item.emotion_text || "";
         app.globalData.task_data.card_id = item.card_id || "";
+        landscapeUtil.syncTaskLandscape(
+          app.globalData.task_data,
+          card.landscape || item.landscape || "sharepool"
+        );
 
         wx.navigateTo({
           url: "/pages/dialogue/dialogue"
@@ -390,6 +495,10 @@ Page({
         app.globalData.task_data.spot_url = card.image_url || "";
         app.globalData.task_data.request = card.emotion_text || "";
         app.globalData.task_data.card_id = item.card_id || "";
+        landscapeUtil.syncTaskLandscape(
+          app.globalData.task_data,
+          card.landscape || item.landscape || "sharepool"
+        );
 
         wx.navigateTo({
           url: "/pages/dialogue/dialogue"

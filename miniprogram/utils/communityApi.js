@@ -7,7 +7,9 @@ const COMMUNITY_API = {
   profileMyPost: "/data/profile/mypost",
   profileMyCard: "/data/profile/mycard",
   profilePostLiked: "/data/profile/post_liked",
-  profileCardLiked: "/data/profile/card_liked"
+  profileCardLiked: "/data/profile/card_liked",
+  profilePostDelete: "/data/profile/post/delete",
+  profileCardDelete: "/data/profile/card/delete"
 };
 
 module.exports = COMMUNITY_API;

@@ -15,6 +15,7 @@
 
     <view class="headline-row">
       <view class="headline-pill">猜你喜欢</view>
+      <view class="landscape-pill">当前景区：{{currentLandscape.name}}</view>
       <view class="trend">
         <text class="trend-fire">🔥🔥🔥</text>
         <text>520视频限定同款模板！</text>
@@ -39,7 +40,7 @@
       </view>
       <view class="recommend-grid">
         <block wx:for="{{recommendList}}" wx:key="id">
-          <view class="template-card {{current === index + 2 ? 'active' : ''}}" data-index="{{index + 2}}" bindtap="selectSpot">
+          <view class="template-card {{selectedSpot.id === item.id ? 'active' : ''}}" data-index="{{index}}" bindtap="selectTemplate">
             <image class="template-image" src="{{item.cover}}" mode="aspectFill"></image>
           </view>
         </block>

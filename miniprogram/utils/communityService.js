@@ -59,6 +59,14 @@ function apiProfileCardLiked(data) {
   return post(COMMUNITY_API.profileCardLiked, data);
 }
 
+function apiProfilePostDelete(data) {
+  return post(COMMUNITY_API.profilePostDelete, data);
+}
+
+function apiProfileCardDelete(data) {
+  return post(COMMUNITY_API.profileCardDelete, data);
+}
+
 module.exports = {
   apiCommunityPost,
   apiCommunityCard,
@@ -68,5 +76,7 @@ module.exports = {
   apiProfileMypost,
   apiProfileMycard,
   apiProfilePostLiked,
-  apiProfileCardLiked
+  apiProfileCardLiked,
+  apiProfilePostDelete,
+  apiProfileCardDelete
 };

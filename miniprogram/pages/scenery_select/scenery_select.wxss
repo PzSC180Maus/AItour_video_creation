@@ -49,6 +49,28 @@ home-back-button {
   margin: 0 0 42rpx;
 }
 
+.landscape-pill {
+  flex-shrink: 0;
+  min-width: 238rpx;
+  max-width: 292rpx;
+  height: 54rpx;
+  padding: 0 22rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.92);
+  border-radius: 28rpx;
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 48rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: #62c9c4;
+  box-shadow:
+    0 7rpx 12rpx rgba(35, 104, 105, 0.24),
+    inset 0 -3rpx 0 rgba(32, 156, 166, 0.35);
+  box-sizing: border-box;
+}
+
 .headline-pill,
 .recommend-pill {
   min-width: 150rpx;

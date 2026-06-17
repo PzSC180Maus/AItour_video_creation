@@ -3,6 +3,7 @@ const commentStore = require("../../utils/commentStore.js");
 const profileStore = require("../../utils/profileStore.js");
 const avatarStore = require("../../utils/avatarStore.js");
 const avatarRefresh = require("../../utils/avatarRefresh.js");
+const landscapeUtil = require("../../utils/landscape.js");
 const app = getApp();
 
 const DEFAULT_USER_AVATAR = "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0";
@@ -301,6 +302,10 @@ Page({
         app.globalData.task_data.request =
           card.emotion_text || item.emotion_text || "";
         app.globalData.task_data.card_id = item.card_id || "";
+        landscapeUtil.syncTaskLandscape(
+          app.globalData.task_data,
+          card.landscape || item.landscape || "sharepool"
+        );
 
         wx.navigateTo({
           url: "/pages/dialogue/dialogue"
@@ -338,6 +343,10 @@ Page({
         app.globalData.task_data.spot_url = card.image_url || "";
         app.globalData.task_data.request = card.emotion_text || "";
         app.globalData.task_data.card_id = item.card_id || "";
+        landscapeUtil.syncTaskLandscape(
+          app.globalData.task_data,
+          card.landscape || item.landscape || "sharepool"
+        );
 
         wx.navigateTo({
           url: "/pages/dialogue/dialogue"

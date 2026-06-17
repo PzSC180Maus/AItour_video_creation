@@ -91,6 +91,7 @@ Page({
               title: "已保存到相册",
               icon: "success"
             });
+            console.log("视频下载地址:", videoUrl);
           },
           fail() {
             wx.hideLoading();

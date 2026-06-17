@@ -30,6 +30,39 @@
     </view>
   </view>
 
+  <view class="landscape-hero">
+    <scroll-view class="landscape-tabs" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view class="landscape-track">
+        <block wx:for="{{landscapeOptions}}" wx:key="id">
+          <view class="landscape-tab {{currentLandscape.id === item.id ? 'active' : ''}}" data-landscape="{{item.id}}" bindtap="switchLandscape">
+            {{item.shortName || item.name}}
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+
+    <swiper class="landscape-swiper" circular current="{{landscapeIndex}}" bindchange="onLandscapeSwiperChange">
+      <block wx:for="{{landscapeOptions}}" wx:key="id">
+        <swiper-item>
+          <view class="landscape-banner {{currentLandscape.id === item.id ? 'active' : ''}}" data-landscape="{{item.id}}" bindtap="switchLandscape">
+            <image class="landscape-banner-image" src="{{item.cover}}" mode="aspectFill"></image>
+            <view class="landscape-banner-mask"></view>
+            <view class="landscape-banner-copy">
+              <view class="landscape-banner-title">{{item.name}}</view>
+              <view class="landscape-banner-desc">{{item.desc}}</view>
+            </view>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <view class="landscape-dots">
+      <block wx:for="{{landscapeOptions}}" wx:key="id">
+        <view class="landscape-dot {{currentLandscape.id === item.id ? 'active' : ''}}"></view>
+      </block>
+    </view>
+  </view>
+
   <scroll-view class="masonry" scroll-y bindscrolltolower="loadMore">
     <view class="feed-panel">
       <view class="columns">
