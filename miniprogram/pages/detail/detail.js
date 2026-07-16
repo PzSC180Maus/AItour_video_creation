@@ -4,6 +4,7 @@ const profileStore = require("../../utils/profileStore.js");
 const avatarStore = require("../../utils/avatarStore.js");
 const avatarRefresh = require("../../utils/avatarRefresh.js");
 const landscapeUtil = require("../../utils/landscape.js");
+const { pickProduct } = require("../../utils/demoProducts.js");
 const app = getApp();
 
 const DEFAULT_USER_AVATAR = "../../images/default.jpg";
@@ -39,6 +40,30 @@ Page({
       comments: safeTarget.comments || 0,
       List: Array.isArray(safeTarget.List) ? safeTarget.List : []
     };
+  },
+
+  getDemoProductsForPost(item, type) {
+    if (type !== "post") {
+      return [];
+    }
+
+    const endorsedProduct = item && item.endorsement_product;
+    if (endorsedProduct) {
+      return [{ ...endorsedProduct }];
+    }
+
+    if (
+      item &&
+      (item.endorsement_enabled === false || item.endorsementEnabled === false)
+    ) {
+      return [];
+    }
+
+    const seed =
+      (item && (item.video_url || item.share_text || item.title || item.post_id)) ||
+      "legacy-post-demo";
+
+    return [{ ...pickProduct(seed) }];
   },
 
   // ====== 新增：与 community.js 一致的 openid 提取方法 ======
@@ -130,18 +155,17 @@ Page({
     const target = item.target || item.Target || {};
     const type = options.type || item.type || "post";
     const id = options.id || item.post_id || item.card_id || "";
-    const endorsedProduct = item.endorsement_product || null;
 
     return this.attachAuthorProfiles([item]).then((items) => {
+      const displayItem = items[0] || item;
+
       this.setData({
         type,
         id,
         targetId: options.target_id || item.target_id || "",
-        item: items[0] || item,
+        item: displayItem,
         target: this.normalizeTarget(target),
-        demoProducts: type === "post" && endorsedProduct
-          ? [{ ...endorsedProduct }]
-          : []
+        demoProducts: this.getDemoProductsForPost(displayItem, type)
       });
 
       return this.loadComments();
